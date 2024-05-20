@@ -1,5 +1,5 @@
 import { ElMessageBox } from 'element-plus'
-import type { MessageBoxOptions, MessageBoxHandle } from 'element-plus'
+import type { ElMessageBoxOptions, MessageBoxData } from 'element-plus'
 
 const defaults: object = {
   confirmButtonText: 'Ok',
@@ -7,7 +7,7 @@ const defaults: object = {
   showClose: true
 }
 
-function alert (title: string, message: string, options: MessageBoxOptions = {}): MessageBoxHandle {
+function alert (title: string, message: string, options: ElMessageBoxOptions = {}): Promise<MessageBoxData> {
   return ElMessageBox.alert(message, title, {
     ...defaults,
     message,
@@ -16,7 +16,7 @@ function alert (title: string, message: string, options: MessageBoxOptions = {})
   })
 }
 
-function confirm (title: string, message: string, options: MessageBoxOptions = {}): MessageBoxHandle {
+function confirm (title: string, message: string, options: ElMessageBoxOptions = {}): Promise<MessageBoxData> {
   return ElMessageBox.confirm(message, title, {
     ...defaults,
     message,
@@ -25,7 +25,7 @@ function confirm (title: string, message: string, options: MessageBoxOptions = {
   })
 }
 
-function prompt (title: string, message: string, options: MessageBoxOptions = {}): MessageBoxHandle {
+function prompt (title: string, message: string, options: ElMessageBoxOptions = {}): Promise<MessageBoxData> {
   return ElMessageBox.prompt(message, title, {
     ...defaults,
     message,
@@ -45,9 +45,9 @@ function useMessageBox (): UseMessageBox {
 export default useMessageBox
 
 interface UseMessageBox {
-  alert: (title: string, message: string, options: MessageBoxOptions) => MessageBoxHandle
-  confirm: (title: string, message: string, options: MessageBoxOptions) => MessageBoxHandle
-  prompt: (title: string, message: string, options: MessageBoxOptions) => MessageBoxHandle
+  alert: (title: string, message: string, options: ElMessageBoxOptions) => Promise<MessageBoxData>
+  confirm: (title: string, message: string, options: ElMessageBoxOptions) => Promise<MessageBoxData>
+  prompt: (title: string, message: string, options: ElMessageBoxOptions) => Promise<MessageBoxData>
 }
 
 export type { UseMessageBox }

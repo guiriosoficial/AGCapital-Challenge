@@ -20,7 +20,7 @@
 import { ElTabPane } from 'element-plus'
 
 defineOptions({
-  name: 'ProjTabPane'
+  name: 'AgcTabPane'
   // inheritAttrs: false
 })
 

@@ -30,7 +30,7 @@ import type { FormInstance, FormRules } from 'element-plus'
 import { ref, type PropType } from 'vue'
 
 defineOptions({
-  name: 'ProjForm',
+  name: 'AgcForm',
   inheritAttrs: false
 })
 

@@ -13,7 +13,7 @@ import { ElIcon } from 'element-plus'
 import type { PropType, Component } from 'vue'
 
 defineOptions({
-  name: 'ProjCard',
+  name: 'AgcCard',
   inheritAttrs: true
 })
 

@@ -32,7 +32,7 @@ import type { TabPaneName } from 'element-plus'
 import type { PropType } from 'vue'
 
 defineOptions({
-  name: 'ProjTabs',
+  name: 'AgcTabs',
   inheritAttrs: false
 })
 

@@ -28,7 +28,7 @@ import { ElFormItem } from 'element-plus'
 import type { PropType } from 'vue'
 
 defineOptions({
-  name: 'ProjFormItem',
+  name: 'AgcFormItem',
   inheritAttrs: false
 })
 
@@ -47,7 +47,6 @@ defineProps({
     type: Boolean
   },
   rules: {
-    // ARRUMAR
     type: Object as PropType<Record<string, any>>
   },
   error: {

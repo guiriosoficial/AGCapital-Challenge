@@ -21,7 +21,7 @@ import { ElTag } from 'element-plus'
 import type { PropType } from 'vue'
 
 defineOptions({
-  name: 'ProjTag',
+  name: 'AgcTag',
   inheritAttrs: false
 })
 

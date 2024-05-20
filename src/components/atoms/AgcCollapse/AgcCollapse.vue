@@ -3,7 +3,7 @@
     v-bind="$attrs"
     v-model="modelValue"
     :accordion="accordion"
-    @change="$emit('change', $event)"
+    @change="emit('change', $event)"
   >
     <slot name="default" />
   </ElCollapse>
@@ -13,7 +13,7 @@
 import { ElCollapse } from 'element-plus'
 
 defineOptions({
-  name: 'ProjCollapse',
+  name: 'AgcCollapse',
   inheritAttrs: false
 })
 
@@ -29,5 +29,5 @@ defineProps({
   }
 })
 
-const emit = defineEmits(['change', 'update:modelValue'])
+const emit = defineEmits(['change'])
 </script>

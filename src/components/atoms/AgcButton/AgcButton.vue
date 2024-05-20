@@ -42,7 +42,7 @@ import { ElButton } from 'element-plus'
 import type { PropType, Component } from 'vue'
 
 defineOptions({
-  name: 'ProjInput',
+  name: 'AgcInput',
   inheritAttrs: false
 })
 

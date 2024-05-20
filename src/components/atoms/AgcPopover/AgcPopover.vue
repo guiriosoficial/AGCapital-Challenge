@@ -42,7 +42,7 @@ import { ElPopover } from 'element-plus'
 import { type PropType } from 'vue'
 
 defineOptions({
-  name: 'ProjPopover',
+  name: 'AgcPopover',
   inheritAttrs: false
 })
 

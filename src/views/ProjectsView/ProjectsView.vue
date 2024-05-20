@@ -110,28 +110,28 @@
 </template>
 
 <script setup lang="ts">
-import AgcTabs from '@/components/atoms/AgcTabs'
-import AgcTabPane from '@/components/atoms/AgcTabPane'
+import { computed, ref, onBeforeMount } from 'vue'
+import { Plus, Delete, EditPen, Search } from '@element-plus/icons-vue'
+import { useRoute, useRouter } from 'vue-router'
+import AgcButton from '@/components/atoms/AgcButton'
+import AgcCard from '@/components/atoms/AgcCard'
 import AgcCollapse from '@/components/atoms/AgcCollapse'
 import AgcCollapseItem from '@/components/atoms/AgcCollapseItem'
-import AgcCard from '@/components/atoms/AgcCard'
-import AgcButton from '@/components/atoms/AgcButton'
 import AgcIcon from '@/components/atoms/AgcIcon'
 import AgcInput from '@/components/atoms/AgcInput'
-import ProjectInfoDialog from './dialog/ProjectInfoDialog'
+import AgcTabPane from '@/components/atoms/AgcTabPane'
+import AgcTabs from '@/components/atoms/AgcTabs'
 import ClientInfoDialog from './dialog/ClientInfoDialog'
-import useProjectsStore, { type ClientProjects, type Project, ProjectStatuses } from '@/stores/projectsStore'
+import ProjectInfoDialog from './dialog/ProjectInfoDialog'
 import useClientStore, { type Client } from '@/stores/clientsStore'
-import { computed, ref, onBeforeMount } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { Plus, Delete, EditPen, Search } from '@element-plus/icons-vue'
-import  useMessageBox from '@/composables/useMessageBox'
+import useMessageBox from '@/composables/useMessageBox'
+import useProjectsStore, { type ClientProjects, type Project, ProjectStatuses } from '@/stores/projectsStore'
 
-const route = useRoute()
-const router = useRouter()
-const projectsStore = useProjectsStore()
 const clientStore = useClientStore()
 const messageBox = useMessageBox()
+const projectsStore = useProjectsStore()
+const route = useRoute()
+const router = useRouter()
 
 const tabs = [
   {
@@ -144,9 +144,9 @@ const tabs = [
   }
 ]
 
-const searchQuery = ref('')
 const projectInfoDialogRef = ref<InstanceType<typeof ProjectInfoDialog> | null>(null)
 const clientInfoDialogRef = ref<InstanceType<typeof ClientInfoDialog> | null>(null)
+const searchQuery = ref('')
 
 const activeTab = computed({
   get: (): string => String(route.params.tab),
@@ -171,6 +171,10 @@ const mappedClientsIds = computed((): string[] => {
 })
 
 const activeCollapses = ref<string[]>(mappedClientsIds.value)
+
+onBeforeMount(() => {
+  projectsStore.searchProjectsByClients()
+})
 
 function handleClickProject (project: Project): void {
   projectsStore.setCurrentProject(project)
@@ -223,10 +227,6 @@ function handleEditClient (clientId: number, clientName: string): void {
     name: clientName
   })
 }
-
-onBeforeMount(() => {
-  projectsStore.searchProjectsByClients()
-})
 </script>
 
 <style lang="scss">
@@ -358,4 +358,4 @@ onBeforeMount(() => {
     }
   }
 }
-</style>@/views/ProjectsView/dialog/ClientInfoDialog@/views/ProjectsView/dialog/ProjectInfoDialog
+</style>

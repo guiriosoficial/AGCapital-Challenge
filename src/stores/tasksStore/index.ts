@@ -7,27 +7,27 @@ const useTasksStore = defineStore('tasksStore', () => {
   const projectTasks = ref<Task[]>([
     {
       description: 'Lavar a louça',
-      status: 'CANCELLED',
+      status: TaskStatuses.CANCELLED,
       id: 1
     },
     {
       description: 'separar o lixo e levar até a lixeira',
-      status: 'TODO',
+      status: TaskStatuses.TODO,
       id: 2
     },
     {
       description: 'fazer faxina na casa',
-      status: 'DOING',
+      status: TaskStatuses.DOING,
       id: 3
     },
     {
       description: 'Teste task 4',
-      status: 'DONE',
+      status: TaskStatuses.DONE,
       id: 4
     },
     {
       description: 'tarefa concluida',
-      status: 'DONE',
+      status: TaskStatuses.DONE,
       id: 5
     }
   ])

@@ -78,26 +78,26 @@
 </template>
 
 <script setup lang="ts">
+import { computed, ref, onBeforeMount } from 'vue'
+import { filterByTerm } from '@/utils'
+import { Plus, Delete, Search, Back } from '@element-plus/icons-vue'
+import { TaskStatuses } from '@/stores/tasksStore'
+import { useRouter, useRoute } from 'vue-router'
 import AgcCard from '@/components/atoms/AgcCard'
 import AgcIcon from '@/components/atoms/AgcIcon'
 import AgcInput from '@/components/atoms/AgcInput'
+import AgcPopoverInlineEditor from '@/components/molecles/AgcPopoverInlineEditor'
 import AgcTag from '@/components/atoms/AgcTag'
 import AgcTextInlineEditor from '@/components/molecles/AgcTextInlineEditor'
-import AgcPopoverInlineEditor from '@/components/molecles/AgcPopoverInlineEditor'
-import useTasksStore from '@/stores/tasksStore'
+import useMessageBox from '@/composables/useMessageBox'
 import useProjectsStore from '@/stores/projectsStore'
-import { TaskStatuses } from '@/stores/tasksStore'
-import { Plus, Delete, Search, Back } from '@element-plus/icons-vue'
-import { computed, ref, onBeforeMount } from 'vue'
-import  useMessageBox from '@/composables/useMessageBox'
-import { filterByTerm } from '@/utils'
-import { useRouter, useRoute } from 'vue-router'
+import useTasksStore from '@/stores/tasksStore'
 
-const tasksStore = useTasksStore()
-const projectsStore = useProjectsStore()
 const messageBox = useMessageBox()
-const router = useRouter()
+const projectsStore = useProjectsStore()
+const tasksStore = useTasksStore()
 const route = useRoute()
+const router = useRouter()
 const projectId = Number(route.params.projectId)
 
 const statusOptions = [
@@ -120,13 +120,15 @@ const statusOptions = [
 ]
 
 const searchQuery = ref('')
-
 const isCreatingTask = ref(false)
-
 const newTaskDescription = ref('')
 
 const filteredTasks = computed(() => {
   return filterByTerm(tasksStore.getProjectTasks, searchQuery.value, ['description', 'status'])
+})
+
+onBeforeMount(() => {
+  tasksStore.searchTasksByClients(projectId)
 })
 
 function getStatusTagTypes (status: TaskStatuses): 'primary' | 'success' | 'info' | 'warning' | 'danger' | undefined {
@@ -170,10 +172,6 @@ function backHome() {
     params: { tab: 'open' }
   })
 }
-
-onBeforeMount(() => {
-  tasksStore.searchTasksByClients(projectId)
-})
 </script>
 
 <style lang="scss">

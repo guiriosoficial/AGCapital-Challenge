@@ -19,11 +19,6 @@ declare module 'vue' {
     IconEcosystem: typeof import('./src/components/icons/IconEcosystem.vue')['default']
     IconSupport: typeof import('./src/components/icons/IconSupport.vue')['default']
     IconTooling: typeof import('./src/components/icons/IconTooling.vue')['default']
-    ProjCard: typeof import('./src/components/AgcCard/ProjCard.vue')['default']
-    ProjCollapse: typeof import('./src/components/ProjCollapse/ProjCollapse.vue')['default']
-    ProjCollapseItem: typeof import('./src/components/ProjCollapseItem/ProjCollapseItem.vue')['default']
-    ProjTabPane: typeof import('./src/components/AgcTabPane/ProjTabPane.vue')['default']
-    ProjTabs: typeof import('./src/components/AgcTabs/ProjTabs.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

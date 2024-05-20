@@ -68,7 +68,7 @@ import { ElInput } from 'element-plus'
 import type { PropType, Component, CSSProperties } from 'vue'
 
 defineOptions({
-  name: 'ProjInput',
+  name: 'AgcInput',
   inheritAttrs: false
 })
 

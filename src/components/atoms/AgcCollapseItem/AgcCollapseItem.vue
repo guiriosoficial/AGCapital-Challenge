@@ -16,7 +16,7 @@
 import { ElCollapseItem } from 'element-plus'
 
 defineOptions({
-  name: 'ProjCollapseItem',
+  name: 'AgcCollapseItem',
   inheritAttrs: false
 })
 

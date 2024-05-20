@@ -1,8 +1,18 @@
 <template>
-  <ElCard :shadow="shadow">
-    <slot name="default" />
+  <ElCard
+    v-bind="$attrs"
+    :header="header"
+    :footer="footer"
+    :body-class="bodyClass"
+    :body-style="bodyStyle"
+    :shadow="shadow"
+  >
     <template v-if="$slots.header" #header>
       <slot name="header" />
+    </template>
+    <slot name="default" />
+    <template v-if="$slots.footer" #footer>
+      <slot name="footer" />
     </template>
   </ElCard>
 </template>
@@ -12,11 +22,23 @@ import { ElCard } from 'element-plus'
 import type { PropType } from 'vue'
 
 defineOptions({
-  name: 'ProjCard',
+  name: 'AgcCard',
   inheritAttrs: true
 })
 
 defineProps({
+  header: {
+    type: String
+  },
+  footer: {
+    type: String
+  },
+  bodyStyle: {
+    type: Object as PropType<CSSProperties>
+  },
+  bodyClass {
+    type: String
+  },
   shadow: {
     type: String as PropType<'always' | 'hover' | 'never'>,
     default: 'always'

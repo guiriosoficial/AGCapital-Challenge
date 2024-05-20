@@ -46,7 +46,7 @@
 import { ElDialog } from 'element-plus'
 
 defineOptions({
-  name: 'ProjDialog',
+  name: 'AgcDialog',
   inheritAttrs: false
 })
 

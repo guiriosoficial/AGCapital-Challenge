@@ -16,6 +16,10 @@ const routes = [
   {
     path: '/',
     redirect: { name: 'projects', params: { tab: 'open' } }
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: { name: 'projects', params: { tab: 'open' } }
   }
 ]
 
