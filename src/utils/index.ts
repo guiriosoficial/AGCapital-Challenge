@@ -3,5 +3,5 @@ import normalizeString from './normalizeString'
 
 export {
   filterByTerm,
-  normalizeString 
+  normalizeString
 }

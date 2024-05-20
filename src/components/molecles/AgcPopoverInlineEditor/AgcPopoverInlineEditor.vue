@@ -59,11 +59,11 @@ const selectedOption = computed((): Option => {
 })
 
 function handleSelect ({ value }: Option): void {
-    if (props.modelValue !== value) {
-      emit('change', value)
-    }
+  if (props.modelValue !== value) {
+    emit('change', value)
+  }
 
-    popoverEditor.value.hide()
+  popoverEditor.value.hide()
 }
 
 interface Option {

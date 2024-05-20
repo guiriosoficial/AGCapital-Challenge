@@ -14,12 +14,12 @@
     :autofocus="autofocus"
     :native-type="nativeType"
     :auto-insert-space="autoInsertSpace"
+    :loading-icon="loadingIcon"
     :color="color"
     :dark="dark"
     :tag="tag"
     :icon="icon"
   >
-    <!-- :loading-icon="loadingIcon" -->
     <slot name="default" />
 
     <template
@@ -39,6 +39,7 @@
 
 <script setup lang="ts">
 import { ElButton } from 'element-plus'
+import { Loading } from '@element-plus/icons-vue'
 import type { PropType, Component } from 'vue'
 
 defineOptions({
@@ -84,15 +85,15 @@ defineProps({
     default: false
   },
   loadingIcon: {
-    // type: [String, Component],
-    // default: Loading
+    type: Object as PropType<Component | String>,
+    default: Loading
   },
   disabled: {
     type: Boolean,
     default: false
   },
   icon: {
-    type: [String, Object as PropType<Component>]
+    type: Object as PropType<Component | String>
   },
   autofocus: {
     type: Boolean,

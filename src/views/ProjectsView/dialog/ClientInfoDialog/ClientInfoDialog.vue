@@ -68,16 +68,16 @@ const clientInfoRules = reactive<FormRules<ClientInfoForm>>({
 })
 
 const clientInfoModel = reactive<ClientInfoForm>({
-  name: '',
+  name: ''
 })
 
 const isEditingClient = computed(() => Boolean(client.value.id))
 
-function handleCloseDialog(): void {
+function handleCloseDialog (): void {
   isDialogVisible.value = false
 }
 
-function handleCreateEditClient(): void {
+function handleCreateEditClient (): void {
   clientInfoRulesRef?.value?.instance?.validate((valid) => {
     if (valid) {
       if (isEditingClient.value) {

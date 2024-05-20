@@ -42,14 +42,14 @@
                   <AgcIcon
                     :icon="EditPen"
                     :size="16"
-                    @click.stop="handleEditClient(client.id, client.name)"
                     class="hover-icon"
+                    @click.stop="handleEditClient(client.id, client.name)"
                   />
                   <AgcIcon
                     :icon="Delete"
                     :size="16"
-                    @click.stop="handleDeleteClient(client.id, client.name)"
                     class="hover-icon hover-icon--danger"
+                    @click.stop="handleDeleteClient(client.id, client.name)"
                   />
                 </span>
               </div>
@@ -59,8 +59,8 @@
                 v-for="project in client.projects"
                 :key="project.id"
                 shadow="hover"
-                @click="handleClickProject(project)"
                 class="projects-view-container__project-card"
+                @click="handleClickProject(project)"
               >
                 <template #header>
                   <div class="projects-view-container__project-card-header">
@@ -85,10 +85,10 @@
                 {{ project.description }}
               </AgcCard>
               <AgcCard
-                @click="handleCreateProjectDialog({ id: client.id, name: client.name })"
                 class="projects-view-container__new-project-card"
                 body-class="projects-view-container__new-project-card-body"
                 shadow="hover"
+                @click="handleCreateProjectDialog({ id: client.id, name: client.name })"
               >
                 <AgcIcon
                   :icon="Plus"
@@ -326,7 +326,7 @@ function handleEditClient (clientId: number, clientName: string): void {
     .projects-view-container__collapse-clients {
       .projects-view-container__projects-list {
         grid-template-columns: repeat(3, 1fr);
-      } 
+      }
     }
   }
 }
@@ -336,7 +336,7 @@ function handleEditClient (clientId: number, clientName: string): void {
     .projects-view-container__collapse-clients {
       .projects-view-container__projects-list {
         grid-template-columns: repeat(2, 1fr);
-      } 
+      }
     }
   }
 }
@@ -354,7 +354,7 @@ function handleEditClient (clientId: number, clientName: string): void {
       .projects-view-container__projects-list {
         grid-template-columns: 1fr;
         gap: 16px;
-      } 
+      }
     }
   }
 }

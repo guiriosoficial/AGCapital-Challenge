@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 import { ElCard } from 'element-plus'
-import type { PropType } from 'vue'
+import type { PropType, CSSProperties } from 'vue'
 
 defineOptions({
   name: 'AgcCard',
@@ -36,7 +36,7 @@ defineProps({
   bodyStyle: {
     type: Object as PropType<CSSProperties>
   },
-  bodyClass {
+  bodyClass: {
     type: String
   },
   shadow: {

@@ -19,7 +19,7 @@ defineOptions({
 
 defineProps({
   color: {
-    type: String,
+    type: String
   },
   size: {
     type: [String, Number],

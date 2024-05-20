@@ -24,7 +24,7 @@ const useProjectsStore = defineStore('projectsStore', () => {
           name: 'Google Search',
           description: 'Search engine for Google',
           id: 6
-        },
+        }
       ]
     },
     {
@@ -45,26 +45,26 @@ const useProjectsStore = defineStore('projectsStore', () => {
           name: 'Google Search',
           description: 'Search engine for Google',
           id: 3
-        },
+        }
       ]
     }
   ])
   const getProjectsByClients = computed((): ClientProjects[] => projectsByClients.value)
-  
+
   const getCurrentProject = computed((): Project | undefined => currentProject.value)
-  
+
   function setCurrentProject (project?: Project) {
     currentProject.value = project
   }
-  async function searchProjectsByClients() {
-    return 
+  async function searchProjectsByClients () {
+
   }
 
-  async function updateProject(projectId: number, project: EditableProject) {}
+  async function updateProject (projectId: number, project: EditableProject) {}
 
-  async function createProject(project: EditableProject) {}
+  async function createProject (project: EditableProject) {}
 
-  async function deleteProject(projectId: number) {}
+  async function deleteProject (projectId: number) {}
 
   return {
     getProjectsByClients,

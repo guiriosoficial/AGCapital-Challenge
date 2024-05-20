@@ -33,7 +33,9 @@
       </AgcFormItem>
     </AgcForm>
     <template #footer>
-      <AgcButton @click="handleCloseDialog">Cancel</AgcButton>
+      <AgcButton @click="handleCloseDialog">
+        Cancel
+      </AgcButton>
       <AgcButton
         type="primary"
         @click="handleCreateEditProject"
@@ -56,7 +58,6 @@ import type { FormRules } from 'element-plus'
 import useDialog, { type UseDialog } from '@/composables/useDialog'
 import useProjectsStore, { type Project, type EditableProject } from '@/stores/projectsStore'
 
-
 interface Props extends Project {
   client: Client
 }
@@ -68,7 +69,7 @@ const {
 } = useDialog() as UseDialog & { dialogProps: Props }
 const projectStore = useProjectsStore()
 
-type ProjectInfoForm = EditableProject 
+type ProjectInfoForm = EditableProject
 
 const projectInfoRulesRef = ref<InstanceType<typeof AgcForm>>()
 
@@ -91,20 +92,20 @@ const projectInfoRules = reactive<FormRules<ProjectInfoForm>>({
 
 const projectInfoModel = reactive<ProjectInfoForm>({
   name: '',
-  description: '',
+  description: ''
 })
 
 const isEditingProject = computed(() => Boolean(project.value.id))
 
-function handleCloseDialog() {
+function handleCloseDialog () {
   isDialogVisible.value = false
 }
 
-function handleCreateEditProject() {
+function handleCreateEditProject () {
   projectInfoRulesRef.value?.instance?.validate((valid: boolean) => {
     if (valid) {
       if (isEditingProject.value) {
-        projectStore.updateProject(project.id, projectInfoModel)      
+        projectStore.updateProject(project.id, projectInfoModel)
       } else {
         projectStore.createProject(projectInfoModel)
       }

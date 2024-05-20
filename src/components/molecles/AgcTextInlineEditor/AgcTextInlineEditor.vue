@@ -1,11 +1,14 @@
 <template>
   <div class="text-inline-editor">
-    <span v-if="!isEditing" class="text-inline-editor__inner">
+    <span
+      v-if="!isEditing"
+      class="text-inline-editor__inner"
+    >
       {{ modelValue }}
       <AgcIcon
         :icon="EditPen"
-        @click="startEdit"
         class="hover-icon text-inline-editor__inner-actions"
+        @click="startEdit"
       />
     </span>
 
@@ -19,7 +22,7 @@
         v-model="editingModelValue"
         class="text-inline-editor__input-inner"
         @blur="cancelEdit"
-      />
+      >
       <span class="text-inline-editor__input-inner-actions">
         <AgcIcon
           :icon="Check"
@@ -92,7 +95,7 @@ function handleKeys (event: KeyboardEvent): void {
   const { key, isTrusted } = event
 
   if (!isTrusted) {
-    return
+
   } else if (key === KeyCodes.ENTER) {
     confirmEdit()
   } else if (key === KeyCodes.ESCAPE) {

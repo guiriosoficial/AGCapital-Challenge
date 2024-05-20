@@ -9,11 +9,11 @@
         {{ projectsStore.getCurrentProject?.name }} Tasks
       </div>
       <AgcInput
-          v-model="searchQuery"
-          :prefix-icon="Search"
-          placeholder="Search tasks"
-          class="tasks-view-container__input-search"
-        />
+        v-model="searchQuery"
+        :prefix-icon="Search"
+        placeholder="Search tasks"
+        class="tasks-view-container__input-search"
+      />
     </header>
     <AgcCard
       v-for="task in filteredTasks"
@@ -28,8 +28,8 @@
         @change="handleEditTaskDescriptions(task.id, $event)"
       />
       <AgcPopoverInlineEditor
-        :options="statusOptions"
         v-model="task.status"
+        :options="statusOptions"
         @change="handleEditTaskStatus(task.id, $event)"
       >
         <template #reference>
@@ -69,9 +69,9 @@
       <AgcTextInlineEditor
         v-model="newTaskDescription"
         class="tasks-view-container__task-card-description"
+        start-editing
         @change="handleCreateTask($event)"
         @blur="isCreatingTask = false"
-        start-editing
       />
     </AgcCard>
   </section>
@@ -81,7 +81,7 @@
 import { computed, ref, onBeforeMount } from 'vue'
 import { filterByTerm } from '@/utils'
 import { Plus, Delete, Search, Back } from '@element-plus/icons-vue'
-import { TaskStatuses } from '@/stores/tasksStore'
+import useTasksStore, { TaskStatuses } from '@/stores/tasksStore'
 import { useRouter, useRoute } from 'vue-router'
 import AgcCard from '@/components/atoms/AgcCard'
 import AgcIcon from '@/components/atoms/AgcIcon'
@@ -91,7 +91,6 @@ import AgcTag from '@/components/atoms/AgcTag'
 import AgcTextInlineEditor from '@/components/molecles/AgcTextInlineEditor'
 import useMessageBox from '@/composables/useMessageBox'
 import useProjectsStore from '@/stores/projectsStore'
-import useTasksStore from '@/stores/tasksStore'
 
 const messageBox = useMessageBox()
 const projectsStore = useProjectsStore()
@@ -144,29 +143,29 @@ function getStatusTagTypes (status: TaskStatuses): 'primary' | 'success' | 'info
   }
 }
 
-function handleCreateTask(taskDescription: string): void {
+function handleCreateTask (taskDescription: string): void {
   tasksStore.createTask(projectId, taskDescription)
 }
 
-function handleEditTaskDescriptions(taskId: number, taskDescription: string): void {
+function handleEditTaskDescriptions (taskId: number, taskDescription: string): void {
   tasksStore.updateTaskDescriptions(taskId, taskDescription)
 }
 
-function handleEditTaskStatus(taskId: number, taskStatus: TaskStatuses): void {
+function handleEditTaskStatus (taskId: number, taskStatus: TaskStatuses): void {
   tasksStore.updateTaskStatus(taskId, taskStatus)
 }
 
-function handleDeleteTask(taskId: number) {
+function handleDeleteTask (taskId: number) {
   messageBox.confirm(
     'Caution!',
-    `Are you sure you want to delete this task?`,
+    'Are you sure you want to delete this task?',
     { confirmButtonText: 'Delete' }
   ).then(() => {
     console.log('DELETADO', taskId)
   })
 }
 
-function backHome() {
+function backHome () {
   router.push({
     name: 'projects',
     params: { tab: 'open' }

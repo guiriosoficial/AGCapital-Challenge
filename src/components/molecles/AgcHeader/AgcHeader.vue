@@ -13,13 +13,13 @@ import { ProjectStatuses } from '@/stores/projectsStore'
 
 const router = useRouter()
 
-function goHome() {
+function goHome () {
   router.push({
-      name: 'projects',
-      params: {
-        tab: ProjectStatuses.OPEN
-      }
-    })
+    name: 'projects',
+    params: {
+      tab: ProjectStatuses.OPEN
+    }
+  })
 }
 </script>
 
