@@ -34,11 +34,32 @@ const useTasksStore = defineStore('tasksStore', () => {
 
   const getProjectTasks = computed((): Task[] => projectTasks.value)
 
+  async function searchTasksByClients (projectId: number) {}
+
+  async function createTask (projectId: number, taskDescription: string) {}
+
+  async function updateTaskDescriptions (taskId: number, taskDescription: string) {}
+
+  async function updateTaskStatus (taskId: number, taskStatus: TaskStatuses) {}
+
+  async function deleteTask (taskId: number) {}
+
   return {
-    getProjectTasks
+    getProjectTasks,
+    searchTasksByClients,
+    createTask,
+    updateTaskDescriptions,
+    updateTaskStatus,
+    deleteTask
   }
 })
 
-export type { Task }
-export { TaskStatuses }
 export default useTasksStore
+
+export type {
+  Task
+}
+
+export {
+  TaskStatuses
+}

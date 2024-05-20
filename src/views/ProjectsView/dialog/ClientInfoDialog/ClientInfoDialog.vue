@@ -41,14 +41,15 @@ import AgcFormItem from '@/components/atoms/AgcFormItem'
 import AgcInput from '@/components/atoms/AgcInput'
 import AgcButton from '@/components/atoms/AgcButton'
 import useDialog, { type UseDialog } from '@/composables/useDialog'
-import type { Client } from '@/stores/projectsStore'
-import type { FormRules, FormInstance } from 'element-plus'
+import useClientStore, { type Client } from '@/stores/clientsStore'
+import type { FormRules } from 'element-plus'
 
 const {
   dialogProps: client,
   isDialogVisible,
   handleToggleDialog
 } = useDialog() as UseDialog & { dialogProps: Client }
+const clientStore = useClientStore()
 
 interface ClientInfoForm {
   name: string
@@ -78,9 +79,9 @@ function handleCreateEditClient(): void {
   clientInfoRulesRef?.value?.instance?.validate((valid) => {
     if (valid) {
       if (isEditingClient.value) {
-        // edit client
+        clientStore.updateClient(client.id, clientInfoModel.name)
       } else {
-        // create client
+        clientStore.createClient(clientInfoModel.name)
       }
       handleCloseDialog()
     }

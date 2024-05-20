@@ -45,9 +45,9 @@ function useMessageBox (): UseMessageBox {
 export default useMessageBox
 
 interface UseMessageBox {
-  alert: (options: MessageBoxOptions) => MessageBoxHandle
-  confirm: (options: MessageBoxOptions) => MessageBoxHandle
-  prompt: (options: MessageBoxOptions) => MessageBoxHandle
+  alert: (title: string, message: string, options: MessageBoxOptions) => MessageBoxHandle
+  confirm: (title: string, message: string, options: MessageBoxOptions) => MessageBoxHandle
+  prompt: (title: string, message: string, options: MessageBoxOptions) => MessageBoxHandle
 }
 
 export type { UseMessageBox }

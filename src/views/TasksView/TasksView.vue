@@ -6,7 +6,7 @@
         @click="backHome()"
       >
         <AgcIcon :icon="Back" />
-        Tasks
+        {{ projectsStore.getCurrentProject?.name }} Tasks
       </div>
       <AgcInput
           v-model="searchQuery"
@@ -25,11 +25,12 @@
       <AgcTextInlineEditor
         v-model="task.description"
         class="tasks-view-container__task-card-description"
-        @change="handleEditTask(task.id, $event)"
+        @change="handleEditTaskDescriptions(task.id, $event)"
       />
       <AgcPopoverInlineEditor
         :options="statusOptions"
         v-model="task.status"
+        @change="handleEditTaskStatus(task.id, $event)"
       >
         <template #reference>
           <AgcTag
@@ -84,16 +85,20 @@ import AgcTag from '@/components/atoms/AgcTag'
 import AgcTextInlineEditor from '@/components/molecles/AgcTextInlineEditor'
 import AgcPopoverInlineEditor from '@/components/molecles/AgcPopoverInlineEditor'
 import useTasksStore from '@/stores/tasksStore'
+import useProjectsStore from '@/stores/projectsStore'
 import { TaskStatuses } from '@/stores/tasksStore'
 import { Plus, Delete, Search, Back } from '@element-plus/icons-vue'
-import { computed, ref } from 'vue'
+import { computed, ref, onBeforeMount } from 'vue'
 import  useMessageBox from '@/composables/useMessageBox'
 import { filterByTerm } from '@/utils'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 const tasksStore = useTasksStore()
+const projectsStore = useProjectsStore()
 const messageBox = useMessageBox()
 const router = useRouter()
+const route = useRoute()
+const projectId = Number(route.params.projectId)
 
 const statusOptions = [
   {
@@ -137,12 +142,16 @@ function getStatusTagTypes (status: TaskStatuses): 'primary' | 'success' | 'info
   }
 }
 
-function handleCreateTask(taskDescription: string ): void {
-
+function handleCreateTask(taskDescription: string): void {
+  tasksStore.createTask(projectId, taskDescription)
 }
 
-function handleEditTask(taskId: number, taskDescription: string): void {
-  
+function handleEditTaskDescriptions(taskId: number, taskDescription: string): void {
+  tasksStore.updateTaskDescriptions(taskId, taskDescription)
+}
+
+function handleEditTaskStatus(taskId: number, taskStatus: TaskStatuses): void {
+  tasksStore.updateTaskStatus(taskId, taskStatus)
 }
 
 function handleDeleteTask(taskId: number) {
@@ -161,6 +170,10 @@ function backHome() {
     params: { tab: 'open' }
   })
 }
+
+onBeforeMount(() => {
+  tasksStore.searchTasksByClients(projectId)
+})
 </script>
 
 <style lang="scss">
@@ -216,7 +229,8 @@ function backHome() {
       .tasks-view-container__task-status-tag {
         width: 120px;
         margin-right: 32px;
-        cursor: pointer
+        font-weight: 500;
+        cursor: pointer;
       }
     }
     .tasks-view-container__task-card-actions {

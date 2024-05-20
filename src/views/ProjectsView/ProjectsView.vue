@@ -38,12 +38,20 @@
             <template #title>
               <div class="projects-view-container__collapse-header">
                 {{ client.name }}
-                <AgcIcon
-                  :icon="EditPen"
-                  :size="16"
-                  @click.stop="handleEditClient(client.id, client.name)"
-                  class="projects-view-container__collapse-header-actions hover-icon"
-                />
+                <span class="projects-view-container__collapse-header-actions">
+                  <AgcIcon
+                    :icon="EditPen"
+                    :size="16"
+                    @click.stop="handleEditClient(client.id, client.name)"
+                    class="hover-icon"
+                  />
+                  <AgcIcon
+                    :icon="Delete"
+                    :size="16"
+                    @click.stop="handleDeleteClient(client.id, client.name)"
+                    class="hover-icon hover-icon--danger"
+                  />
+                </span>
               </div>
             </template>
             <div class="projects-view-container__projects-list">
@@ -51,7 +59,7 @@
                 v-for="project in client.projects"
                 :key="project.id"
                 shadow="hover"
-                @click="handleClickProject(project.id)"
+                @click="handleClickProject(project)"
                 class="projects-view-container__project-card"
               >
                 <template #header>
@@ -110,11 +118,11 @@ import AgcCard from '@/components/atoms/AgcCard'
 import AgcButton from '@/components/atoms/AgcButton'
 import AgcIcon from '@/components/atoms/AgcIcon'
 import AgcInput from '@/components/atoms/AgcInput'
-import ProjectInfoDialog from '@/components/molecles/ProjectInfoDialog'
-import ClientInfoDialog from '@/components/molecles/ClientInfoDialog'
-import useProjectsStore, { type ClientProjects, type Client, type Project } from '@/stores/projectsStore'
-import { ProjectStatuses } from '@/stores/projectsStore'
-import { computed, ref } from 'vue'
+import ProjectInfoDialog from './dialog/ProjectInfoDialog'
+import ClientInfoDialog from './dialog/ClientInfoDialog'
+import useProjectsStore, { type ClientProjects, type Project, ProjectStatuses } from '@/stores/projectsStore'
+import useClientStore, { type Client } from '@/stores/clientsStore'
+import { computed, ref, onBeforeMount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { Plus, Delete, EditPen, Search } from '@element-plus/icons-vue'
 import  useMessageBox from '@/composables/useMessageBox'
@@ -122,6 +130,7 @@ import  useMessageBox from '@/composables/useMessageBox'
 const route = useRoute()
 const router = useRouter()
 const projectsStore = useProjectsStore()
+const clientStore = useClientStore()
 const messageBox = useMessageBox()
 
 const tabs = [
@@ -163,11 +172,12 @@ const mappedClientsIds = computed((): string[] => {
 
 const activeCollapses = ref<string[]>(mappedClientsIds.value)
 
-function handleClickProject (projectId: number): void {
+function handleClickProject (project: Project): void {
+  projectsStore.setCurrentProject(project)
   router.push({
     name: 'project-tasks',
     params: {
-      project: projectId
+      projectId: project.id
     }
   })
 }
@@ -189,7 +199,7 @@ function handleDeleteProject (projectId: number, projectName: string): void {
     `Are you sure you want to delete this project? (${projectName})`,
     { confirmButtonText: 'Delete' }
   ).then(() => {
-    console.log('DELETADO', projectId)
+    projectsStore.deleteProject(projectId)
   })
 }
 
@@ -197,13 +207,26 @@ function handleCreateClient (): void {
   clientInfoDialogRef.value?.handleToggleDialog()
 }
 
+function handleDeleteClient (clientId: number, clientName: string): void {
+  messageBox.confirm(
+    'Caution!',
+    `Are you sure you want to delete this client? (${clientName})`,
+    { confirmButtonText: 'Delete' }
+  ).then(() => {
+    clientStore.deleteClient(clientId)
+  })
+}
+
 function handleEditClient (clientId: number, clientName: string): void {
   clientInfoDialogRef.value?.handleToggleDialog({
     id: clientId,
     name: clientName
   })
-  
 }
+
+onBeforeMount(() => {
+  projectsStore.searchProjectsByClients()
+})
 </script>
 
 <style lang="scss">
@@ -238,6 +261,8 @@ function handleEditClient (clientId: number, clientName: string): void {
         gap: 8px;
         .projects-view-container__collapse-header-actions {
           opacity: 0;
+          gap: 4px;
+          display: flex;
         }
       }
       &:hover .projects-view-container__collapse-header .projects-view-container__collapse-header-actions {
@@ -333,4 +358,4 @@ function handleEditClient (clientId: number, clientName: string): void {
     }
   }
 }
-</style>
+</style>@/views/ProjectsView/dialog/ClientInfoDialog@/views/ProjectsView/dialog/ProjectInfoDialog

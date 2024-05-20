@@ -52,7 +52,8 @@ import AgcFormItem from '@/components/atoms/AgcFormItem'
 import AgcInput from '@/components/atoms/AgcInput'
 import AgcButton from '@/components/atoms/AgcButton'
 import useDialog, { type UseDialog } from '@/composables/useDialog'
-import type { Client, Project } from '@/stores/projectsStore'
+import useProjectsStore, { type Project, type EditableProject } from '@/stores/projectsStore'
+import type { Client } from '@/stores/clientsStore'
 import type { FormRules } from 'element-plus'
 
 
@@ -65,11 +66,9 @@ const {
   isDialogVisible,
   handleToggleDialog
 } = useDialog() as UseDialog & { dialogProps: Props }
+const projectStore = useProjectsStore()
 
-interface ProjectInfoForm {
-  name: string
-  description: string
-}
+type ProjectInfoForm = EditableProject 
 
 const projectInfoRulesRef = ref<InstanceType<typeof AgcForm>>()
 
@@ -105,9 +104,9 @@ function handleCreateEditProject() {
   projectInfoRulesRef.value?.instance?.validate((valid: boolean) => {
     if (valid) {
       if (isEditingProject.value) {
-        // edit project        
+        projectStore.updateProject(project.id, projectInfoModel)      
       } else {
-        // create project
+        projectStore.createProject(projectInfoModel)
       }
       handleCloseDialog()
     }

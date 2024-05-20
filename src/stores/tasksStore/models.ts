@@ -11,5 +11,10 @@ interface Task {
   id: number
 }
 
-export type { Task }
-export { TaskStatuses }
+export type {
+  Task
+}
+
+export {
+  TaskStatuses
+}

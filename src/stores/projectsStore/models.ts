@@ -1,27 +1,29 @@
-interface Project {
-  id: number
-  name: string
-  description: string
-}
-
-interface Client {
-  id: number
-  name: string
-}
-
-interface ClientProjects extends Client {
-  projects: Project[]
-}
+import type { Client } from '../clientsStore/models'
 
 enum ProjectStatuses {
   OPEN = 'OPEN',
   CLOSED = 'DOING',
 }
 
+interface EditableProject {
+  name: string
+  description: string
+}
+
+interface Project extends EditableProject {
+  id: number
+}
+
+interface ClientProjects extends Client {
+  projects: Project[]
+}
 
 export type {
   Project,
-  Client,
-  ClientProjects,
+  EditableProject,
+  ClientProjects
 }
-export { ProjectStatuses }
+
+export {
+  ProjectStatuses
+}
