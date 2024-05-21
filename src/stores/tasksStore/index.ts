@@ -2,51 +2,43 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import type { Task } from './models'
 import { TaskStatuses } from './models'
+import * as api from './integrations'
 
 const useTasksStore = defineStore('tasksStore', () => {
-  const projectTasks = ref<Task[]>([
-    {
-      description: 'Lavar a louça',
-      status: TaskStatuses.CANCELLED,
-      id: 1
-    },
-    {
-      description: 'separar o lixo e levar até a lixeira',
-      status: TaskStatuses.TODO,
-      id: 2
-    },
-    {
-      description: 'fazer faxina na casa',
-      status: TaskStatuses.DOING,
-      id: 3
-    },
-    {
-      description: 'Teste task 4',
-      status: TaskStatuses.DONE,
-      id: 4
-    },
-    {
-      description: 'tarefa concluida',
-      status: TaskStatuses.DONE,
-      id: 5
-    }
-  ])
+  const projectTasks = ref<Task[]>([])
 
   const getProjectTasks = computed((): Task[] => projectTasks.value)
 
-  async function searchTasksByClients (projectId: number) {}
+  async function searchTasksByProject (projectId: string): Promise<void> {
+    const data = await api.searchTasksByProject(projectId)
+    projectTasks.value = data.value
+  }
 
-  async function createTask (projectId: number, taskDescription: string) {}
+  async function createTask (projectId: string, taskDescription: string): Promise<void> {
+    const body = {
+      description: taskDescription,
+      status: TaskStatuses.TODO
+    }
+    await api.createTask(projectId, body)
+  }
 
-  async function updateTaskDescriptions (taskId: number, taskDescription: string) {}
+  async function updateTaskDescriptions (taskId: string, taskDescription: string): Promise<void> {
+    const body = { description: taskDescription }
+    await api.updateTask(taskId, body)
+  }
 
-  async function updateTaskStatus (taskId: number, taskStatus: TaskStatuses) {}
+  async function updateTaskStatus (taskId: string, taskStatus: TaskStatuses): Promise<void> {
+    const body = { status: taskStatus }
+    await api.updateTask(taskId, body)
+  }
 
-  async function deleteTask (taskId: number) {}
+  async function deleteTask (taskId: string): Promise<void> {
+    await api.deleteTask(taskId)
+  }
 
   return {
     getProjectTasks,
-    searchTasksByClients,
+    searchTasksByProject,
     createTask,
     updateTaskDescriptions,
     updateTaskStatus,

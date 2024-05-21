@@ -7,7 +7,7 @@ function filterByTerm (
 ): any[] {
   const normalizedTerm: string = normalizeString(term)
 
-  return array.filter((i) => {
+  return array?.filter((i) => {
     if (keys.length > 0) {
       const keysList: string[] =
         !Array.isArray(keys)

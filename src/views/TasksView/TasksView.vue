@@ -97,7 +97,7 @@ const projectsStore = useProjectsStore()
 const tasksStore = useTasksStore()
 const route = useRoute()
 const router = useRouter()
-const projectId = Number(route.params.projectId)
+const projectId = String(route.params.projectId)
 
 const statusOptions = [
   {
@@ -127,7 +127,7 @@ const filteredTasks = computed(() => {
 })
 
 onBeforeMount(() => {
-  tasksStore.searchTasksByClients(projectId)
+  tasksStore.searchTasksByProject(projectId)
 })
 
 function getStatusTagTypes (status: TaskStatuses): 'primary' | 'success' | 'info' | 'warning' | 'danger' | undefined {
@@ -147,21 +147,21 @@ function handleCreateTask (taskDescription: string): void {
   tasksStore.createTask(projectId, taskDescription)
 }
 
-function handleEditTaskDescriptions (taskId: number, taskDescription: string): void {
+function handleEditTaskDescriptions (taskId: string, taskDescription: string): void {
   tasksStore.updateTaskDescriptions(taskId, taskDescription)
 }
 
-function handleEditTaskStatus (taskId: number, taskStatus: TaskStatuses): void {
+function handleEditTaskStatus (taskId: string, taskStatus: TaskStatuses): void {
   tasksStore.updateTaskStatus(taskId, taskStatus)
 }
 
-function handleDeleteTask (taskId: number) {
+function handleDeleteTask (taskId: string) {
   messageBox.confirm(
     'Caution!',
     'Are you sure you want to delete this task?',
     { confirmButtonText: 'Delete' }
   ).then(() => {
-    console.log('DELETADO', taskId)
+    tasksStore.deleteTask(taskId)
   })
 }
 

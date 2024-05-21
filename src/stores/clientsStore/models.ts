@@ -1,8 +1,12 @@
-interface Client {
-  id: number
+interface Client extends NewClient{
+  id: string
+}
+
+interface NewClient {
   name: string
 }
 
 export type {
-  Client
+  Client,
+  NewClient
 }

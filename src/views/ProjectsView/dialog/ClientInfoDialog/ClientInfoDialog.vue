@@ -81,9 +81,9 @@ function handleCreateEditClient (): void {
   clientInfoRulesRef?.value?.instance?.validate((valid) => {
     if (valid) {
       if (isEditingClient.value) {
-        clientStore.updateClient(client.id, clientInfoModel.name)
+        clientStore.updateClient(client.value.id, clientInfoModel)
       } else {
-        clientStore.createClient(clientInfoModel.name)
+        clientStore.createClient(clientInfoModel)
       }
       handleCloseDialog()
     }

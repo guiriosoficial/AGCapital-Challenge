@@ -21,13 +21,13 @@
         ref="textInput"
         v-model="editingModelValue"
         class="text-inline-editor__input-inner"
-        @blur="cancelEdit"
+        @blur.self="cancelEdit"
       >
       <span class="text-inline-editor__input-inner-actions">
         <AgcIcon
           :icon="Check"
           class="hover-icon"
-          @click="confirmEdit"
+          @click.stop="confirmEdit"
         />
         <AgcIcon
           :icon="Close"
@@ -86,16 +86,18 @@ function confirmEdit (): void {
 }
 
 function cancelEdit (): void {
-  editingModelValue.value = ''
-  isEditing.value = false
-  emit('blur')
+  setTimeout(() => {
+    editingModelValue.value = ''
+    isEditing.value = false
+    emit('blur')
+  }, 200)
 }
 
 function handleKeys (event: KeyboardEvent): void {
   const { key, isTrusted } = event
 
   if (!isTrusted) {
-
+    console.error('key is not trusted')
   } else if (key === KeyCodes.ENTER) {
     confirmEdit()
   } else if (key === KeyCodes.ESCAPE) {

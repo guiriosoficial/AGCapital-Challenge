@@ -2,7 +2,7 @@ import type { Client } from '../clientsStore/models'
 
 enum ProjectStatuses {
   OPEN = 'OPEN',
-  CLOSED = 'DOING',
+  CLOSED = 'CLOSED',
 }
 
 interface EditableProject {
@@ -11,7 +11,7 @@ interface EditableProject {
 }
 
 interface Project extends EditableProject {
-  id: number
+  id: string
 }
 
 interface ClientProjects extends Client {

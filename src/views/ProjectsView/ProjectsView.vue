@@ -2,10 +2,11 @@
   <article class="projects-view-container">
     <div class="projects-view-container__tabs-actions">
       <AgcInput
-        v-model="searchQuery"
+        v-model="searchTerm"
         :prefix-icon="Search"
         placeholder="Search projects os clients"
         class="projects-view-container__input-search"
+        @input="handleSearchTerm"
       />
       <AgcButton
         type="primary"
@@ -18,6 +19,7 @@
     </div>
     <AgcTabs
       v-model="activeTab"
+      @tab-change="handleChangeTab"
     >
       <AgcTabPane
         v-for="tab in tabs"
@@ -85,6 +87,7 @@
                 {{ project.description }}
               </AgcCard>
               <AgcCard
+                v-if="activeTab.toUpperCase() === ProjectStatuses.OPEN"
                 class="projects-view-container__new-project-card"
                 body-class="projects-view-container__new-project-card-body"
                 shadow="hover"
@@ -95,12 +98,19 @@
                   :size="40"
                 />
                 <span>
-                  Novo projeto
+                  New Project
                 </span>
               </AgcCard>
             </div>
           </AgcCollapseItem>
         </AgcCollapse>
+        <div
+          v-if="projects.length === 0"
+          class="projects-view-container__empty-state"
+        >
+          <AgcIcon :icon="FolderDelete" :size="48" />
+          No data to show
+        </div>
       </AgcTabPane>
     </AgcTabs>
   </article>
@@ -111,7 +121,8 @@
 
 <script setup lang="ts">
 import { computed, ref, onBeforeMount } from 'vue'
-import { Plus, Delete, EditPen, Search } from '@element-plus/icons-vue'
+import { Plus, Delete, EditPen, Search, FolderDelete } from '@element-plus/icons-vue'
+import { useDebounceFn } from '@vueuse/core'
 import { useRoute, useRouter } from 'vue-router'
 import AgcButton from '@/components/atoms/AgcButton'
 import AgcCard from '@/components/atoms/AgcCard'
@@ -146,7 +157,7 @@ const tabs = [
 
 const projectInfoDialogRef = ref<InstanceType<typeof ProjectInfoDialog> | null>(null)
 const clientInfoDialogRef = ref<InstanceType<typeof ClientInfoDialog> | null>(null)
-const searchQuery = ref('')
+const searchTerm = ref<string>('')
 
 const activeTab = computed({
   get: (): string => String(route.params.tab),
@@ -170,11 +181,28 @@ const mappedClientsIds = computed((): string[] => {
     .map((client: ClientProjects) => String(client.id))
 })
 
-const activeCollapses = ref<string[]>(mappedClientsIds.value)
+const activeCollapses = ref<string[]>([])
 
 onBeforeMount(() => {
-  projectsStore.searchProjectsByClients()
+  handleUpdateData(activeTab.value, searchTerm.value)
 })
+
+function handleUpdateData (status: string, searchTerm?: string): void {
+  projectsStore.searchProjectsByClients(
+    status.toUpperCase() as ProjectStatuses,
+    searchTerm
+  ).then(() => {
+    activeCollapses.value = mappedClientsIds.value
+  })
+}
+
+function handleChangeTab (event: string): void {
+  handleUpdateData(event, searchTerm.value)
+}
+
+const handleSearchTerm = useDebounceFn((event: string) => {
+  handleUpdateData(activeTab.value, event)
+}, 800) 
 
 function handleClickProject (project: Project): void {
   projectsStore.setCurrentProject(project)
@@ -197,7 +225,7 @@ function handleEditProject (project: Project, client: Client): void {
   })
 }
 
-function handleDeleteProject (projectId: number, projectName: string): void {
+function handleDeleteProject (projectId: string, projectName: string): void {
   messageBox.confirm(
     'Caution!',
     `Are you sure you want to delete this project? (${projectName})`,
@@ -211,7 +239,7 @@ function handleCreateClient (): void {
   clientInfoDialogRef.value?.handleToggleDialog()
 }
 
-function handleDeleteClient (clientId: number, clientName: string): void {
+function handleDeleteClient (clientId: string, clientName: string): void {
   messageBox.confirm(
     'Caution!',
     `Are you sure you want to delete this client? (${clientName})`,
@@ -221,7 +249,7 @@ function handleDeleteClient (clientId: number, clientName: string): void {
   })
 }
 
-function handleEditClient (clientId: number, clientName: string): void {
+function handleEditClient (clientId: string, clientName: string): void {
   clientInfoDialogRef.value?.handleToggleDialog({
     id: clientId,
     name: clientName
@@ -318,6 +346,13 @@ function handleEditClient (clientId: number, clientName: string): void {
         }
       }
     }
+  }
+  .projects-view-container__empty-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 12px
   }
 }
 

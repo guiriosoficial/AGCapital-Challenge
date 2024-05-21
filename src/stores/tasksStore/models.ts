@@ -5,14 +5,18 @@ enum TaskStatuses {
   CANCELLED = 'CANCELLED'
 }
 
-interface Task {
-  description: string
-  status: TaskStatuses
-  id: number
+interface NewTask {
+  description?: string
+  status?: TaskStatuses
+}
+
+interface Task extends NewTask {
+  id: string
 }
 
 export type {
-  Task
+  Task,
+  NewTask
 }
 
 export {

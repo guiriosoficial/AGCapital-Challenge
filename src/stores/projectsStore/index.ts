@@ -2,53 +2,11 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import type { ClientProjects, Project, EditableProject } from './models'
 import { ProjectStatuses } from './models'
+import * as api from './integrations'
 
 const useProjectsStore = defineStore('projectsStore', () => {
   const currentProject = ref<Project | undefined>()
-  const projectsByClients = ref<ClientProjects[]>([
-    {
-      name: 'Google',
-      id: 1,
-      projects: [
-        {
-          name: 'Google Search',
-          description: 'Search engine for Google',
-          id: 4
-        },
-        {
-          name: 'Google Search',
-          description: 'Search engine for Google',
-          id: 5
-        },
-        {
-          name: 'Google Search',
-          description: 'Search engine for Google',
-          id: 6
-        }
-      ]
-    },
-    {
-      name: 'Softplan',
-      id: 2,
-      projects: [
-        {
-          name: 'Google Search',
-          description: 'Search engine for Google',
-          id: 1
-        },
-        {
-          name: 'Google Search',
-          description: 'Search engine for Google',
-          id: 2
-        },
-        {
-          name: 'Google Search',
-          description: 'Search engine for Google',
-          id: 3
-        }
-      ]
-    }
-  ])
+  const projectsByClients = ref<ClientProjects[]>([])
   const getProjectsByClients = computed((): ClientProjects[] => projectsByClients.value)
 
   const getCurrentProject = computed((): Project | undefined => currentProject.value)
@@ -56,15 +14,24 @@ const useProjectsStore = defineStore('projectsStore', () => {
   function setCurrentProject (project?: Project) {
     currentProject.value = project
   }
-  async function searchProjectsByClients () {
 
+  async function searchProjectsByClients (activeTab: ProjectStatuses, searchTerm?: string): Promise<void> {
+    const query = { status: activeTab, searchTerm: searchTerm }
+    const data = await api.searchProjectsByClients(query)
+    projectsByClients.value = data.value
   }
 
-  async function updateProject (projectId: number, project: EditableProject) {}
+  async function updateProject (projectId: string, body: EditableProject): Promise<void> {
+    await api.updateProject(projectId, { ...body })
+  }
 
-  async function createProject (project: EditableProject) {}
+  async function createProject (clientId: string, body: EditableProject): Promise<void> {
+    await api.createProject(clientId, { ...body })
+  }
 
-  async function deleteProject (projectId: number) {}
+  async function deleteProject (projectId: string): Promise<void> {
+    await api.deleteProject(projectId)
+  }
 
   return {
     getProjectsByClients,

@@ -105,9 +105,10 @@ function handleCreateEditProject () {
   projectInfoRulesRef.value?.instance?.validate((valid: boolean) => {
     if (valid) {
       if (isEditingProject.value) {
-        projectStore.updateProject(project.id, projectInfoModel)
+        projectStore.updateProject(project.value.id, projectInfoModel)
       } else {
-        projectStore.createProject(projectInfoModel)
+        console.log(project)
+        projectStore.createProject(project.value.client.id, projectInfoModel)
       }
       handleCloseDialog()
     }

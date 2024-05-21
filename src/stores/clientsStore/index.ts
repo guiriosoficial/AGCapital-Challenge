@@ -1,12 +1,19 @@
 import { defineStore } from 'pinia'
-import type { Client } from './models'
+import type { Client, NewClient } from './models'
+import * as api from './integrations'
 
 const useClientsStore = defineStore('ClientsStore', () => {
-  async function updateClient (clientId: number, clientName: string) {}
+  async function createClient (client: NewClient): Promise<void> {
+    await api.createClient({ ...client })
+  }
+  
+  async function updateClient (clientId: string, client: NewClient): Promise<void> {
+    await api.updateClient(clientId, { ...client })
+  }
 
-  async function createClient (clientName: string) {}
-
-  async function deleteClient (clientId: number) {}
+  async function deleteClient (clientId: string): Promise<void> {
+    await api.deleteClient(clientId)
+  }
 
   return {
     updateClient,
