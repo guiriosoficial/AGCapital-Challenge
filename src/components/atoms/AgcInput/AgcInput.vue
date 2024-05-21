@@ -1,5 +1,6 @@
 <template>
   <ElInput
+    ref="instance"
     v-bind="$attrs"
     v-model="modelValue"
     :type="type"
@@ -66,11 +67,14 @@
 <script setup lang="ts">
 import { ElInput } from 'element-plus'
 import type { PropType, Component, CSSProperties } from 'vue'
+import { ref } from 'vue'
 
 defineOptions({
   name: 'AgcInput',
   inheritAttrs: false
 })
+
+const instance = ref()
 
 const modelValue = defineModel<string, number>('modelValue', {
   required: true

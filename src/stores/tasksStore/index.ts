@@ -19,21 +19,27 @@ const useTasksStore = defineStore('tasksStore', () => {
       description: taskDescription,
       status: TaskStatuses.TODO
     }
-    await api.createTask(projectId, body)
+    const data = await api.createTask(projectId, body)
+    projectTasks.value.push(data.value)
   }
 
   async function updateTaskDescriptions (taskId: string, taskDescription: string): Promise<void> {
     const body = { description: taskDescription }
-    await api.updateTask(taskId, body)
+    const data = await api.updateTask(taskId, body)
+    const taskIndex = projectTasks.value.findIndex((task) => task.id === taskId)
+    projectTasks.value[taskIndex] = data.value
   }
 
   async function updateTaskStatus (taskId: string, taskStatus: TaskStatuses): Promise<void> {
     const body = { status: taskStatus }
-    await api.updateTask(taskId, body)
+    const data = await api.updateTask(taskId, body)
+    const taskIndex = projectTasks.value.findIndex((task) => task.id === taskId)
+    projectTasks.value[taskIndex] = data.value
   }
 
   async function deleteTask (taskId: string): Promise<void> {
     await api.deleteTask(taskId)
+    projectTasks.value = projectTasks.value.filter((task) => task.id !== taskId)
   }
 
   return {

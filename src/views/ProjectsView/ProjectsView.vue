@@ -120,7 +120,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onBeforeMount } from 'vue'
+import { computed, ref, onBeforeMount, watch } from 'vue'
 import { Plus, Delete, EditPen, Search, FolderDelete } from '@element-plus/icons-vue'
 import { useDebounceFn } from '@vueuse/core'
 import { useRoute, useRouter } from 'vue-router'
@@ -185,6 +185,10 @@ const activeCollapses = ref<string[]>([])
 
 onBeforeMount(() => {
   handleUpdateData(activeTab.value, searchTerm.value)
+})
+
+watch(mappedClientsIds, (): void => {
+  activeCollapses.value = mappedClientsIds.value
 })
 
 function handleUpdateData (status: string, searchTerm?: string): void {

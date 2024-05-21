@@ -73,6 +73,8 @@ type ProjectInfoForm = EditableProject
 
 const projectInfoRulesRef = ref<InstanceType<typeof AgcForm>>()
 
+const projectNameInputRef = ref(null)
+
 const projectInfoRules = reactive<FormRules<ProjectInfoForm>>({
   name: [
     {
@@ -107,7 +109,6 @@ function handleCreateEditProject () {
       if (isEditingProject.value) {
         projectStore.updateProject(project.value.id, projectInfoModel)
       } else {
-        console.log(project)
         projectStore.createProject(project.value.client.id, projectInfoModel)
       }
       handleCloseDialog()
