@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import type { ClientProjects, Project, EditableProject } from './models'
+import type { ClientProjects, Project, EditableProject, NewProject } from './models'
 import { ProjectStatuses } from './models'
 import * as api from './integrations'
 
@@ -25,11 +25,17 @@ const useProjectsStore = defineStore('projectsStore', () => {
     projectsByClients.value = data.value
   }
 
-  async function updateProject (projectId: string, body: EditableProject): Promise<void> {
-    const data = await api.updateProject(projectId, { ...body })
+  async function editProject (projectId: string, body: EditableProject): Promise<void> {
+    const data = await api.editProject(projectId, { ...body })
     const clientIndex = findClientProject(projectId)
     const projectIndex = projectsByClients.value[clientIndex].projects.findIndex((project) => project.id === projectId)
     projectsByClients.value[clientIndex].projects[projectIndex] = data.value
+  }
+
+  async function editProjectStatus (projectId: string, body: EditableProject): Promise<void> {
+    await api.editProject(projectId, { ...body })
+    const clientIndex = findClientProject(projectId)
+    projectsByClients.value[clientIndex].projects = projectsByClients.value[clientIndex].projects.filter((project) => project.id !== projectId)
   }
 
   async function createProject (clientId: string, body: EditableProject): Promise<void> {
@@ -54,7 +60,8 @@ const useProjectsStore = defineStore('projectsStore', () => {
     setCurrentProject,
     setProjectsByClients,
     searchProjectsByClients,
-    updateProject,
+    editProjectStatus,
+    editProject,
     createProject,
     deleteProject
   }
@@ -65,6 +72,7 @@ export default useProjectsStore
 export type {
   ClientProjects,
   EditableProject,
+  NewProject,
   Project
 }
 

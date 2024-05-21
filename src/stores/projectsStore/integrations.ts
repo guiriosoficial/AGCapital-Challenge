@@ -1,5 +1,6 @@
 import { fetch, buildQuery } from '@/utils'
 import type { EditableProject, ClientProjects, Project } from './models'
+import { ProjectStatuses } from './models'
 import type { Ref } from 'vue'
 
 const projectsPath = '/projects'
@@ -9,8 +10,8 @@ async function searchProjectsByClients (query: Record<string, any>): Promise<Ref
   return response.data
 }
 
-async function updateProject (projectId: string, body: EditableProject): Promise<Ref<Project>> {
-  const response = await fetch(`${projectsPath}/${projectId}`).post(body).json()
+async function editProject (projectId: string, body: EditableProject): Promise<Ref<Project>> {
+  const response = await fetch(`${projectsPath}/${projectId}`).patch(body).json()
   return response.data
 }
 
@@ -25,7 +26,7 @@ async function deleteProject (projectId: string): Promise<void> {
 
 export {
   searchProjectsByClients,
-  updateProject,
+  editProject,
   createProject,
   deleteProject
 }

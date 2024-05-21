@@ -28,6 +28,7 @@
       >
         <AgcInput
           v-model="projectInfoModel.description"
+          type="textarea"
           class="full-width"
         />
       </AgcFormItem>
@@ -56,7 +57,7 @@ import AgcInput from '@/components/atoms/AgcInput'
 import type { Client } from '@/stores/clientsStore'
 import type { FormRules } from 'element-plus'
 import useDialog, { type UseDialog } from '@/composables/useDialog'
-import useProjectsStore, { type Project, type EditableProject } from '@/stores/projectsStore'
+import useProjectsStore, { type Project, type NewProject, ProjectStatuses } from '@/stores/projectsStore'
 
 interface Props extends Project {
   client: Client
@@ -69,11 +70,9 @@ const {
 } = useDialog() as UseDialog & { dialogProps: Props }
 const projectStore = useProjectsStore()
 
-type ProjectInfoForm = EditableProject
+type ProjectInfoForm = NewProject
 
 const projectInfoRulesRef = ref<InstanceType<typeof AgcForm>>()
-
-const projectNameInputRef = ref(null)
 
 const projectInfoRules = reactive<FormRules<ProjectInfoForm>>({
   name: [
@@ -94,7 +93,8 @@ const projectInfoRules = reactive<FormRules<ProjectInfoForm>>({
 
 const projectInfoModel = reactive<ProjectInfoForm>({
   name: '',
-  description: ''
+  description: '',
+  status: ProjectStatuses.OPEN
 })
 
 const isEditingProject = computed(() => Boolean(project.value.id))
@@ -107,7 +107,7 @@ function handleCreateEditProject () {
   projectInfoRulesRef.value?.instance?.validate((valid: boolean) => {
     if (valid) {
       if (isEditingProject.value) {
-        projectStore.updateProject(project.value.id, projectInfoModel)
+        projectStore.editProject(project.value.id, projectInfoModel)
       } else {
         projectStore.createProject(project.value.client.id, projectInfoModel)
       }

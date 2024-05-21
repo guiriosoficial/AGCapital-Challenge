@@ -6,11 +6,18 @@ enum ProjectStatuses {
 }
 
 interface EditableProject {
-  name: string
-  description: string
+  name?: string
+  description?: string
+  status?: ProjectStatuses
 }
 
-interface Project extends EditableProject {
+interface NewProject {
+  name: string
+  description: string
+  status: ProjectStatuses
+}
+
+interface Project extends NewProject {
   id: string
 }
 
@@ -21,6 +28,7 @@ interface ClientProjects extends Client {
 export type {
   Project,
   EditableProject,
+  NewProject,
   ClientProjects
 }
 

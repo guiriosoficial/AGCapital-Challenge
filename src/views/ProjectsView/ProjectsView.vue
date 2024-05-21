@@ -72,7 +72,7 @@
                         :icon="EditPen"
                         class="hover-icon"
                         @click.stop="handleEditProject(
-                          { id: project.id, name: project.name, description: project.description },
+                          project,
                           { id: client.id, name: client.name }
                         )"
                       />
@@ -85,6 +85,14 @@
                   </div>
                 </template>
                 {{ project.description }}
+                <AgcButton
+                  link
+                  type="primary"
+                  class="projects-view-container__project-card-link-action"
+                  @click.stop="handleMoveProject(project.id, project.status)"
+                >
+                  {{ project.status === ProjectStatuses.OPEN ? 'Close' : 'Reopen' }}
+                </AgcButton>
               </AgcCard>
               <AgcCard
                 v-if="activeTab.toUpperCase() === ProjectStatuses.OPEN"
@@ -165,7 +173,7 @@ const activeTab = computed({
     router.push({
       name: 'projects',
       params: {
-        tab: value
+        tab: value.toLowerCase()
       }
     })
   }
@@ -227,6 +235,11 @@ function handleEditProject (project: Project, client: Client): void {
     ...project,
     client
   })
+}
+
+function handleMoveProject (projectId: string, status: ProjectStatuses): void {
+  const newStatus = status === ProjectStatuses.OPEN ? ProjectStatuses.CLOSED : ProjectStatuses.OPEN
+  projectsStore.editProjectStatus(projectId, { status: newStatus })
 }
 
 function handleDeleteProject (projectId: string, projectName: string): void {
@@ -331,6 +344,11 @@ function handleEditClient (clientId: string, clientName: string): void {
         // background-color: var(--el-bg-color-page);
         background: linear-gradient(162deg, rgba(64,158,255,0.2) 0%, rgba(64,158,255,0) 100%);
         cursor: pointer;
+        .projects-view-container__project-card-link-action {
+          float: right;
+          font-size: 16px;
+          margin: 12px -4px -4px 12px;
+        }
         .projects-view-container__project-card-header {
           display: flex;
           align-items: center;
