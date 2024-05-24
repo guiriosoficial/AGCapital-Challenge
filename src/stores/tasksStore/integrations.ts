@@ -4,8 +4,8 @@ import type { Ref } from 'vue'
 
 const tasksPath = '/tasks'
 
-async function searchTasksByProject (projectId:string): Promise<Ref<Task[]>> {
-  const response = await fetch(`${tasksPath}?${buildQuery({ projectId })}`).json()
+async function searchTasksByProject (query: {  projectId: string }): Promise<Ref<Task[]>> {
+  const response = await fetch(`${tasksPath}?${buildQuery(query)}`).json()
   return response.data
 }
 

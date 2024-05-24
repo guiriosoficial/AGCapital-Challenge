@@ -10,7 +10,8 @@ const useTasksStore = defineStore('tasksStore', () => {
   const getProjectTasks = computed((): Task[] => projectTasks.value)
 
   async function searchTasksByProject (projectId: string): Promise<void> {
-    const data = await api.searchTasksByProject(projectId)
+    const query = { projectId: projectId }
+    const data = await api.searchTasksByProject(query)
     projectTasks.value = data.value
   }
 

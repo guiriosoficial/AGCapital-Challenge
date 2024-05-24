@@ -6,7 +6,7 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _from, next) => {
   const lowerCasedPath = to.path.toLowerCase()
   if (to.path !== lowerCasedPath) {
     next(to.path.toLowerCase())
