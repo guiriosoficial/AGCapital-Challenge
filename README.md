@@ -1,4 +1,4 @@
-# AGCapital-Challenge ![Agnes](https://raw.githubusercontent.com/guiriosoficial/AGCapital-Challenge/refs/heads/main/public/agnes-logo.png) ![AGCapital](https://raw.githubusercontent.com/guiriosoficial/AGCapital-Challenge/refs/heads/main/public/ag-capital-logo.png)
+# AGCapital-Challenge ![AGCapital](https://raw.githubusercontent.com/guiriosoficial/AGCapital-Challenge/refs/heads/main/public/ag-capital-logo-1.png) ![Agnes](https://raw.githubusercontent.com/guiriosoficial/AGCapital-Challenge/refs/heads/main/public/agnes-logo-1.png)
 
 This is a challenge for a vacation jog on AG Capital
 
