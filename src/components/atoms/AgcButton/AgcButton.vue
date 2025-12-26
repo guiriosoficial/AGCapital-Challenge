@@ -21,7 +21,6 @@
     :icon="icon"
   >
     <slot name="default" />
-
     <template
       v-if="$slots.icon"
       #icon

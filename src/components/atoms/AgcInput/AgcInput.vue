@@ -82,7 +82,31 @@ const modelValue = defineModel<string, number>('modelValue', {
 
 defineProps({
   type: {
-    type: String as PropType<'week' | 'textarea' | 'url' | 'time' | 'tel' | 'text' | 'password' | 'submit' | 'search' | 'reset' | 'range' | 'radio' | 'number' | 'month' | 'email' | 'image' | 'hidden' | 'file' | 'color' | 'datetime-local' | 'date' | 'checkbox' | 'button'>,
+    type: String as PropType<
+      | 'week'
+      | 'textarea'
+      | 'url'
+      | 'time'
+      | 'tel'
+      | 'text'
+      | 'password'
+      | 'submit'
+      | 'search'
+      | 'reset'
+      | 'range'
+      | 'radio'
+      | 'number'
+      | 'month'
+      | 'email'
+      | 'image'
+      | 'hidden'
+      | 'file'
+      | 'color'
+      | 'datetime-local'
+      | 'date'
+      | 'checkbox'
+      | 'button'
+    >,
     default: 'text'
   },
   maxlength: {

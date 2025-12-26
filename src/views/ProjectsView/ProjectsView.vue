@@ -130,7 +130,7 @@
 <script setup lang="ts">
 import { computed, ref, onBeforeMount, watch } from 'vue'
 import { Plus, Delete, EditPen, Search, FolderDelete } from '@element-plus/icons-vue'
-import { useDebounceFn } from '@vueuse/core'
+import { useDebounce } from '@/composables/useDebounce'
 import { useRoute, useRouter } from 'vue-router'
 import AgcButton from '@/components/atoms/AgcButton'
 import AgcCard from '@/components/atoms/AgcCard'
@@ -212,7 +212,7 @@ function handleChangeTab (event: string): void {
   handleUpdateData(event, searchTerm.value)
 }
 
-const handleSearchTerm = useDebounceFn((event: string) => {
+const handleSearchTerm = useDebounce((event: string) => {
   handleUpdateData(activeTab.value, event)
 }, 800) 
 

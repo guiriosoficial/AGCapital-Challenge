@@ -7,6 +7,7 @@ import * as api from './integrations'
 const useProjectsStore = defineStore('projectsStore', () => {
   const currentProject = ref<Project | undefined>()
   const projectsByClients = ref<ClientProjects[]>([])
+
   const getProjectsByClients = computed((): ClientProjects[] => projectsByClients.value)
 
   const getCurrentProject = computed((): Project | undefined => currentProject.value)

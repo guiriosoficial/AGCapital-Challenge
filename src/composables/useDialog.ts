@@ -2,6 +2,12 @@ import { ref, type Ref } from 'vue'
 
 type AnyObject = Record<string, any>
 
+interface UseDialog {
+  dialogProps: Ref<AnyObject>
+  isDialogVisible: Ref<boolean>
+  handleToggleDialog: (params?: object) => void
+}
+
 function useDialog (): UseDialog {
   const dialogProps = ref<AnyObject>({})
   const isDialogVisible = ref<boolean>(false)
@@ -19,10 +25,4 @@ function useDialog (): UseDialog {
 }
 
 export default useDialog
-interface UseDialog {
-  dialogProps: Ref<AnyObject>
-  isDialogVisible: Ref<boolean>
-  handleToggleDialog: (params?: object) => void
-}
-
 export type { UseDialog }

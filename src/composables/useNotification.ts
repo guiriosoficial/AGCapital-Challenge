@@ -1,6 +1,13 @@
 import { ElNotification } from 'element-plus'
 import type { NotificationHandle, NotificationParams } from 'element-plus'
 
+interface UseNotification {
+  success: (options: NotificationParams) => NotificationHandle
+  warning: (options: NotificationParams) => NotificationHandle
+  info: (options: NotificationParams) => NotificationHandle
+  error: (options: NotificationParams) => NotificationHandle
+}
+
 const defaults: object = {
   position: 'top-right',
   duration: 5000,
@@ -70,12 +77,4 @@ function useNotification (): UseNotification {
 }
 
 export default useNotification
-
-interface UseNotification {
-  success: (options: NotificationParams) => NotificationHandle
-  warning: (options: NotificationParams) => NotificationHandle
-  info: (options: NotificationParams) => NotificationHandle
-  error: (options: NotificationParams) => NotificationHandle
-}
-
 export type { UseNotification }

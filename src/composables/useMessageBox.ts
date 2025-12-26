@@ -1,6 +1,12 @@
 import { ElMessageBox } from 'element-plus'
 import type { ElMessageBoxOptions, MessageBoxData } from 'element-plus'
 
+interface UseMessageBox {
+  alert: (title: string, message: string, options: ElMessageBoxOptions) => Promise<MessageBoxData>
+  confirm: (title: string, message: string, options: ElMessageBoxOptions) => Promise<MessageBoxData>
+  prompt: (title: string, message: string, options: ElMessageBoxOptions) => Promise<MessageBoxData>
+}
+
 const defaults: object = {
   confirmButtonText: 'Ok',
   cancelButtonText: 'Cancel',
@@ -43,11 +49,4 @@ function useMessageBox (): UseMessageBox {
 }
 
 export default useMessageBox
-
-interface UseMessageBox {
-  alert: (title: string, message: string, options: ElMessageBoxOptions) => Promise<MessageBoxData>
-  confirm: (title: string, message: string, options: ElMessageBoxOptions) => Promise<MessageBoxData>
-  prompt: (title: string, message: string, options: ElMessageBoxOptions) => Promise<MessageBoxData>
-}
-
 export type { UseMessageBox }

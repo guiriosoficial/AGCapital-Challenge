@@ -1,6 +1,5 @@
 import { fetch, buildQuery } from '@/utils'
 import type { EditableProject, ClientProjects, Project } from './models'
-import { ProjectStatuses } from './models'
 import type { Ref } from 'vue'
 
 const projectsPath = '/projects'

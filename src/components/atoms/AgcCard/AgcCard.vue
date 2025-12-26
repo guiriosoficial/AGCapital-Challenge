@@ -7,11 +7,17 @@
     :body-style="bodyStyle"
     :shadow="shadow"
   >
-    <template v-if="$slots.header" #header>
+    <template
+      v-if="$slots.header"
+      #header
+    >
       <slot name="header" />
     </template>
     <slot name="default" />
-    <template v-if="$slots.footer" #footer>
+    <template
+      v-if="$slots.footer"
+      #footer
+    >
       <slot name="footer" />
     </template>
   </ElCard>
