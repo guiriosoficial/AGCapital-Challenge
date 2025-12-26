@@ -1,4 +1,4 @@
-# AGCapital-Challenge ![AGCapital](https://raw.githubusercontent.com/guiriosoficial/AGCapital-Challenge/refs/heads/main/public/logo-ag-capital.png) ![Agnes](https://raw.githubusercontent.com/guiriosoficial/AGCapital-Challenge/refs/heads/main/public/logo-agnes.png)
+# AGCapital-Challenge-Web ![AGCapital](https://raw.githubusercontent.com/guiriosoficial/AGCapital-Challenge/refs/heads/main/public/logo-ag-capital.png) ![Agnes](https://raw.githubusercontent.com/guiriosoficial/AGCapital-Challenge/refs/heads/main/public/logo-agnes.png)
 
 This is a challenge for a vacation jog on AG Capital
 
@@ -10,7 +10,7 @@ The challenge consists of developing an interface for managing projects segmente
 - **Integration and State Management:** Mock integrations using a state manager
 
 ## Dependence
-To Run this project, you will need to clone and run the [AgCapital-Challenge-BFF](https://github.com/guiriosoficial/AGCapital-Challenge-BFF)
+To Run this project, you will need to clone and run the [AgCapital-Challenge-Api](https://github.com/guiriosoficial/AGCapital-Challenge-Api)
 
 ## Project Setup
 
