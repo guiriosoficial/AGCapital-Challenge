@@ -1,4 +1,4 @@
-# AGCapital-Challenge ![Agnes](https://raw.githubusercontent.com/guiriosoficial/AGCapital-Challenge/refs/heads/main/public/agnes-logo.svg) ![Agnes](https://raw.githubusercontent.com/guiriosoficial/AGCapital-Challenge/refs/heads/main/public/ag-capital-logo.svg)
+# AGCapital-Challenge ![Agnes](https://raw.githubusercontent.com/guiriosoficial/AGCapital-Challenge/refs/heads/main/public/agnes-logo.png) ![AGCapital](https://raw.githubusercontent.com/guiriosoficial/AGCapital-Challenge/refs/heads/main/public/ag-capital-logo.png)
 
 This is a challenge for a vacation jog on AG Capital
 
@@ -7,6 +7,7 @@ The challenge consists of developing an interface for managing projects segmente
 - **Lifecycle Management:** Functionality to close or reopen projects;
 - **Task Management:** Activity control per project, allowing task management and status transitions between "Todo", "Doing", "Done", and "Cancelled";
 - **Search and Filtering:** Search functionality for projects and clients, including tab-based filters for project status (open or closed).
+- **Integration ans State Management:** Mock integrations using a state manager
 
 ## Dependence
 To Run this project, you will need to clone and run the [AgCapital-Challenge-BFF](https://github.com/guiriosoficial/AGCapital-Challenge-BFF)
