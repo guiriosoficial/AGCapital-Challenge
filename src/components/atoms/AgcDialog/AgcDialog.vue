@@ -23,6 +23,8 @@
     :destroy-on-close="destroyOnClose"
     :z-index="zIndex"
     :header-aria-level="headerAriaLevel"
+    :before-close="beforeClose"
+    :close-icon="closeIcon"
     @open="$emit('open', $event)"
     @opened="$emit('opened', $event)"
     @close="$emit('close', $event)"
@@ -30,8 +32,6 @@
     @open-auto-focus="$emit('open-auto-focus', $event)"
     @close-auto-focus="$emit('close-auto-focus', $event)"
   >
-    <!-- :before-close="beforeClose"
-    :close-icon="closeIcon" -->
     <template #header>
       <slot name="header" />
     </template>
@@ -43,7 +43,8 @@
 </template>
 
 <script setup lang="ts">
-import { ElDialog } from 'element-plus'
+import { ElDialog, type DialogBeforeCloseFn } from 'element-plus'
+import type { Component, PropType } from "vue";
 
 defineOptions({
   name: 'AgcDialog',
@@ -110,9 +111,9 @@ defineProps({
     type: Boolean,
     default: true
   },
-  // beforeClose: {
-  //   type: Function
-  // },
+  beforeClose: {
+    type: Function as PropType<DialogBeforeCloseFn>,
+  },
   draggable: {
     type: Boolean,
     default: false
@@ -133,9 +134,9 @@ defineProps({
     type: Boolean,
     default: false
   },
-  // closeIcon: {
-  //   type: [String, Component],
-  // },
+  closeIcon: {
+    type: [String,  Object as () => Component],
+  },
   zIndex: {
     type: Number
   },

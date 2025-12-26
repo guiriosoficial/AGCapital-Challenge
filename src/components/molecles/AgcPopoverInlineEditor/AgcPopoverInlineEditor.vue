@@ -54,7 +54,8 @@ const selectedOption = computed((): Option => {
     (option: Option) => option.value === props.modelValue
   )
 
-  if (optionIndex >= 0) { return props.options[optionIndex] }
+  if (optionIndex >= 0) return props.options[optionIndex] as Option
+
   return { value: '', label: '' }
 })
 

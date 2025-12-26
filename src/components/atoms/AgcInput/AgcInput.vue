@@ -158,11 +158,11 @@ defineProps({
     default: 2
   },
   autosize: {
-    type: [Boolean, Object], // Object as () => PropType<{ minRows?: number, maxRows?: number }>],
+    type: [Boolean, Object as () => { minRows?: number, maxRows?: number }],
     default: false
   },
   autocomplete: {
-    type: String,
+    type: String as PropType<AutoFill>,
     default: 'off'
   },
   name: {

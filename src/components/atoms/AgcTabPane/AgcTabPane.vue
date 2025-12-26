@@ -20,8 +20,8 @@
 import { ElTabPane } from 'element-plus'
 
 defineOptions({
-  name: 'AgcTabPane'
-  // inheritAttrs: false
+  name: 'AgcTabPane',
+  inheritAttrs: false
 })
 
 defineProps({

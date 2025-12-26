@@ -1,6 +1,7 @@
 <template>
   <ElFormItem
     v-bind="$attrs"
+    :for="forEl"
     :prop="prop"
     :label="label"
     :label-width="labelWidth"
@@ -10,9 +11,8 @@
     :show-message="showMessage"
     :inline-message="inlineMessage"
     :size="size"
+    :validate-status="validateStatus"
   >
-    <!-- :for="for"
-    :validate-status="validateStatus" -->
     <template #label>
       <slot name="label" />
     </template>
@@ -57,13 +57,13 @@ defineProps({
     default: true
   },
   inlineMessage: {
-    type: [Boolean, String],
-    default: ''
+    type: Boolean,
+    default: false
   },
   size: {
     type: String as PropType<'' | 'large' | 'default' | 'small'>
   },
-  for: {
+  forEl: {
     type: String
   },
   validateStatus: {

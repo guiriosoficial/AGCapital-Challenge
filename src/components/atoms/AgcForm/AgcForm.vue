@@ -17,9 +17,9 @@
     :size="size"
     :disabled="disabled"
     :scroll-to-error="scrollToError"
+    :scroll-into-view-options="scrollIntoViewOptions"
     @validate="$emit('validate', $event)"
   >
-    <!-- :scroll-into-view-options="scrollIntoViewOptions" -->
     <slot name="default" />
   </ElForm>
 </template>
@@ -96,10 +96,10 @@ defineProps({
   scrollToError: {
     type: Boolean,
     default: false
+  },
+  scrollIntoViewOptions: {
+    type: [Boolean, Object as () => ScrollIntoViewOptions],
   }
-  // scrollIntoViewOptions: {
-  //   type: [Boolean, Object as PropType<ScrollIntoViewOptions>],
-  // }
 })
 
 defineEmits(['validate'])
