@@ -128,7 +128,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onBeforeMount, watch } from 'vue'
+import { computed, ref, onBeforeMount, watch, defineAsyncComponent } from 'vue'
 import { Plus, Delete, EditPen, Search, FolderDelete } from '@element-plus/icons-vue'
 import { useDebounce } from '@/composables/useDebounce'
 import { useRoute, useRouter } from 'vue-router'
@@ -140,11 +140,12 @@ import AgcIcon from '@/components/atoms/AgcIcon'
 import AgcInput from '@/components/atoms/AgcInput'
 import AgcTabPane from '@/components/atoms/AgcTabPane'
 import AgcTabs from '@/components/atoms/AgcTabs'
-import ClientInfoDialog from './dialogs/ClientInfoDialog'
-import ProjectInfoDialog from './dialogs/ProjectInfoDialog'
 import useClientStore, { type Client } from '@/stores/clientsStore'
 import useMessageBox from '@/composables/useMessageBox'
 import useProjectsStore, { type ClientProjects, type Project, ProjectStatuses } from '@/stores/projectsStore'
+
+const ClientInfoDialog = defineAsyncComponent(() => import('./dialogs/ClientInfoDialog'))
+const ProjectInfoDialog = defineAsyncComponent(() => import('./dialogs/ProjectInfoDialog'))
 
 const clientStore = useClientStore()
 const messageBox = useMessageBox()

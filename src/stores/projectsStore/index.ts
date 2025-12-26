@@ -7,10 +7,13 @@ import * as api from './integrations'
 const useProjectsStore = defineStore('projectsStore', () => {
   const currentProject = ref<Project | undefined>()
   const projectsByClients = ref<ClientProjects[]>([])
+  const isLoadingProjects = ref<boolean>(false)
 
   const getProjectsByClients = computed((): ClientProjects[] => projectsByClients.value)
 
   const getCurrentProject = computed((): Project | undefined => currentProject.value)
+
+  const getIsLoadingProjects = computed((): boolean => isLoadingProjects.value)
 
   function setCurrentProject (project?: Project) {
     currentProject.value = project
@@ -20,10 +23,12 @@ const useProjectsStore = defineStore('projectsStore', () => {
     projectsByClients.value = value
   }
 
-  async function searchProjectsByClients (activeTab: ProjectStatuses, searchTerm?: string): Promise<void> {
-    const query = { status: activeTab, searchTerm: searchTerm }
+  async function searchProjectsByClients (status: ProjectStatuses, searchTerm?: string): Promise<void> {
+    isLoadingProjects.value = true
+    const query = { status, searchTerm }
     const data = await api.searchProjectsByClients(query)
     projectsByClients.value = data.value
+    isLoadingProjects.value = false
   }
 
   async function editProject (projectId: string, body: EditableProject): Promise<void> {
@@ -58,6 +63,7 @@ const useProjectsStore = defineStore('projectsStore', () => {
   return {
     getProjectsByClients,
     getCurrentProject,
+    getIsLoadingProjects,
     setCurrentProject,
     setProjectsByClients,
     searchProjectsByClients,
