@@ -6,8 +6,8 @@ enum TaskStatuses {
 }
 
 interface NewTask {
-  description?: string
-  status?: TaskStatuses
+  description: string
+  status: TaskStatuses
 }
 
 interface Task extends NewTask {

@@ -4,13 +4,15 @@
       <AgcInput
         v-model="searchTerm"
         :prefix-icon="Search"
+        :disabled="isLoading"
         placeholder="Search projects os clients"
         class="projects-view-container__input-search"
         @input="handleSearchTerm"
       />
       <AgcButton
-        type="primary"
         :icon="Plus"
+        :disabled="isLoading"
+        type="primary"
         class="hover-icon"
         @click="handleCreateClient"
       >
@@ -23,6 +25,8 @@
     >
       <AgcTabPane
         v-for="tab in tabs"
+        v-loading="isLoading"
+        :disabled="isLoading"
         :key="tab.name"
         :name="tab.name.toLowerCase()"
         :label="tab.title"
@@ -178,6 +182,10 @@ const activeTab = computed({
       }
     })
   }
+})
+
+const isLoading = computed((): boolean => {
+  return projectsStore.getIsLoadingProjects
 })
 
 const projects = computed((): ClientProjects[] => {
@@ -375,7 +383,9 @@ function handleEditClient (clientId: string, clientName: string): void {
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    padding: 12px
+    margin-top: 24px;
+    padding: 12px;
+    color: var(--el-text-color-secondary);
   }
 }
 

@@ -14,7 +14,7 @@ async function createTask (projectId: string, body: NewTask) {
   return response.data
 }
 
-async function updateTask (taskId: string, body: NewTask) {
+async function updateTask (taskId: string, body: Partial<NewTask>) {
   const response = await fetch(`${tasksPath}/${taskId}`).patch(body).json()
   return response.data
 }

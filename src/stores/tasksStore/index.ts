@@ -6,18 +6,19 @@ import * as api from './integrations'
 
 const useTasksStore = defineStore('tasksStore', () => {
   const projectTasks = ref<Task[]>([])
-  const isTasksLoading = ref<boolean>(false)
+  const isLoadingTasks = ref<boolean>(false)
 
   const getProjectTasks = computed((): Task[] => projectTasks.value)
 
-  const getIsTasksLoading = computed((): boolean => isTasksLoading.value)
+  const getIsLoadingTasks = computed((): boolean => isLoadingTasks.value)
 
   async function searchTasksByProject (projectId: string): Promise<void> {
-    isTasksLoading.value = true
+    projectTasks.value = []
+    isLoadingTasks.value = true
     const query = { projectId: projectId }
     const data = await api.searchTasksByProject(query)
     projectTasks.value = data.value
-    isTasksLoading.value = false
+    isLoadingTasks.value = false
   }
 
   async function createTask (projectId: string, taskDescription: string): Promise<void> {
@@ -50,7 +51,7 @@ const useTasksStore = defineStore('tasksStore', () => {
 
   return {
     getProjectTasks,
-    getIsTasksLoading,
+    getIsLoadingTasks,
     searchTasksByProject,
     createTask,
     updateTaskDescriptions,
