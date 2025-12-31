@@ -45,6 +45,7 @@ import AgcInput from '@/components/atoms/AgcInput'
 import type { FormRules } from 'element-plus'
 import useClientStore, { type Client } from '@/stores/clientsStore'
 import useDialog, { type UseDialog } from '@/composables/useDialog'
+import useNotification from '@/composables/useNotification'
 
 const {
   dialogProps: client,
@@ -52,6 +53,7 @@ const {
   handleToggleDialog
 } = useDialog() as UseDialog & { dialogProps: Client }
 const clientStore = useClientStore()
+const notification = useNotification()
 
 interface ClientInfoForm {
   name: string
@@ -79,14 +81,19 @@ function handleCloseDialog (): void {
 
 function handleCreateEditClient (): void {
   clientInfoRulesRef?.value?.instance?.validate((valid) => {
-    if (valid) {
-      if (isEditingClient.value) {
-        clientStore.updateClient(client.value.id, clientInfoModel)
-      } else {
-        clientStore.createClient(clientInfoModel)
-      }
-      handleCloseDialog()
+    if (!valid) return
+
+    if (isEditingClient.value) {
+      clientStore.updateClient(client.value.id, clientInfoModel)
+        .then(() => notification.success('Client updated successfully'))
+        .catch(() => notification.error('Error updating client, please try again'))
+    } else {
+      clientStore.createClient(clientInfoModel)
+        .then(() => notification.success('Client created successfully'))
+        .catch(() => notification.error('Error creating client, please try again'))
     }
+
+    handleCloseDialog()
   })
 }
 

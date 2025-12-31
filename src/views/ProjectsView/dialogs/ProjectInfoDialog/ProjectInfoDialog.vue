@@ -58,6 +58,7 @@ import type { Client } from '@/stores/clientsStore'
 import type { FormRules } from 'element-plus'
 import useDialog, { type UseDialog } from '@/composables/useDialog'
 import useProjectsStore, { type Project, type NewProject, ProjectStatuses } from '@/stores/projectsStore'
+import useNotification from '@/composables/useNotification'
 
 interface Props extends Project {
   client: Client
@@ -69,6 +70,7 @@ const {
   handleToggleDialog
 } = useDialog() as UseDialog & { dialogProps: Props }
 const projectStore = useProjectsStore()
+const notification = useNotification()
 
 type ProjectInfoForm = NewProject
 
@@ -105,14 +107,19 @@ function handleCloseDialog () {
 
 function handleCreateEditProject () {
   projectInfoRulesRef.value?.instance?.validate((valid: boolean) => {
-    if (valid) {
-      if (isEditingProject.value) {
-        projectStore.editProject(project.value.id, projectInfoModel)
-      } else {
-        projectStore.createProject(project.value.client.id, projectInfoModel)
-      }
-      handleCloseDialog()
+    if (!valid) return
+
+    if (isEditingProject.value) {
+      projectStore.editProject(project.value.id, projectInfoModel)
+        .then(() => notification.success('Project updated successfully'))
+        .catch(() => notification.error('Error updating project, please try again'))
+    } else {
+      projectStore.createProject(project.value.client.id, projectInfoModel)
+        .then(() => notification.success('Project created successfully'))
+        .catch(() => notification.error('Error creating project, please try again'))
     }
+
+    handleCloseDialog()
   })
 }
 

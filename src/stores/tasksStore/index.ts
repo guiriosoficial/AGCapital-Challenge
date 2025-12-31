@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import type { Task } from './models'
 import { TaskStatuses } from './models'
 import * as api from './integrations'
+import { assertIndex } from '@/utils'
 
 const useTasksStore = defineStore('tasksStore', () => {
   const projectTasks = ref<Task[]>([])
@@ -31,16 +32,24 @@ const useTasksStore = defineStore('tasksStore', () => {
   }
 
   async function updateTaskDescriptions (taskId: string, taskDescription: string): Promise<void> {
-    const body = { description: taskDescription }
-    const data = await api.updateTask(taskId, body)
-    const taskIndex = projectTasks.value.findIndex((task) => task.id === taskId)
+    const data = await api.updateTask(taskId, { description: taskDescription })
+
+    const taskIndex = assertIndex(
+      projectTasks.value.findIndex((task) => task.id === taskId),
+      'TASK_NOT_FOUND'
+    )
+
     projectTasks.value[taskIndex] = data.value
   }
 
   async function updateTaskStatus (taskId: string, taskStatus: TaskStatuses): Promise<void> {
-    const body = { status: taskStatus }
-    const data = await api.updateTask(taskId, body)
-    const taskIndex = projectTasks.value.findIndex((task) => task.id === taskId)
+    const data = await api.updateTask(taskId, { status: taskStatus })
+
+    const taskIndex = assertIndex(
+      projectTasks.value.findIndex((task) => task.id === taskId),
+      'TASK_NOT_FOUND'
+    )
+
     projectTasks.value[taskIndex] = data.value
   }
 

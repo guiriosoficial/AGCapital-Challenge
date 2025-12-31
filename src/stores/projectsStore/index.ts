@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import type { ClientProjects, Project, EditableProject, NewProject } from './models'
 import { ProjectStatuses } from './models'
 import * as api from './integrations'
+import { assertExists, assertIndex } from "@/utils";
 
 const useProjectsStore = defineStore('projectsStore', () => {
   const currentProject = ref<Project | undefined>()
@@ -33,31 +34,67 @@ const useProjectsStore = defineStore('projectsStore', () => {
 
   async function editProject (projectId: string, body: EditableProject): Promise<void> {
     const data = await api.editProject(projectId, { ...body })
-    const clientIndex = findClientProject(projectId)
-    const projectIndex = projectsByClients.value[clientIndex].projects.findIndex((project) => project.id === projectId)
-    projectsByClients.value[clientIndex].projects[projectIndex] = data.value
+
+    const clientIndex = findClientIndexByProject(projectId)
+    const client = getClientByIndex(clientIndex)
+
+    const projectIndex = assertIndex(
+      client.projects.findIndex((project) => project.id === projectId),
+      'PROJECT_NOT_FOUND'
+    )
+
+    client.projects[projectIndex] = data.value
   }
 
   async function editProjectStatus (projectId: string, body: EditableProject): Promise<void> {
     await api.editProject(projectId, { ...body })
-    const clientIndex = findClientProject(projectId)
-    projectsByClients.value[clientIndex].projects = projectsByClients.value[clientIndex].projects.filter((project) => project.id !== projectId)
+
+    const clientIndex = findClientIndexByProject(projectId)
+    const client = getClientByIndex(clientIndex)
+
+    client.projects = client.projects.filter(
+      (project) => project.id !== projectId
+    )
   }
 
   async function createProject (clientId: string, body: EditableProject): Promise<void> {
     const data = await api.createProject(clientId, { ...body })
-    const clientIndex = projectsByClients.value.findIndex((client) => client.id === clientId)
-    projectsByClients.value[clientIndex].projects.push(data.value)
+
+    const clientIndex = assertIndex(
+      projectsByClients.value.findIndex((client) => client.id === clientId),
+      'CLIENT_NOT_FOUND'
+    )
+
+    const client = getClientByIndex(clientIndex)
+
+    client.projects.push(data.value)
   }
 
   async function deleteProject (projectId: string): Promise<void> {
     await api.deleteProject(projectId)
-    const clientIndex = findClientProject(projectId)
-    projectsByClients.value[clientIndex].projects = projectsByClients.value[clientIndex].projects.filter((project) => project.id !== projectId)
+
+    const clientIndex = findClientIndexByProject(projectId)
+    const client = getClientByIndex(clientIndex)
+
+    client.projects = client.projects.filter(
+      (project) => project.id !== projectId
+    )
   }
 
-  function findClientProject (projectId: string): number {
-    return projectsByClients.value.findIndex((client) => client.projects.findIndex((project) => project.id === projectId) > -1)
+  function getClientByIndex (index: number): ClientProjects {
+    return assertExists(
+      projectsByClients.value[index],
+      'CLIENT_NOT_FOUND'
+    )
+  }
+
+  function findClientIndexByProject (projectId: string): number {
+    return assertIndex(
+      projectsByClients.value.findIndex((client) =>
+        client.projects.some((project) => project.id === projectId)
+      ),
+      'PROJECT_NOT_FOUND'
+    )
   }
 
   return {
