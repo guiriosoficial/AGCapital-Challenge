@@ -16,8 +16,8 @@
       />
     </header>
     <div
-        v-loading="isLoading"
-        class="tasks-view-container__body"
+      v-loading="isLoading"
+      class="tasks-view-container__body"
     >
       <AgcCard
         v-for="task in filteredTasks"
@@ -96,9 +96,11 @@ import AgcPopoverInlineEditor from '@/components/molecles/AgcPopoverInlineEditor
 import AgcTag from '@/components/atoms/AgcTag'
 import AgcTextInlineEditor from '@/components/molecles/AgcTextInlineEditor'
 import useMessageBox from '@/composables/useMessageBox'
+import useNotification from '@/composables/useNotification'
 import useProjectsStore from '@/stores/projectsStore'
 
 const messageBox = useMessageBox()
+const notification = useNotification()
 const projectsStore = useProjectsStore()
 const tasksStore = useTasksStore()
 const route = useRoute()
@@ -138,6 +140,10 @@ const filteredTasks = computed((): Task[] => {
 
 onBeforeMount(() => {
   tasksStore.searchTasksByProject(projectId)
+    .catch(() => {
+      notification.error('Error loading tasks')
+      backHome()
+    })
 })
 
 function getStatusTagTypes (status: TaskStatuses): 'primary' | 'success' | 'info' | 'warning' | 'danger' | undefined {
@@ -155,14 +161,20 @@ function getStatusTagTypes (status: TaskStatuses): 'primary' | 'success' | 'info
 
 function handleCreateTask (taskDescription: string): void {
   tasksStore.createTask(projectId, taskDescription)
+    .then(() => notification.success('Task created successfully'))
+    .catch(() => notification.error('Error creating task, please try again'))
 }
 
 function handleEditTaskDescriptions (taskId: string, taskDescription: string): void {
   tasksStore.updateTaskDescriptions(taskId, taskDescription)
+    .then(() => notification.success('Task description updated successfully'))
+    .catch(() => notification.error('Error updating task description, please try again'))
 }
 
 function handleEditTaskStatus (taskId: string, taskStatus: TaskStatuses): void {
   tasksStore.updateTaskStatus(taskId, taskStatus)
+    .then(() => notification.success('Task status updated successfully'))
+    .catch(() => notification.error('Error updating task status, please try again'))
 }
 
 function handleDeleteTask (taskId: string) {
@@ -172,6 +184,8 @@ function handleDeleteTask (taskId: string) {
     { confirmButtonText: 'Delete' }
   ).then(() => {
     tasksStore.deleteTask(taskId)
+      .then(() => notification.success('Task deleted successfully'))
+      .catch(() => notification.error('Error deleting task, please try again'))
   })
 }
 

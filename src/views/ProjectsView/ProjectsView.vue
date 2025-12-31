@@ -5,7 +5,7 @@
         v-model="searchTerm"
         :prefix-icon="Search"
         :disabled="isLoading"
-        placeholder="Search projects os clients"
+        placeholder="Search for projects os clients"
         class="projects-view-container__input-search"
         @input="handleSearchTerm"
       />
@@ -25,9 +25,9 @@
     >
       <AgcTabPane
         v-for="tab in tabs"
+        :key="tab.name"
         v-loading="isLoading"
         :disabled="isLoading"
-        :key="tab.name"
         :name="tab.name.toLowerCase()"
         :label="tab.title"
       >
@@ -120,7 +120,10 @@
           v-if="projects.length === 0"
           class="projects-view-container__empty-state"
         >
-          <AgcIcon :icon="FolderDelete" :size="48" />
+          <AgcIcon
+            :icon="FolderDelete"
+            :size="48"
+          />
           No data to show
         </div>
       </AgcTabPane>
@@ -147,12 +150,14 @@ import AgcTabs from '@/components/atoms/AgcTabs'
 import useClientStore, { type Client } from '@/stores/clientsStore'
 import useMessageBox from '@/composables/useMessageBox'
 import useProjectsStore, { type ClientProjects, type Project, ProjectStatuses } from '@/stores/projectsStore'
+import useNotification from '@/composables/useNotification'
 
 const ClientInfoDialog = defineAsyncComponent(() => import('./dialogs/ClientInfoDialog'))
 const ProjectInfoDialog = defineAsyncComponent(() => import('./dialogs/ProjectInfoDialog'))
 
 const clientStore = useClientStore()
 const messageBox = useMessageBox()
+const notification = useNotification()
 const projectsStore = useProjectsStore()
 const route = useRoute()
 const router = useRouter()
@@ -249,6 +254,8 @@ function handleEditProject (project: Project, client: Client): void {
 function handleMoveProject (projectId: string, status: ProjectStatuses): void {
   const newStatus = status === ProjectStatuses.OPEN ? ProjectStatuses.CLOSED : ProjectStatuses.OPEN
   projectsStore.editProjectStatus(projectId, { status: newStatus })
+    .then(() => notification.success('Project status changed successfully'))
+    .catch(() => notification.error('Error changing project status, please try again'))
 }
 
 function handleDeleteProject (projectId: string, projectName: string): void {
@@ -258,6 +265,8 @@ function handleDeleteProject (projectId: string, projectName: string): void {
     { confirmButtonText: 'Delete' }
   ).then(() => {
     projectsStore.deleteProject(projectId)
+      .then(() => notification.success('Project deleted successfully'))
+      .catch(() => notification.error('Error deleting project, please try again'))
   })
 }
 
@@ -272,6 +281,8 @@ function handleDeleteClient (clientId: string, clientName: string): void {
     { confirmButtonText: 'Delete' }
   ).then(() => {
     clientStore.deleteClient(clientId)
+      .then(() => notification.success('Client deleted successfully'))
+      .catch(() => notification.error('Error deleting client, please try again'))
   })
 }
 

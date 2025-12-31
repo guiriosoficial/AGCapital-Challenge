@@ -84,7 +84,7 @@ defineProps({
     default: false
   },
   loadingIcon: {
-    type: Object as PropType<Component | String>,
+    type: Object as PropType<Component | string>,
     default: Loading
   },
   disabled: {
@@ -92,7 +92,8 @@ defineProps({
     default: false
   },
   icon: {
-    type: Object as PropType<Component | String>
+    type: Object as PropType<Component | string>,
+    default: () => {}
   },
   autofocus: {
     type: Boolean,
