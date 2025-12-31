@@ -37,8 +37,8 @@ npm run lint
 ```
 
 ## TODO
-- Implement Loadings
 - Create Tests
-- Create Errors Handling
+- Handle Changes In Real Time
+- Clean Console Errors
 
 > **NOTE:** I Got de Job! 💸

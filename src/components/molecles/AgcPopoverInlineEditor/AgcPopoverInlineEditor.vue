@@ -1,6 +1,6 @@
 <template>
   <div class="popover-inline-editor">
-    <el-popover
+    <ElPopover
       ref="popoverEditor"
       placement="bottom"
       trigger="click"
@@ -27,12 +27,13 @@
           {{ selectedOption.label }}
         </span>
       </template>
-    </el-popover>
+    </ElPopover>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref, computed, type PropType } from 'vue'
+import { ElPopover } from 'element-plus'
 
 const popoverEditor = ref()
 
