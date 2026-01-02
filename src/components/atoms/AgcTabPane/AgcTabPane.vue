@@ -26,10 +26,12 @@ defineOptions({
 
 defineProps({
   label: {
-    type: String
+    type: String,
+    default: undefined
   },
   name: {
-    type: String
+    type: String,
+    default: undefined
   },
   disabled: {
     type: Boolean,

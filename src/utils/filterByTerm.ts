@@ -1,25 +1,24 @@
 import normalizeString from './normalizeString'
 
-function filterByTerm (
-  array: any[] = [],
+function filterByTerm<T> (
+  array: T[] = [],
   term: string = '',
-  keys: string[] | string = ''
-): any[] {
+  keys: (keyof T)[] | keyof T = []
+): T[] {
   const normalizedTerm: string = normalizeString(term)
 
-  return array?.filter((i) => {
-    if (keys.length > 0) {
-      const keysList: string[] =
-        !Array.isArray(keys)
-          ? [keys]
-          : keys
+  return array.filter((item) => {
+    const keysList = Array.isArray(keys) ? keys : [keys]
 
+    if (keysList.length > 0) {
       return keysList.some((key) => {
-        return normalizeString(i[key]).includes(normalizedTerm)
+        const value = item[key]
+        if (value == null) return false
+        return normalizeString(String(value)).includes(normalizedTerm)
       })
-    } else {
-      return normalizeString(i).includes(normalizedTerm)
     }
+
+    return normalizeString(String(item)).includes(normalizedTerm)
   })
 }
 

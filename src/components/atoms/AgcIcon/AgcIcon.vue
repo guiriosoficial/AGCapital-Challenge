@@ -19,14 +19,16 @@ defineOptions({
 
 defineProps({
   color: {
-    type: String
+    type: String,
+    default: undefined
   },
   size: {
     type: [String, Number],
     default: '1em'
   },
   icon: {
-    type: Object as PropType<Component>
+    type: Object as PropType<Component>,
+    default: undefined
   }
 })
 </script>

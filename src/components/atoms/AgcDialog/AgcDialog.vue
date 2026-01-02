@@ -77,7 +77,8 @@ defineProps({
     default: true
   },
   modalClass: {
-    type: String
+    type: String,
+    default: undefined
   },
   appendToBody: {
     type: Boolean,
@@ -113,6 +114,7 @@ defineProps({
   },
   beforeClose: {
     type: Function as PropType<DialogBeforeCloseFn>,
+    default: undefined
   },
   draggable: {
     type: Boolean,
@@ -136,9 +138,11 @@ defineProps({
   },
   closeIcon: {
     type: [String,  Object as () => Component],
+    default: undefined
   },
   zIndex: {
-    type: Number
+    type: Number,
+    default: undefined
   },
   headerAriaLevel: {
     type: String,

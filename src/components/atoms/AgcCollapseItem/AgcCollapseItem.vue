@@ -26,7 +26,8 @@ defineProps({
     default: ''
   },
   name: {
-    type: [String, Number]
+    type: [String, Number],
+    default: undefined
   },
   disabled: {
     type: Boolean,

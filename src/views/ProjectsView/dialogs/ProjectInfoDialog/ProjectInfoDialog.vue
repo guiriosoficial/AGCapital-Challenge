@@ -2,7 +2,7 @@
   <AgcDialog
     v-if="isDialogVisible"
     v-model="isDialogVisible"
-    :title="`Create a new project for ${project.client.name}`"
+    :title="`Create a new project for ${project?.client.name ?? '...'}`"
   >
     <AgcForm
       ref="projectInfoRulesRef"
@@ -56,11 +56,11 @@ import AgcFormItem from '@/components/atoms/AgcFormItem'
 import AgcInput from '@/components/atoms/AgcInput'
 import type { Client } from '@/stores/clientsStore'
 import type { FormRules } from 'element-plus'
-import useDialog, { type UseDialog } from '@/composables/useDialog'
+import useDialog, { type IUseDialog } from '@/composables/useDialog'
 import useProjectsStore, { type Project, type NewProject, ProjectStatuses } from '@/stores/projectsStore'
 import useNotification from '@/composables/useNotification'
 
-interface Props extends Project {
+interface Props extends NewProject, Partial<Omit<Project, keyof NewProject>>{
   client: Client
 }
 
@@ -68,7 +68,7 @@ const {
   dialogProps: project,
   isDialogVisible,
   handleToggleDialog
-} = useDialog() as UseDialog & { dialogProps: Props }
+} = useDialog() as IUseDialog<Props>
 const projectStore = useProjectsStore()
 const notification = useNotification()
 
@@ -99,7 +99,7 @@ const projectInfoModel = reactive<ProjectInfoForm>({
   status: ProjectStatuses.OPEN
 })
 
-const isEditingProject = computed(() => Boolean(project.value.id))
+const isEditingProject = computed(() => Boolean(project.value?.id))
 
 function handleCloseDialog () {
   isDialogVisible.value = false
@@ -107,9 +107,9 @@ function handleCloseDialog () {
 
 function handleCreateEditProject () {
   projectInfoRulesRef.value?.instance?.validate((valid: boolean) => {
-    if (!valid) return
+    if (!valid || !project.value) return
 
-    if (isEditingProject.value) {
+    if (isEditingProject.value && project.value.id) {
       projectStore.editProject(project.value.id, projectInfoModel)
         .then(() => notification.success('Project updated successfully'))
         .catch(() => notification.error('Error updating project, please try again'))
@@ -124,7 +124,7 @@ function handleCreateEditProject () {
 }
 
 watch(isDialogVisible, (newVal: boolean): void => {
-  if (newVal && project.value.id) {
+  if (newVal && project.value?.id) {
     projectInfoModel.name = project.value.name
     projectInfoModel.description = project.value.description
   } else {

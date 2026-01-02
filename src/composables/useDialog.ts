@@ -1,19 +1,17 @@
-import { ref, type Ref } from 'vue'
+import { ref, shallowRef, type Ref } from 'vue'
 
-type AnyObject = Record<string, any>
-
-interface UseDialog {
-  dialogProps: Ref<AnyObject>
+interface IUseDialog<T> {
+  dialogProps: Ref<T | null>
   isDialogVisible: Ref<boolean>
-  handleToggleDialog: (params?: object) => void
+  handleToggleDialog: (params?: T) => void
 }
 
-function useDialog (): UseDialog {
-  const dialogProps = ref<AnyObject>({})
+function useDialog<T> (): IUseDialog<T> {
+  const dialogProps = shallowRef<T | null>(null)
   const isDialogVisible = ref<boolean>(false)
 
-  function handleToggleDialog (params?: AnyObject): void {
-    dialogProps.value = params ?? {}
+  function handleToggleDialog (params?: T): void {
+    dialogProps.value = params ?? null
     isDialogVisible.value = !isDialogVisible.value
   }
 
@@ -25,4 +23,4 @@ function useDialog (): UseDialog {
 }
 
 export default useDialog
-export type { UseDialog }
+export type { IUseDialog }

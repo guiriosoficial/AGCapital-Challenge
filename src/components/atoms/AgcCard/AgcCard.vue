@@ -34,16 +34,20 @@ defineOptions({
 
 defineProps({
   header: {
-    type: String
+    type: String,
+    default: undefined
   },
   footer: {
-    type: String
+    type: String,
+    default: undefined
   },
   bodyStyle: {
-    type: Object as PropType<CSSProperties>
+    type: Object as PropType<CSSProperties>,
+    default: undefined
   },
   bodyClass: {
-    type: String
+    type: String,
+    default: undefined
   },
   shadow: {
     type: String as PropType<'always' | 'hover' | 'never'>,

@@ -1,14 +1,6 @@
-const buildQuery = (query: Record<string, any>): string => {
-  return Object.keys(query)
-    .map((key: string) => {
-      const value: string = query[key]
-      return value ? `${key}=${value}` : undefined
-    })
-    .join('&')
+const buildQuery = (query: Record<string, unknown>): string => {
+  const params = new URLSearchParams(query as Record<string, string>)
+  return String(params)
 }
-// const buildQuery = (query: Record<string, any>): string => {
-//   const params = new URLSearchParams(query)
-//   return String(params)
-// }
 
 export default buildQuery

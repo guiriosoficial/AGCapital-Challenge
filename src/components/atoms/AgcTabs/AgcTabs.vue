@@ -42,7 +42,8 @@ const modelValue = defineModel<string | number>('modelValue', {
 
 defineProps({
   type: {
-    type: String as PropType<'card' | 'border-card'>
+    type: String as PropType<'card' | 'border-card'>,
+    default: undefined
   },
   closable: {
     type: Boolean,
@@ -65,7 +66,8 @@ defineProps({
     default: false
   },
   beforeLeave: {
-    type: Function as PropType<(newName: TabPaneName, oldName: TabPaneName) => Awaitable<boolean | void> | undefined>
+    type: Function as PropType<(newName: TabPaneName, oldName: TabPaneName) => Awaitable<boolean | void> | undefined>,
+    default: undefined
   }
 })
 

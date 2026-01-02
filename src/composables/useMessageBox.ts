@@ -1,7 +1,7 @@
 import { ElMessageBox } from 'element-plus'
 import type { ElMessageBoxOptions, MessageBoxData } from 'element-plus'
 
-interface UseMessageBox {
+interface IUseMessageBox {
   alert: (title: string, message: string, options: ElMessageBoxOptions) => Promise<MessageBoxData>
   confirm: (title: string, message: string, options: ElMessageBoxOptions) => Promise<MessageBoxData>
   prompt: (title: string, message: string, options: ElMessageBoxOptions) => Promise<MessageBoxData>
@@ -40,7 +40,7 @@ function prompt (title: string, message: string, options: ElMessageBoxOptions = 
   })
 }
 
-function useMessageBox (): UseMessageBox {
+function useMessageBox (): IUseMessageBox {
   return {
     alert,
     confirm,
@@ -49,4 +49,4 @@ function useMessageBox (): UseMessageBox {
 }
 
 export default useMessageBox
-export type { UseMessageBox }
+export type { IUseMessageBox }

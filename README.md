@@ -40,7 +40,5 @@ npm run lint:fix
 ## TODO
 - Create Tests
 - Handle Changes In Real Time
-- Clean Console Errors
-- Fix Lint Errors
 
 > **NOTE:** I Got de Job! 💸

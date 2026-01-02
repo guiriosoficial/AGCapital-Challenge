@@ -34,10 +34,12 @@ defineOptions({
 
 defineProps({
   prop: {
-    type: String as PropType<string | string[]>
+    type: String as PropType<string | string[]>,
+    default: undefined
   },
   label: {
-    type: String
+    type: String,
+    default: undefined
   },
   labelWidth: {
     type: [String, Number],
@@ -47,10 +49,12 @@ defineProps({
     type: Boolean
   },
   rules: {
-    type: Object as PropType<Record<string, any>>
+    type: Object as PropType<Record<string, string>>,
+    default: undefined
   },
   error: {
-    type: String
+    type: String,
+    default: undefined
   },
   showMessage: {
     type: Boolean,
@@ -61,13 +65,16 @@ defineProps({
     default: false
   },
   size: {
-    type: String as PropType<'' | 'large' | 'default' | 'small'>
+    type: String as PropType<'' | 'large' | 'default' | 'small'>,
+    default: undefined
   },
   forEl: {
-    type: String
+    type: String,
+    default: undefined
   },
   validateStatus: {
-    type: String as PropType<'' | 'error' | 'validating' | 'success'>
+    type: String as PropType<'' | 'error' | 'validating' | 'success'>,
+    default: undefined
   }
 })
 </script>

@@ -58,17 +58,20 @@ defineProps({
     default: 'hover'
   },
   title: {
-    type: String
+    type: String,
+    default: undefined
   },
   effect: {
     type: String as PropType<'dark' | 'light'>,
     default: 'light'
   },
   content: {
-    type: String
+    type: String,
+    default: undefined
   },
   width: {
-    type: [Number, String]
+    type: [Number, String],
+    default: undefined
   },
   placement: {
     type: String as PropType<
@@ -108,10 +111,12 @@ defineProps({
     default: () => ({ modifiers: [{ name: 'computeStyles', options: { gpuAcceleration: false } }] })
   },
   popperClass: {
-    type: String
+    type: String,
+    default: undefined
   },
   popperStyle: {
-    type: [String, Object]
+    type: [String, Object],
+    default: undefined
   },
   showAfter: {
     type: Number,
@@ -126,7 +131,8 @@ defineProps({
     default: 0
   },
   tabindex: {
-    type: Number
+    type: Number,
+    default: undefined
   },
   teleported: {
     type: Boolean,

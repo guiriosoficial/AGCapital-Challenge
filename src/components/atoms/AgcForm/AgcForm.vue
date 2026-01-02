@@ -38,7 +38,7 @@ const instance = ref<FormInstance | null>()
 
 defineProps({
   model: {
-    type: Object as PropType<Record<string, any>>,
+    type: Object as PropType<Record<string, string>>,
     default: () => ({})
   },
   rules: {
@@ -99,6 +99,7 @@ defineProps({
   },
   scrollIntoViewOptions: {
     type: [Boolean, Object as () => ScrollIntoViewOptions],
+    default: undefined
   }
 })
 

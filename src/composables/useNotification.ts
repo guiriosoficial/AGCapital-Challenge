@@ -1,7 +1,7 @@
 import { ElNotification } from 'element-plus'
 import type { NotificationHandle, NotificationParams } from 'element-plus'
 
-interface UseNotification {
+interface IUseNotification {
   success: (options: NotificationParams) => NotificationHandle
   warning: (options: NotificationParams) => NotificationHandle
   info: (options: NotificationParams) => NotificationHandle
@@ -67,7 +67,7 @@ function error (options: NotificationParams = {}): NotificationHandle {
   })
 }
 
-function useNotification (): UseNotification {
+function useNotification (): IUseNotification {
   return {
     success,
     warning,
@@ -77,4 +77,4 @@ function useNotification (): UseNotification {
 }
 
 export default useNotification
-export type { UseNotification }
+export type { IUseNotification }

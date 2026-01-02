@@ -44,14 +44,14 @@ import AgcFormItem from '@/components/atoms/AgcFormItem'
 import AgcInput from '@/components/atoms/AgcInput'
 import type { FormRules } from 'element-plus'
 import useClientStore, { type Client } from '@/stores/clientsStore'
-import useDialog, { type UseDialog } from '@/composables/useDialog'
+import useDialog, { type IUseDialog } from '@/composables/useDialog'
 import useNotification from '@/composables/useNotification'
 
 const {
   dialogProps: client,
   isDialogVisible,
   handleToggleDialog
-} = useDialog() as UseDialog & { dialogProps: Client }
+} = useDialog() as IUseDialog<Client>
 const clientStore = useClientStore()
 const notification = useNotification()
 
@@ -73,7 +73,7 @@ const clientInfoModel = reactive<ClientInfoForm>({
   name: ''
 })
 
-const isEditingClient = computed(() => Boolean(client.value.id))
+const isEditingClient = computed(() => Boolean(client.value?.id))
 
 function handleCloseDialog (): void {
   isDialogVisible.value = false
@@ -81,7 +81,7 @@ function handleCloseDialog (): void {
 
 function handleCreateEditClient (): void {
   clientInfoRulesRef?.value?.instance?.validate((valid) => {
-    if (!valid) return
+    if (!valid || !client.value) return
 
     if (isEditingClient.value) {
       clientStore.updateClient(client.value.id, clientInfoModel)
@@ -98,7 +98,7 @@ function handleCreateEditClient (): void {
 }
 
 watch(isDialogVisible, (newVal: boolean): void => {
-  if (newVal && client.value.id) {
+  if (newVal && client.value?.id) {
     clientInfoModel.name = client.value.name
   } else {
     clientInfoModel.name = ''

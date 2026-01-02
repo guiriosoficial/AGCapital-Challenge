@@ -130,10 +130,12 @@ defineProps({
     default: false
   },
   formatter: {
-    type: Function
+    type: Function,
+    default: undefined
   },
   parser: {
-    type: Function
+    type: Function,
+    default: undefined
   },
   showPassword: {
     type: Boolean,
@@ -148,10 +150,12 @@ defineProps({
     default: 'default'
   },
   prefixIcon: {
-    type: [String, Object as () => Component]
+    type: [String, Object as () => Component],
+    default: undefined
   },
   suffixIcon: {
-    type: [String, Object as () => Component]
+    type: [String, Object as () => Component],
+    default: undefined
   },
   rows: {
     type: Number,
@@ -166,30 +170,44 @@ defineProps({
     default: 'off'
   },
   name: {
-    type: String
+    type: String,
+    default: undefined
   },
   readonly: {
     type: Boolean,
     default: false
   },
-  max: {},
-  min: {},
-  step: {},
+  max: {
+    type: [String, Number],
+    default: undefined
+  },
+  min: {
+    type: [String, Number],
+    default: undefined
+  },
+  step: {
+    type: [String, Number],
+    default: undefined
+  },
   resize: {
-    type: String as PropType<'none' | 'both' | 'horizontal' | 'vertical'>
+    type: String as PropType<'none' | 'both' | 'horizontal' | 'vertical'>,
+    default: undefined
   },
   autofocus: {
     type: Boolean,
     default: false
   },
   form: {
-    type: String
+    type: String,
+    default: undefined
   },
   label: {
-    type: String
+    type: String,
+    default: undefined
   },
   tabindex: {
-    type: [String, Number]
+    type: [String, Number],
+    default: undefined
   },
   validateEvent: {
     type: Boolean,

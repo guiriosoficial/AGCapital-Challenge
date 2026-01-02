@@ -4,7 +4,7 @@ import type { Ref } from 'vue'
 
 const projectsPath = '/projects'
 
-async function searchProjectsByClients (query: Record<string, any>): Promise<Ref<ClientProjects[]>> {
+async function searchProjectsByClients (query: Record<string, unknown>): Promise<Ref<ClientProjects[]>> {
   const response = await fetch(`${projectsPath}?${buildQuery(query)}`).json()
   return response.data
 }

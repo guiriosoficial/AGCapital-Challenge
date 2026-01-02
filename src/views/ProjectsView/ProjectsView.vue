@@ -149,7 +149,12 @@ import AgcTabPane from '@/components/atoms/AgcTabPane'
 import AgcTabs from '@/components/atoms/AgcTabs'
 import useClientStore, { type Client } from '@/stores/clientsStore'
 import useMessageBox from '@/composables/useMessageBox'
-import useProjectsStore, { type ClientProjects, type Project, ProjectStatuses } from '@/stores/projectsStore'
+import useProjectsStore, {
+  type ClientProjects,
+  type NewProject,
+  type Project,
+  ProjectStatuses
+} from '@/stores/projectsStore'
 import useNotification from '@/composables/useNotification'
 
 const ClientInfoDialog = defineAsyncComponent(() => import('./dialogs/ClientInfoDialog'))
@@ -241,7 +246,12 @@ function handleClickProject (project: Project): void {
 }
 
 function handleCreateProjectDialog (client: Client): void {
-  projectInfoDialogRef.value?.handleToggleDialog({ client })
+  const newProject = { name: '', description: '', status: ProjectStatuses.OPEN } as NewProject
+
+  projectInfoDialogRef.value?.handleToggleDialog({
+    ...newProject,
+    client
+  })
 }
 
 function handleEditProject (project: Project, client: Client): void {
