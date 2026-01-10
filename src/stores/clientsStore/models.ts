@@ -1,12 +1,7 @@
-interface Client extends NewClient{
+export interface Client {
   id: string
-}
-
-interface NewClient {
   name: string
 }
 
-export type {
-  Client,
-  NewClient
-}
+export type NewClient = Omit<Client, 'id'>
+

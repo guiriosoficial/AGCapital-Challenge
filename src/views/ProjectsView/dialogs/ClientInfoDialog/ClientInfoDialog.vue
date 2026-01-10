@@ -1,7 +1,7 @@
 <template>
   <AgcDialog
-    v-if="isDialogVisible"
-    v-model="isDialogVisible"
+    v-if="isOpen"
+    v-model="isOpen"
     title="Add a new client"
   >
     <AgcForm
@@ -44,13 +44,13 @@ import AgcFormItem from '@/components/atoms/AgcFormItem'
 import AgcInput from '@/components/atoms/AgcInput'
 import type { FormRules } from 'element-plus'
 import useClientStore, { type Client } from '@/stores/clientsStore'
-import useDialog, { type IUseDialog } from '@/composables/useDialog'
-import useNotification from '@/composables/useNotification'
+import { useDialog, type IUseDialog } from '@/composables/useDialog'
+import { useNotification } from '@/composables/useNotification'
 
 const {
-  dialogProps: client,
-  isDialogVisible,
-  handleToggleDialog
+  props: client,
+  isOpen,
+  toggle
 } = useDialog() as IUseDialog<Client>
 const clientStore = useClientStore()
 const notification = useNotification()
@@ -76,7 +76,7 @@ const clientInfoModel = reactive<ClientInfoForm>({
 const isEditingClient = computed(() => Boolean(client.value?.id))
 
 function handleCloseDialog (): void {
-  isDialogVisible.value = false
+  isOpen.value = false
 }
 
 function handleCreateEditClient (): void {
@@ -84,20 +84,34 @@ function handleCreateEditClient (): void {
     if (!valid || !client.value) return
 
     if (isEditingClient.value) {
-      clientStore.updateClient(client.value.id, clientInfoModel)
-        .then(() => notification.success('Client updated successfully'))
-        .catch(() => notification.error('Error updating client, please try again'))
+      handleEditClient(client.value.id)
     } else {
-      clientStore.createClient(clientInfoModel)
-        .then(() => notification.success('Client created successfully'))
-        .catch(() => notification.error('Error creating client, please try again'))
+      handleCreateClient()
     }
 
     handleCloseDialog()
   })
 }
 
-watch(isDialogVisible, (newVal: boolean): void => {
+async function handleEditClient (projectId) {
+  try {
+    await clientStore.updateClient(projectId, clientInfoModel)
+    notification.success('Client updated successfully')
+  } catch {
+    notification.error('Error updating client, please try again')
+  }
+}
+
+async function handleCreateClient () {
+  try {
+    await clientStore.createClient(clientInfoModel)
+    notification.success('Client created successfully')
+  } catch {
+    notification.error('Error creating client, please try again')
+  }
+}
+
+watch(isOpen, (newVal: boolean): void => {
   if (newVal && client.value?.id) {
     clientInfoModel.name = client.value.name
   } else {
@@ -106,6 +120,6 @@ watch(isDialogVisible, (newVal: boolean): void => {
 })
 
 defineExpose({
-  handleToggleDialog
+  toggle
 })
 </script>

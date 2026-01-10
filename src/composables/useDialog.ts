@@ -1,26 +1,40 @@
 import { ref, shallowRef, type Ref } from 'vue'
 
-interface IUseDialog<T> {
-  dialogProps: Ref<T | null>
-  isDialogVisible: Ref<boolean>
-  handleToggleDialog: (params?: T) => void
+export interface IUseDialog<T> {
+  props: Ref<T | null>
+  isOpen: Ref<boolean>
+  toggle: (params?: T) => void
+  open: (params?: T) => void
+  close: () => void
 }
 
-function useDialog<T> (): IUseDialog<T> {
-  const dialogProps = shallowRef<T | null>(null)
-  const isDialogVisible = ref<boolean>(false)
+export function useDialog<T> (): IUseDialog<T> {
+  const props = shallowRef<T | null>(null)
+  const isOpen = ref<boolean>(false)
 
-  function handleToggleDialog (params?: T): void {
-    dialogProps.value = params ?? null
-    isDialogVisible.value = !isDialogVisible.value
+  function open (params?: T): void {
+    props.value = params ?? null
+    isOpen.value = true
+  }
+
+  function close (): void {
+    isOpen.value = false
+    props.value = null
+  }
+
+  function toggle (params?: T): void {
+    if (isOpen.value) {
+      close()
+    } else {
+      open(params)
+    }
   }
 
   return {
-    dialogProps,
-    isDialogVisible,
-    handleToggleDialog
+    props,
+    isOpen,
+    toggle,
+    open,
+    close,
   }
 }
-
-export default useDialog
-export type { IUseDialog }

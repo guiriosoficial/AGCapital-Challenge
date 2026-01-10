@@ -1,37 +1,25 @@
-import type { Client } from '../clientsStore/models'
+import type { Client } from '@/stores/clientsStore'
 
-enum ProjectStatuses {
+export enum ProjectStatuses {
   OPEN = 'OPEN',
   CLOSED = 'CLOSED',
 }
 
-interface EditableProject {
+export interface EditableProject {
   name?: string
   description?: string
   status?: ProjectStatuses
 }
 
-interface NewProject {
+export interface Project {
+  id: string
   name: string
   description: string
   status: ProjectStatuses
 }
 
-interface Project extends NewProject {
-  id: string
-}
+export type NewProject = Omit<Project, 'id'>
 
-interface ClientProjects extends Client {
+export interface ClientProjects extends Client {
   projects: Project[]
-}
-
-export type {
-  Project,
-  EditableProject,
-  NewProject,
-  ClientProjects
-}
-
-export {
-  ProjectStatuses
 }

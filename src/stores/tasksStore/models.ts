@@ -1,24 +1,14 @@
-enum TaskStatuses {
+export enum TaskStatuses {
   TODO = 'TODO',
   DOING = 'DOING',
   DONE = 'DONE',
   CANCELLED = 'CANCELLED'
 }
 
-interface NewTask {
+export interface Task {
+  id: string
   description: string
   status: TaskStatuses
 }
 
-interface Task extends NewTask {
-  id: string
-}
-
-export type {
-  Task,
-  NewTask
-}
-
-export {
-  TaskStatuses
-}
+export type NewTasks = Omit<Task, 'id'>

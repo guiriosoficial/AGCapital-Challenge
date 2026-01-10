@@ -1,7 +1,7 @@
 <template>
   <AgcDialog
-    v-if="isDialogVisible"
-    v-model="isDialogVisible"
+    v-if="isOpen"
+    v-model="isOpen"
     :title="`Create a new project for ${project?.client.name ?? '...'}`"
   >
     <AgcForm
@@ -56,18 +56,18 @@ import AgcFormItem from '@/components/atoms/AgcFormItem'
 import AgcInput from '@/components/atoms/AgcInput'
 import type { Client } from '@/stores/clientsStore'
 import type { FormRules } from 'element-plus'
-import useDialog, { type IUseDialog } from '@/composables/useDialog'
+import { useDialog, type IUseDialog } from '@/composables/useDialog'
 import useProjectsStore, { type Project, type NewProject, ProjectStatuses } from '@/stores/projectsStore'
-import useNotification from '@/composables/useNotification'
+import { useNotification } from '@/composables/useNotification'
 
 interface Props extends NewProject, Partial<Omit<Project, keyof NewProject>>{
   client: Client
 }
 
 const {
-  dialogProps: project,
+  props: project,
   isDialogVisible,
-  handleToggleDialog
+  toggle
 } = useDialog() as IUseDialog<Props>
 const projectStore = useProjectsStore()
 const notification = useNotification()
@@ -110,17 +110,31 @@ function handleCreateEditProject () {
     if (!valid || !project.value) return
 
     if (isEditingProject.value && project.value.id) {
-      projectStore.editProject(project.value.id, projectInfoModel)
-        .then(() => notification.success('Project updated successfully'))
-        .catch(() => notification.error('Error updating project, please try again'))
+      handleEditProject(project.value.id)
     } else {
-      projectStore.createProject(project.value.client.id, projectInfoModel)
-        .then(() => notification.success('Project created successfully'))
-        .catch(() => notification.error('Error creating project, please try again'))
+      handleCreateProject(project.value.client.id)
     }
 
     handleCloseDialog()
   })
+}
+
+async function handleEditProject (projectId: string) {
+  try {
+    await projectStore.editProject(projectId, projectInfoModel)
+    notification.success('Project updated successfully')
+  } catch {
+    notification.error('Error updating project, please try again')
+  }
+}
+
+async function handleCreateProject (clientId: string) {
+  try {
+    await projectStore.createProject(clientId, projectInfoModel)
+    notification.success('Project created successfully')
+  } catch {
+    notification.error('Error creating project, please try again')
+  }
 }
 
 watch(isDialogVisible, (newVal: boolean): void => {
@@ -134,6 +148,6 @@ watch(isDialogVisible, (newVal: boolean): void => {
 })
 
 defineExpose({
-  handleToggleDialog
+  toggle
 })
 </script>

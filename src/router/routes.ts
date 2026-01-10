@@ -1,26 +1,35 @@
-const routes = [
-  {
-    path: '/projects/:tab',
-    name: 'projects',
-    component: async () => await import('@/views/ProjectsView')
-  },
+const ProjectsView = () => import('@/views/ProjectsView')
+const TasksView = () => import('@/views/TasksView')
+
+export const routes = [
   {
     path: '/projects',
-    redirect: { name: 'projects', params: { tab: 'open' } }
-  },
-  {
-    path: '/project/:projectId/tasks/',
-    name: 'project-tasks',
-    component: async () => await import('@/views/TasksView')
-  },
-  {
-    path: '/',
-    redirect: { name: 'projects', params: { tab: 'open' } }
+    children: [
+      {
+        path: ':tab',
+        name: 'projects',
+        component: ProjectsView,
+        props: true
+      },
+      {
+        path: 'id/:projectId/tasks/',
+        name: 'project-tasks',
+        component: TasksView
+      },
+      {
+        path: '',
+        redirect: {
+          name: 'projects',
+          params: { tab: 'open' }
+        }
+      }
+    ]
   },
   {
     path: '/:pathMatch(.*)*',
-    redirect: { name: 'projects', params: { tab: 'open' } }
+    redirect: {
+      name: 'projects',
+      params: { tab: 'open' }
+    }
   }
 ]
-
-export default routes

@@ -1,73 +1,94 @@
 import { ElNotification } from 'element-plus'
-import type { NotificationHandle, NotificationParams } from 'element-plus'
 
-interface IUseNotification {
-  success: (options: NotificationParams) => NotificationHandle
-  warning: (options: NotificationParams) => NotificationHandle
-  info: (options: NotificationParams) => NotificationHandle
-  error: (options: NotificationParams) => NotificationHandle
+type NotificationPositions = 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left'
+
+type NotificationType = 'success' | 'warning' | 'info' | 'error'
+
+interface INotificationOptions {
+  position?: NotificationPositions,
+  duration?: number,
+  offset?: number,
+  showClose?: boolean,
+  title?: string,
+  message?: string
 }
 
-const defaults: object = {
+interface INotificationHandle {
+  close: () => void
+}
+
+interface IUseNotification {
+  success: (message?: string, options?: INotificationOptions) => INotificationHandle
+  warning: (message?: string, options?: INotificationOptions) => INotificationHandle
+  info: (message?: string, options?: INotificationOptions) => INotificationHandle
+  error: (message?: string, options?: INotificationOptions) => INotificationHandle
+}
+
+const defaults: INotificationOptions = {
   position: 'top-right',
   duration: 5000,
   offset: 110,
   showClose: true
 }
 
-function success (options: NotificationParams = {}): NotificationHandle {
-  const title: string = 'Yay!'
-  const message: string = 'Realizado com sucesso!'
+function notify (
+  type: NotificationType,
+  defaultTitle: string,
+  defaultMessage: string,
+  options: INotificationOptions = {}
+): INotificationHandle {
+  const {
+    title = defaultTitle,
+    message = defaultMessage,
+    ...rest
+  } = options
 
   return ElNotification({
     ...defaults,
+    ...rest,
     title,
     message,
-    type: 'success',
-    ...(options as object)
+    type
   })
 }
 
-function warning (options: NotificationParams = {}): NotificationHandle {
-  const title: string = 'Atenção!'
-  const message: string = ''
-
-  return ElNotification({
-    ...defaults,
-    title,
-    message,
-    type: 'warning',
-    ...(options as object)
-  })
+function success (message?: string, options?: INotificationOptions) {
+  return notify(
+    'success',
+    'Yay!',
+    message ?? 'Realizado com sucesso!',
+    options
+  )
 }
 
-function info (options: NotificationParams = {}): NotificationHandle {
-  const title: string = 'Informação!'
-  const message: string = ''
-
-  return ElNotification({
-    ...defaults,
-    title,
-    message,
-    type: 'info',
-    ...(options as object)
-  })
+function warning (message?: string, options?: INotificationOptions) {
+  return notify(
+    'warning',
+    'Atenção!',
+    message ?? '',
+    options
+  )
 }
 
-function error (options: NotificationParams = {}): NotificationHandle {
-  const title: string = 'Ops!'
-  const message: string = 'Tente novamente ou entre em contato com o administrador do sistema.'
-
-  return ElNotification({
-    ...defaults,
-    title,
-    message,
-    type: 'error',
-    ...(options as object)
-  })
+function info (message?: string, options?: INotificationOptions) {
+  return notify(
+    'info',
+    'Informação!',
+    message ?? '',
+    options
+  )
 }
 
-function useNotification (): IUseNotification {
+function error (message?: string, options?: INotificationOptions) {
+  return notify(
+    'error',
+    'Ops!',
+    message ?? 'Tente novamente ou entre em contato com o administrador do sistema.',
+    options
+  )
+}
+
+export function useNotification (): IUseNotification {
   return {
     success,
     warning,
@@ -75,6 +96,3 @@ function useNotification (): IUseNotification {
     error
   }
 }
-
-export default useNotification
-export type { IUseNotification }

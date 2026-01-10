@@ -3,10 +3,10 @@
     <header class="tasks-view-container__header">
       <div
         class="tasks-view-container__header-title"
-        @click="backHome()"
+        @click="goToHome"
       >
         <AgcIcon :icon="Back" />
-        {{ projectsStore.getCurrentProject?.name }} Tasks
+        {{ projectsStore.currentProject?.name }} Tasks
       </div>
       <AgcInput
         v-model="searchQuery"
@@ -16,7 +16,7 @@
       />
     </header>
     <div
-      v-loading="isLoading"
+      v-loading="isLoadingTasks"
       class="tasks-view-container__body"
     >
       <AgcCard
@@ -34,7 +34,7 @@
         <AgcPopoverInlineEditor
           v-model="task.status"
           :options="statusOptions"
-          @change="handleEditTaskStatus(task.id, $event)"
+          @input="handleEditTaskStatus(task.id, $event)"
         >
           <template #reference>
             <AgcTag
@@ -95,9 +95,10 @@ import AgcInput from '@/components/atoms/AgcInput'
 import AgcPopoverInlineEditor from '@/components/molecles/AgcPopoverInlineEditor'
 import AgcTag from '@/components/atoms/AgcTag'
 import AgcTextInlineEditor from '@/components/molecles/AgcTextInlineEditor'
-import useMessageBox from '@/composables/useMessageBox'
-import useNotification from '@/composables/useNotification'
+import { useMessageBox } from '@/composables/useMessageBox'
+import { useNotification } from '@/composables/useNotification'
 import useProjectsStore from '@/stores/projectsStore'
+import { storeToRefs } from 'pinia'
 
 const messageBox = useMessageBox()
 const notification = useNotification()
@@ -130,51 +131,46 @@ const searchQuery = ref('')
 const isCreatingTask = ref(false)
 const newTaskDescription = ref('')
 
-const isLoading = computed((): boolean => {
-  return tasksStore.getIsLoadingTasks
-})
+const { isLoadingTasks, projectTasks } = storeToRefs(tasksStore)
 
 const filteredTasks = computed((): Task[] => {
-  return filterByTerm(tasksStore.getProjectTasks, searchQuery.value, ['description', 'status'])
+  return filterByTerm(projectTasks.value, searchQuery.value, ['description', 'status'])
 })
 
-onBeforeMount(() => {
-  tasksStore.searchTasksByProject(projectId)
-    .catch(() => {
-      notification.error('Error loading tasks')
-      backHome()
-    })
+onBeforeMount(async () => {
+  try {
+    await tasksStore.searchTasksByProject(projectId)
+  } catch {
+    notification.error('Error loading tasks')
+    goToHome()
+  }
 })
 
-function getStatusTagTypes (status: TaskStatuses): 'primary' | 'success' | 'info' | 'warning' | 'danger' | undefined {
-  switch (status) {
-    case TaskStatuses.TODO:
-      return 'warning'
-    case TaskStatuses.DOING:
-      return 'primary'
-    case TaskStatuses.DONE:
-      return 'success'
-    case TaskStatuses.CANCELLED:
-      return 'danger'
+async function handleCreateTask (taskDescription: string): Promise<void> {
+  try {
+    await tasksStore.createTask(projectId, taskDescription)
+    notification.success('Task created successfully')
+  } catch {
+    notification.error('Error creating task, please try again')
   }
 }
 
-function handleCreateTask (taskDescription: string): void {
-  tasksStore.createTask(projectId, taskDescription)
-    .then(() => notification.success('Task created successfully'))
-    .catch(() => notification.error('Error creating task, please try again'))
+async function handleEditTaskDescriptions (taskId: string, taskDescription: string): Promise<void> {
+  try {
+    await tasksStore.updateTaskDescriptions(taskId, taskDescription)
+    notification.success('Task description updated successfully')
+  } catch {
+    notification.error('Error updating task description, please try again')
+  }
 }
 
-function handleEditTaskDescriptions (taskId: string, taskDescription: string): void {
-  tasksStore.updateTaskDescriptions(taskId, taskDescription)
-    .then(() => notification.success('Task description updated successfully'))
-    .catch(() => notification.error('Error updating task description, please try again'))
-}
-
-function handleEditTaskStatus (taskId: string, taskStatus: TaskStatuses): void {
-  tasksStore.updateTaskStatus(taskId, taskStatus)
-    .then(() => notification.success('Task status updated successfully'))
-    .catch(() => notification.error('Error updating task status, please try again'))
+async function handleEditTaskStatus (taskId: string, taskStatus: TaskStatuses): Promise<void> {
+  try {
+    await tasksStore.updateTaskStatus(taskId, taskStatus)
+    notification.success('Task status updated successfully')
+  } catch {
+    notification.error('Error updating task status, please try again')
+  }
 }
 
 function handleDeleteTask (taskId: string) {
@@ -189,7 +185,20 @@ function handleDeleteTask (taskId: string) {
   })
 }
 
-function backHome () {
+function getStatusTagTypes (status: TaskStatuses): 'primary' | 'success' | 'info' | 'warning' | 'danger' | undefined {
+  switch (status) {
+    case TaskStatuses.TODO:
+      return 'warning'
+    case TaskStatuses.DOING:
+      return 'primary'
+    case TaskStatuses.DONE:
+      return 'success'
+    case TaskStatuses.CANCELLED:
+      return 'danger'
+  }
+}
+
+function goToHome () {
   router.push({
     name: 'projects',
     params: { tab: 'open' }
@@ -197,7 +206,7 @@ function backHome () {
 }
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 .tasks-view-container {
   .tasks-view-container__header {
     border-bottom: 2px solid var(--el-border-color);

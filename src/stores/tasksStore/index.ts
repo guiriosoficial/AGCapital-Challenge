@@ -9,10 +9,6 @@ const useTasksStore = defineStore('tasksStore', () => {
   const projectTasks = ref<Task[]>([])
   const isLoadingTasks = ref<boolean>(false)
 
-  const getProjectTasks = computed((): Task[] => projectTasks.value)
-
-  const getIsLoadingTasks = computed((): boolean => isLoadingTasks.value)
-
   async function searchTasksByProject (projectId: string): Promise<void> {
     projectTasks.value = []
     isLoadingTasks.value = true
@@ -59,8 +55,8 @@ const useTasksStore = defineStore('tasksStore', () => {
   }
 
   return {
-    getProjectTasks,
-    getIsLoadingTasks,
+    projectTasks,
+    isLoadingTasks,
     searchTasksByProject,
     createTask,
     updateTaskDescriptions,

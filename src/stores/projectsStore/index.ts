@@ -10,12 +10,6 @@ const useProjectsStore = defineStore('projectsStore', () => {
   const projectsByClients = ref<ClientProjects[]>([])
   const isLoadingProjects = ref<boolean>(false)
 
-  const getProjectsByClients = computed((): ClientProjects[] => projectsByClients.value)
-
-  const getCurrentProject = computed((): Project | undefined => currentProject.value)
-
-  const getIsLoadingProjects = computed((): boolean => isLoadingProjects.value)
-
   function setCurrentProject (project?: Project) {
     currentProject.value = project
   }
@@ -98,9 +92,9 @@ const useProjectsStore = defineStore('projectsStore', () => {
   }
 
   return {
-    getProjectsByClients,
-    getCurrentProject,
-    getIsLoadingProjects,
+    projectsByClients,
+    currentProject,
+    isLoadingProjects,
     setCurrentProject,
     setProjectsByClients,
     searchProjectsByClients,

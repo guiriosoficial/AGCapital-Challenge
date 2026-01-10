@@ -1,3 +1,8 @@
-import { useDebounceFn as useDebounce } from "@vueuse/core";
+import { useDebounceFn, type PromisifyFn } from '@vueuse/core'
 
-export { useDebounce }
+export function useDebounce<T extends (...args: any[]) => any>(
+  fn: T,
+  delay: number = 200
+): PromisifyFn<T> {
+  return useDebounceFn(fn, delay)
+}

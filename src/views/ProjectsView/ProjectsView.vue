@@ -4,14 +4,14 @@
       <AgcInput
         v-model="searchTerm"
         :prefix-icon="Search"
-        :disabled="isLoading"
+        :disabled="isLoadingProjects"
         placeholder="Search for projects os clients"
         class="projects-view-container__input-search"
         @input="handleSearchTerm"
       />
       <AgcButton
         :icon="Plus"
-        :disabled="isLoading"
+        :disabled="isLoadingProjects"
         type="primary"
         class="hover-icon"
         @click="handleCreateClient"
@@ -26,8 +26,8 @@
       <AgcTabPane
         v-for="tab in tabs"
         :key="tab.name"
-        v-loading="isLoading"
-        :disabled="isLoading"
+        v-loading="isLoadingProjects"
+        :disabled="isLoadingProjects"
         :name="tab.name.toLowerCase()"
         :label="tab.title"
       >
@@ -36,10 +36,9 @@
           class="projects-view-container__collapse-clients"
         >
           <AgcCollapseItem
-            v-for="client in projects"
+            v-for="client in projectsByClients"
             :key="client.id"
             :name="String(client.id)"
-            :title="client.name"
           >
             <template #title>
               <div class="projects-view-container__collapse-header">
@@ -117,7 +116,7 @@
           </AgcCollapseItem>
         </AgcCollapse>
         <div
-          v-if="projects.length === 0"
+          v-if="projectsByClients.length === 0"
           class="projects-view-container__empty-state"
         >
           <AgcIcon
@@ -135,10 +134,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onBeforeMount, watch, defineAsyncComponent } from 'vue'
-import { Plus, Delete, EditPen, Search, FolderDelete } from '@element-plus/icons-vue'
-import { useDebounce } from '@/composables/useDebounce'
-import { useRoute, useRouter } from 'vue-router'
 import AgcButton from '@/components/atoms/AgcButton'
 import AgcCard from '@/components/atoms/AgcCard'
 import AgcCollapse from '@/components/atoms/AgcCollapse'
@@ -147,15 +142,20 @@ import AgcIcon from '@/components/atoms/AgcIcon'
 import AgcInput from '@/components/atoms/AgcInput'
 import AgcTabPane from '@/components/atoms/AgcTabPane'
 import AgcTabs from '@/components/atoms/AgcTabs'
+import { computed, ref, onBeforeMount, watch, defineAsyncComponent } from 'vue'
+import { Plus, Delete, EditPen, Search, FolderDelete } from '@element-plus/icons-vue'
+import { useDebounce } from '@/composables/useDebounce'
+import { useRoute, useRouter } from 'vue-router'
 import useClientStore, { type Client } from '@/stores/clientsStore'
-import useMessageBox from '@/composables/useMessageBox'
+import { useMessageBox } from '@/composables/useMessageBox'
 import useProjectsStore, {
+  ProjectStatuses,
   type ClientProjects,
   type NewProject,
-  type Project,
-  ProjectStatuses
+  type Project
 } from '@/stores/projectsStore'
-import useNotification from '@/composables/useNotification'
+import { useNotification } from '@/composables/useNotification'
+import { storeToRefs } from 'pinia'
 
 const ClientInfoDialog = defineAsyncComponent(() => import('./dialogs/ClientInfoDialog'))
 const ProjectInfoDialog = defineAsyncComponent(() => import('./dialogs/ProjectInfoDialog'))
@@ -194,18 +194,13 @@ const activeTab = computed({
   }
 })
 
-const isLoading = computed((): boolean => {
-  return projectsStore.getIsLoadingProjects
-})
-
-const projects = computed((): ClientProjects[] => {
-  return projectsStore.getProjectsByClients
-})
+const {
+  isLoadingProjects,
+  projectsByClients
+} = storeToRefs(projectsStore)
 
 const mappedClientsIds = computed((): string[] => {
-  return projectsStore
-    .getProjectsByClients
-    .map((client: ClientProjects) => String(client.id))
+  return projectsByClients.value.map((client: ClientProjects) => String(client.id))
 })
 
 const activeCollapses = ref<string[]>([])
@@ -227,13 +222,17 @@ function handleUpdateData (status: string, searchTerm?: string): void {
   })
 }
 
-function handleChangeTab (event: string): void {
-  handleUpdateData(event, searchTerm.value)
+function handleChangeTab (tab: string | number): void {
+  handleUpdateData(String(tab), searchTerm.value)
 }
 
-const handleSearchTerm = useDebounce((event: string) => {
-  handleUpdateData(activeTab.value, event)
-}, 800) 
+function handleSearchTerm (): void {
+  const SEARCH_DELAY_MS = 800
+
+  useDebounce((event: string) => {
+    handleUpdateData(activeTab.value, event)
+  }, SEARCH_DELAY_MS)
+}
 
 function handleClickProject (project: Project): void {
   projectsStore.setCurrentProject(project)
@@ -248,24 +247,28 @@ function handleClickProject (project: Project): void {
 function handleCreateProjectDialog (client: Client): void {
   const newProject = { name: '', description: '', status: ProjectStatuses.OPEN } as NewProject
 
-  projectInfoDialogRef.value?.handleToggleDialog({
+  projectInfoDialogRef.value?.toggle({
     ...newProject,
     client
   })
 }
 
 function handleEditProject (project: Project, client: Client): void {
-  projectInfoDialogRef.value?.handleToggleDialog({
+  projectInfoDialogRef.value?.toggle({
     ...project,
     client
   })
 }
 
-function handleMoveProject (projectId: string, status: ProjectStatuses): void {
+async function handleMoveProject (projectId: string, status: ProjectStatuses): Promise<void> {
   const newStatus = status === ProjectStatuses.OPEN ? ProjectStatuses.CLOSED : ProjectStatuses.OPEN
-  projectsStore.editProjectStatus(projectId, { status: newStatus })
-    .then(() => notification.success('Project status changed successfully'))
-    .catch(() => notification.error('Error changing project status, please try again'))
+
+  try {
+    await projectsStore.editProjectStatus(projectId, { status: newStatus })
+    notification.success('Project status changed successfully')
+  } catch {
+    notification.error('Error changing project status, please try again')
+  }
 }
 
 function handleDeleteProject (projectId: string, projectName: string): void {
@@ -281,7 +284,7 @@ function handleDeleteProject (projectId: string, projectName: string): void {
 }
 
 function handleCreateClient (): void {
-  clientInfoDialogRef.value?.handleToggleDialog()
+  clientInfoDialogRef.value?.toggle()
 }
 
 function handleDeleteClient (clientId: string, clientName: string): void {
@@ -297,7 +300,7 @@ function handleDeleteClient (clientId: string, clientName: string): void {
 }
 
 function handleEditClient (clientId: string, clientName: string): void {
-  clientInfoDialogRef.value?.handleToggleDialog({
+  clientInfoDialogRef.value?.toggle({
     id: clientId,
     name: clientName
   })

@@ -1,52 +1,96 @@
 import { ElMessageBox } from 'element-plus'
-import type { ElMessageBoxOptions, MessageBoxData } from 'element-plus'
 
-interface IUseMessageBox {
-  alert: (title: string, message: string, options: ElMessageBoxOptions) => Promise<MessageBoxData>
-  confirm: (title: string, message: string, options: ElMessageBoxOptions) => Promise<MessageBoxData>
-  prompt: (title: string, message: string, options: ElMessageBoxOptions) => Promise<MessageBoxData>
+interface IMessageBoxOptions {
+  confirmButtonText?: string,
+  cancelButtonText?: string,
+  showClose?: boolean
 }
 
-const defaults: object = {
+export interface IUseMessageBox {
+  alert: (
+    title: string,
+    message: string,
+    options?: IMessageBoxOptions
+  ) => Promise<void>
+
+  confirm: (
+    title: string,
+    message: string,
+    options?: IMessageBoxOptions
+  ) => Promise<boolean>
+
+  prompt: (
+    title: string,
+    message: string,
+    options?: IMessageBoxOptions
+  ) => Promise<string | null>
+}
+
+const defaults: IMessageBoxOptions = {
   confirmButtonText: 'Ok',
   cancelButtonText: 'Cancel',
   showClose: true
 }
 
-function alert (title: string, message: string, options: ElMessageBoxOptions = {}): Promise<MessageBoxData> {
-  return ElMessageBox.alert(message, title, {
+function resolveOptions (
+  options?: IMessageBoxOptions
+): IMessageBoxOptions {
+  return {
     ...defaults,
-    message,
-    title,
     ...options
-  })
+  }
 }
 
-function confirm (title: string, message: string, options: ElMessageBoxOptions = {}): Promise<MessageBoxData> {
-  return ElMessageBox.confirm(message, title, {
-    ...defaults,
+async function alert (
+  title: string,
+  message: string,
+  options?: IMessageBoxOptions
+): Promise<void> {
+  await ElMessageBox.alert(
     message,
     title,
-    ...options
-  })
+    resolveOptions(options)
+  )
 }
 
-function prompt (title: string, message: string, options: ElMessageBoxOptions = {}): Promise<MessageBoxData> {
-  return ElMessageBox.prompt(message, title, {
-    ...defaults,
-    message,
-    title,
-    ...options
-  })
+async function confirm (
+  title: string,
+  message: string,
+  options: IMessageBoxOptions = {}
+): Promise<boolean> {
+  try {
+    await ElMessageBox.confirm(
+      message,
+      title,
+      resolveOptions(options)
+    )
+    return true
+  } catch {
+    return false
+  }
 }
 
-function useMessageBox (): IUseMessageBox {
+async function prompt (
+  title: string,
+  message: string,
+  options: IMessageBoxOptions = {}
+): Promise<string | null> {
+  try {
+    const { value } = await ElMessageBox.prompt(
+      message,
+      title,
+      resolveOptions(options)
+    )
+    return value
+  } catch {
+    return null
+  }
+}
+
+export function useMessageBox (): IUseMessageBox {
   return {
     alert,
     confirm,
     prompt
   }
 }
-
-export default useMessageBox
-export type { IUseMessageBox }
