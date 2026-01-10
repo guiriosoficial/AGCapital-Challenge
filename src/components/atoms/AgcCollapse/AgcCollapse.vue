@@ -1,33 +1,23 @@
 <template>
   <ElCollapse
-    v-bind="$attrs"
     v-model="modelValue"
-    :accordion="accordion"
+    :class="$attrs.class"
     @change="emit('change', $event)"
   >
-    <slot name="default" />
+    <slot />
   </ElCollapse>
 </template>
 
 <script setup lang="ts">
 import { ElCollapse } from 'element-plus'
+import type {
+  AgcCollapseModelValue,
+  IAgcCollapseEmits,
+} from './types.ts'
 
-defineOptions({
-  name: 'AgcCollapse',
-  inheritAttrs: false
-})
-
-const modelValue = defineModel<string | string[]>('modelValue', {
-  required: true,
+const modelValue = defineModel<AgcCollapseModelValue | AgcCollapseModelValue[]>({
   default: () => []
 })
 
-defineProps({
-  accordion: {
-    type: Boolean,
-    default: false
-  }
-})
-
-const emit = defineEmits(['change'])
+const emit = defineEmits<IAgcCollapseEmits>()
 </script>

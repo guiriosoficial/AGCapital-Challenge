@@ -1,7 +1,7 @@
 <template>
   <h1
     class="agc-header"
-    @click="goHome()"
+    @click="goToHome"
   >
     AGCapital-Challenge
   </h1>
@@ -13,7 +13,7 @@ import { ProjectStatuses } from '@/stores/projectsStore'
 
 const router = useRouter()
 
-function goHome () {
+function goToHome() {
   router.push({
     name: 'projects',
     params: {

@@ -1,229 +1,38 @@
+<!-- TODO: Verificar/Implementar defineExposes -->
 <template>
   <ElInput
     ref="instance"
-    v-bind="$attrs"
     v-model="modelValue"
+    :class="$attrs.class"
     :type="type"
-    :maxlength="maxlength"
-    :minlength="minlength"
-    :show-word-limit="showWordLimit"
     :placeholder="placeholder"
-    :clearable="clearable"
-    :formatter="formatter"
-    :parser="parser"
-    :show-password="showPassword"
     :disabled="disabled"
-    :size="size"
     :prefix-icon="prefixIcon"
-    :suffix-icon="suffixIcon"
-    :rows="rows"
-    :autosize="autosize"
-    :autocomplete="autocomplete"
-    :name="name"
-    :readonly="readonly"
-    :max="max"
-    :min="min"
-    :step="step"
-    :resize="resize"
-    :autofocus="autofocus"
-    :form="form"
-    :label="label"
-    :tabindex="tabindex"
-    :validate-event="validateEvent"
-    :input-style="inputStyle"
-    @blur="$emit('blur', $event)"
-    @change="$emit('change', $event)"
-    @focus="$emit('focus', $event)"
-    @input="$emit('input', $event)"
-    @clear="$emit('clear', $event)"
-  >
-    <template
-      v-if="$slots.prefix"
-      #prefix
-    >
-      <slot name="prefix" />
-    </template>
-    <template
-      v-if="$slots.suffix"
-      #suffix
-    >
-      <slot name="suffix" />
-    </template>
-    <template
-      v-if="$slots.prepend"
-      #prepend
-    >
-      <slot name="prepend" />
-    </template>
-    <template
-      v-if="$slots.append"
-      #append
-    >
-      <slot name="append" />
-    </template>
-  </ElInput>
+    @input="emit('input', $event)"
+  />
 </template>
 
 <script setup lang="ts">
 import { ElInput } from 'element-plus'
-import type { PropType, Component, CSSProperties } from 'vue'
+import type {
+  IAgcInputProps,
+  IAgcInputEmits,
+  AgcInputModelValue
+} from './types'
 import { ref } from 'vue'
-
-defineOptions({
-  name: 'AgcInput',
-  inheritAttrs: false
-})
 
 const instance = ref()
 
-const modelValue = defineModel<string, number>('modelValue', {
+const modelValue = defineModel<AgcInputModelValue>({
   required: true
 })
 
-defineProps({
-  type: {
-    type: String as PropType<
-      | 'week'
-      | 'textarea'
-      | 'url'
-      | 'time'
-      | 'tel'
-      | 'text'
-      | 'password'
-      | 'submit'
-      | 'search'
-      | 'reset'
-      | 'range'
-      | 'radio'
-      | 'number'
-      | 'month'
-      | 'email'
-      | 'image'
-      | 'hidden'
-      | 'file'
-      | 'color'
-      | 'datetime-local'
-      | 'date'
-      | 'checkbox'
-      | 'button'
-    >,
-    default: 'text'
-  },
-  maxlength: {
-    type: [String, Number],
-    default: ''
-  },
-  minlength: {
-    type: [String, Number],
-    default: ''
-  },
-  showWordLimit: {
-    type: Boolean,
-    default: false
-  },
-  placeholder: {
-    type: String,
-    default: ''
-  },
-  clearable: {
-    type: Boolean,
-    default: false
-  },
-  formatter: {
-    type: Function,
-    default: undefined
-  },
-  parser: {
-    type: Function,
-    default: undefined
-  },
-  showPassword: {
-    type: Boolean,
-    default: false
-  },
-  disabled: {
-    type: Boolean,
-    default: false
-  },
-  size: {
-    type: String as PropType<'default' | 'small' | 'large'>,
-    default: 'default'
-  },
-  prefixIcon: {
-    type: [String, Object as () => Component],
-    default: undefined
-  },
-  suffixIcon: {
-    type: [String, Object as () => Component],
-    default: undefined
-  },
-  rows: {
-    type: Number,
-    default: 2
-  },
-  autosize: {
-    type: [Boolean, Object as () => { minRows?: number, maxRows?: number }],
-    default: false
-  },
-  autocomplete: {
-    type: String as PropType<AutoFill>,
-    default: 'off'
-  },
-  name: {
-    type: String,
-    default: undefined
-  },
-  readonly: {
-    type: Boolean,
-    default: false
-  },
-  max: {
-    type: [String, Number],
-    default: undefined
-  },
-  min: {
-    type: [String, Number],
-    default: undefined
-  },
-  step: {
-    type: [String, Number],
-    default: undefined
-  },
-  resize: {
-    type: String as PropType<'none' | 'both' | 'horizontal' | 'vertical'>,
-    default: undefined
-  },
-  autofocus: {
-    type: Boolean,
-    default: false
-  },
-  form: {
-    type: String,
-    default: undefined
-  },
-  label: {
-    type: String,
-    default: undefined
-  },
-  tabindex: {
-    type: [String, Number],
-    default: undefined
-  },
-  validateEvent: {
-    type: Boolean,
-    default: true
-  },
-  inputStyle: {
-    type: [String, Object as () => CSSProperties | CSSProperties[]],
-    default: () => {}
-  }
-})
+const {
+  type = 'text',
+  placeholder = '',
+  disabled = false,
+  prefixIcon,
+} = defineProps<IAgcInputProps>()
 
-defineEmits([
-  'blur',
-  'change',
-  'focus',
-  'input',
-  'clear'
-])
+const emit = defineEmits<IAgcInputEmits>()
 </script>

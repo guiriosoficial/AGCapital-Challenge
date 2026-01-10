@@ -1,6 +1,6 @@
 <template>
   <div class="popover-inline-editor">
-    <ElPopover
+    <AgcPopover
       ref="popoverEditor"
       placement="bottom"
       trigger="click"
@@ -27,50 +27,45 @@
           {{ selectedOption.label }}
         </span>
       </template>
-    </ElPopover>
+    </AgcPopover>
   </div>
 </template>
 
-<script lang="ts" setup>
-import { ref, computed, type PropType } from 'vue'
-import { ElPopover } from 'element-plus'
+<script setup lang="ts">
+import AgcPopover from '@/components/atoms/AgcPopover'
+import { ref, computed } from 'vue'
+import type {
+  AgcPopoverInlineEditorModelValue,
+  IAgcPopoverInlineEditorProps,
+  IAgcPopoverInlineEditorEmits,
+  IAgcPopoverInlineEditorOption
+} from './types.ts'
 
 const popoverEditor = ref()
 
-const props = defineProps({
-  modelValue: {
-    type: [String, Boolean],
-    default: ''
-  },
-  options: {
-    type: Array as PropType<Option[]>,
-    default: [] as Option[]
-  }
+const modelValue = defineModel<AgcPopoverInlineEditorModelValue>({
+  required: true,
+  default: ''
 })
 
-const emit = defineEmits(['change'])
+const {
+  options = []
+} = defineProps<IAgcPopoverInlineEditorProps>()
 
-const selectedOption = computed((): Option => {
-  const optionIndex = props.options.findIndex(
-    (option: Option) => option.value === props.modelValue
+const emit = defineEmits<IAgcPopoverInlineEditorEmits>()
+
+const selectedOption = computed<IAgcPopoverInlineEditorOption>(() => {
+  const optionIndex = options.findIndex(
+      (option: IAgcPopoverInlineEditorOption) => option.value === modelValue.value
   )
 
-  if (optionIndex >= 0) return props.options[optionIndex] as Option
-
-  return { value: '', label: '' }
+  return options[optionIndex] ?? { value: '', label: '' }
 })
 
-function handleSelect ({ value }: Option): void {
-  if (props.modelValue !== value) {
-    emit('change', value)
-  }
-
+function handleSelect (option: IAgcPopoverInlineEditorOption): void {
+  modelValue.value = option.value
+  emit('change', option.value)
   popoverEditor.value.hide()
-}
-
-interface Option {
-  value: string | number
-  label: string
 }
 </script>
 

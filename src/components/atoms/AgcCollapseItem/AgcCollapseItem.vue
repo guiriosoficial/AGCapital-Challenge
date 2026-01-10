@@ -1,37 +1,22 @@
 <template>
   <ElCollapseItem
-    v-bind="$attrs"
+    :class="$attrs.class"
     :title="title"
     :name="name"
-    :disabled="disabled"
   >
-    <template #title>
+    <template v-if="$slots.title" #title>
       <slot name="title" />
     </template>
-    <slot name="default" />
+    <slot />
   </ElCollapseItem>
 </template>
 
 <script setup lang="ts">
 import { ElCollapseItem } from 'element-plus'
+import type { IAgcCollapseItemProps } from './typea.ts'
 
-defineOptions({
-  name: 'AgcCollapseItem',
-  inheritAttrs: false
-})
-
-defineProps({
-  title: {
-    type: String,
-    default: ''
-  },
-  name: {
-    type: [String, Number],
-    default: undefined
-  },
-  disabled: {
-    type: Boolean,
-    default: false
-  }
-})
+const {
+  title = '',
+  name,
+} = defineProps<IAgcCollapseItemProps>()
 </script>

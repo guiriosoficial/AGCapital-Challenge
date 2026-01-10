@@ -1,8 +1,9 @@
 <template>
   <ElIcon
-    v-bind="$attrs"
+    :class="$attrs.class"
     :color="color"
     :size="size"
+    @click="emit('click', $event)"
   >
     <component :is="icon" />
   </ElIcon>
@@ -10,25 +11,17 @@
 
 <script setup lang="ts">
 import { ElIcon } from 'element-plus'
-import type { PropType, Component } from 'vue'
+import type {
+  IAgcIconEmits,
+  IAgcIconProps
+} from './types.ts'
 
-defineOptions({
-  name: 'AgcCard',
-  inheritAttrs: true
-})
+const {
+  color,
+  size = '1em',
+  icon
+} = defineProps<IAgcIconProps>()
 
-defineProps({
-  color: {
-    type: String,
-    default: undefined
-  },
-  size: {
-    type: [String, Number],
-    default: '1em'
-  },
-  icon: {
-    type: Object as PropType<Component>,
-    default: undefined
-  }
-})
+const emit = defineEmits<IAgcIconEmits>()
 </script>
+

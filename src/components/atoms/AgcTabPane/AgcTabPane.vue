@@ -1,10 +1,9 @@
+<!-- TODO: Verificar/Implementar Props v-loading, :key (v-bind) -->
 <template>
   <ElTabPane
     :label="label"
     :name="name"
     :disabled="disabled"
-    :closable="closable"
-    :lazy="lazy"
   >
     <template
       v-if="$slots.label"
@@ -18,32 +17,11 @@
 
 <script setup lang="ts">
 import { ElTabPane } from 'element-plus'
+import type { IAgcTabPaneProps } from './types.ts'
 
-defineOptions({
-  name: 'AgcTabPane',
-  inheritAttrs: false
-})
-
-defineProps({
-  label: {
-    type: String,
-    default: undefined
-  },
-  name: {
-    type: String,
-    default: undefined
-  },
-  disabled: {
-    type: Boolean,
-    default: false
-  },
-  closable: {
-    type: Boolean,
-    default: false
-  },
-  lazy: {
-    type: Boolean,
-    default: false
-  }
-})
+const {
+  label,
+  name,
+  disabled = false,
+} = defineProps<IAgcTabPaneProps>()
 </script>

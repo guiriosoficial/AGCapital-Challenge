@@ -39,34 +39,28 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
+import AgcIcon from '@/components/atoms/AgcIcon'
 import { ref, nextTick, watch, onMounted } from 'vue'
 import { EditPen, Check, Close } from '@element-plus/icons-vue'
-import AgcIcon from '@/components/atoms/AgcIcon'
-
-enum KeyCodes {
-  ENTER = 'Enter',
-  ESCAPE = 'Escape'
-}
+import {
+  KeyCodes,
+  type AgcTextInlineEditorMovelValue,
+  type IAgcTextInlineEditorEmits,
+  type IAgcTextInlineEditorProps
+} from './types.ts'
 
 const textInput = ref()
 
-const modelValue = defineModel<string, number>('modelValue', {
+const modelValue = defineModel<AgcTextInlineEditorMovelValue>({
   required: true,
-  default: ''
 })
 
-const props = defineProps({
-  startEditing: {
-    type: Boolean,
-    default: false
-  }
-})
+const {
+  startEditing = false
+} = defineProps<IAgcTextInlineEditorProps>()
 
-const emit = defineEmits([
-  'blur',
-  'change'
-])
+const emit = defineEmits<IAgcTextInlineEditorEmits>()
 
 const isEditing = ref<boolean>(false)
 
@@ -86,11 +80,13 @@ function confirmEdit (): void {
 }
 
 function cancelEdit (): void {
+  const CANCEL_DELAY_MS = 200
+
   setTimeout(() => {
     editingModelValue.value = ''
     isEditing.value = false
     emit('blur')
-  }, 200)
+  }, CANCEL_DELAY_MS)
 }
 
 function handleKeys (event: KeyboardEvent): void {
@@ -115,7 +111,7 @@ watch(isEditing, (newValue: boolean) => {
 })
 
 onMounted(() => {
-  if (props.startEditing) {
+  if (startEditing) {
     startEdit()
   }
 })

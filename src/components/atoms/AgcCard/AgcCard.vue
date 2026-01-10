@@ -1,57 +1,29 @@
 <template>
   <ElCard
-    v-bind="$attrs"
-    :header="header"
-    :footer="footer"
+    :class="$attrs.class"
+    :style="$attrs.style"
     :body-class="bodyClass"
-    :body-style="bodyStyle"
     :shadow="shadow"
+    @click="emit('click', $event)"
   >
-    <template
-      v-if="$slots.header"
-      #header
-    >
+    <template v-if="$slots.header" #header>
       <slot name="header" />
     </template>
-    <slot name="default" />
-    <template
-      v-if="$slots.footer"
-      #footer
-    >
-      <slot name="footer" />
-    </template>
+    <slot />
   </ElCard>
 </template>
 
 <script setup lang="ts">
 import { ElCard } from 'element-plus'
-import type { PropType, CSSProperties } from 'vue'
+import type {
+  IAgcCardEmits,
+  IAgcCardProps
+} from './types.ts'
 
-defineOptions({
-  name: 'AgcCard',
-  inheritAttrs: true
-})
+const {
+  bodyClass,
+  shadow = 'always'
+} = defineProps<IAgcCardProps>()
 
-defineProps({
-  header: {
-    type: String,
-    default: undefined
-  },
-  footer: {
-    type: String,
-    default: undefined
-  },
-  bodyStyle: {
-    type: Object as PropType<CSSProperties>,
-    default: undefined
-  },
-  bodyClass: {
-    type: String,
-    default: undefined
-  },
-  shadow: {
-    type: String as PropType<'always' | 'hover' | 'never'>,
-    default: 'always'
-  }
-})
+const emit = defineEmits<IAgcCardEmits>()
 </script>
