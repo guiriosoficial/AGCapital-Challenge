@@ -7,13 +7,18 @@
       class="popover-inline-editor__popover"
       popper-class="popover-inline-editor__popper-class"
     >
-      <ul class="popover-inline-editor__list">
+      <ul
+        role="listbox"
+        class="popover-inline-editor__list"
+      >
         <li
           v-for="option in options"
           :key="option.value"
-          :class="{ 'popover-inline-editor__option--selected': option.value === modelValue }"
+          :class="{ 'popover-inline-editor__option--selected': isSelected(option) }"
+          role="option"
           class="popover-inline-editor__option"
           @click="handleSelect(option)"
+          @keydown.enter.space.prevent="handleSelect(option)"
         >
           {{ option.label }}
         </li>
@@ -24,7 +29,7 @@
           name="reference"
         />
         <span v-else>
-          {{ selectedOption.label }}
+          {{ selectedOption?.label || '—' }}
         </span>
       </template>
     </AgcPopover>
@@ -37,35 +42,30 @@ import { ref, computed } from 'vue'
 import type {
   AgcPopoverInlineEditorModelValue,
   IAgcPopoverInlineEditorProps,
-  IAgcPopoverInlineEditorEmits,
   IAgcPopoverInlineEditorOption
 } from './types.ts'
 
-const popoverEditor = ref()
+const popoverEditor = ref<InstanceType<typeof AgcPopover> | null>(null)
 
 const modelValue = defineModel<AgcPopoverInlineEditorModelValue>({
-  required: true,
-  default: ''
+  required: true
 })
 
 const {
   options = []
 } = defineProps<IAgcPopoverInlineEditorProps>()
 
-const emit = defineEmits<IAgcPopoverInlineEditorEmits>()
-
-const selectedOption = computed<IAgcPopoverInlineEditorOption>(() => {
-  const optionIndex = options.findIndex(
-      (option: IAgcPopoverInlineEditorOption) => option.value === modelValue.value
-  )
-
-  return options[optionIndex] ?? { value: '', label: '' }
+const selectedOption = computed<IAgcPopoverInlineEditorOption | null>(() => {
+  return options.find(option => option.value === modelValue.value) ?? null
 })
+
+function isSelected (option: IAgcPopoverInlineEditorOption): boolean {
+  return option.value === modelValue.value
+}
 
 function handleSelect (option: IAgcPopoverInlineEditorOption): void {
   modelValue.value = option.value
-  emit('change', option.value)
-  popoverEditor.value.hide()
+  popoverEditor.value?.hide()
 }
 </script>
 

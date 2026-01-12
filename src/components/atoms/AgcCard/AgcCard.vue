@@ -1,7 +1,6 @@
 <template>
   <ElCard
     :class="$attrs.class"
-    :style="$attrs.style"
     :body-class="bodyClass"
     :shadow="shadow"
     @click="emit('click', $event)"

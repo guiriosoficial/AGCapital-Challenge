@@ -1,5 +1,6 @@
 <template>
   <ElPopover
+    ref="popoverRef"
     :class="$attrs.class"
     :trigger="trigger"
     :placement="placement"
@@ -16,12 +17,22 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import { ElPopover } from 'element-plus'
-import type { IAgcPopoverProps } from './types'
+import type {
+  IAgcPopoverProps,
+  IAgcInputExpose
+} from './types'
+
+const popoverRef = ref<InstanceType<typeof ElPopover>>()
 
 const {
   trigger = 'hover',
   placement = 'bottom',
   popperClass,
 } = defineProps<IAgcPopoverProps>()
+
+defineExpose<IAgcInputExpose>({
+  hide: () => popoverRef.value?.hide()
+})
 </script>

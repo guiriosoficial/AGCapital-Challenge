@@ -18,10 +18,12 @@ export type AgcPopoverPlacement =
   | 'right-start'
   | 'right-end'
 
-export type AgcPopoverModelValue = boolean
-
 export interface IAgcPopoverProps {
   trigger?: AgcPopoverTrigger
   placement?: AgcPopoverPlacement
   popperClass?: string
+}
+
+export interface IAgcInputExpose {
+  hide: () => void
 }

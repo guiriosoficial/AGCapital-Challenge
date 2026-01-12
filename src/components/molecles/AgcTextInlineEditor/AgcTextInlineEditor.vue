@@ -7,8 +7,10 @@
       {{ modelValue }}
       <AgcIcon
         :icon="EditPen"
+        role="button"
         class="hover-icon text-inline-editor__inner-actions"
         @click="startEdit"
+        @keydown.enter.space.prevent="startEdit"
       />
     </span>
 
@@ -17,22 +19,28 @@
       class="text-inline-editor__input"
     >
       <input
-        id="textInlineEditorInput"
         ref="textInput"
+        type="text"
         v-model="editingModelValue"
         class="text-inline-editor__input-inner"
         @blur.self="cancelEdit"
+        @keydown.enter.prevent="confirmEdit"
+        @keydown.esc.prevent="cancelEdit"
       >
       <span class="text-inline-editor__input-inner-actions">
         <AgcIcon
           :icon="Check"
+          role="button"
           class="hover-icon"
           @click.stop="confirmEdit"
+          @keydown.enter.space.prevent="confirmEdit"
         />
         <AgcIcon
           :icon="Close"
+          role="button"
           class="hover-icon hover-icon--danger"
-          @click="cancelEdit"
+          @click.stop="cancelEdit"
+          @keydown.enter.space.prevent="cancelEdit"
         />
       </span>
     </div>
@@ -44,15 +52,14 @@ import AgcIcon from '@/components/atoms/AgcIcon'
 import { ref, nextTick, watch, onMounted } from 'vue'
 import { EditPen, Check, Close } from '@element-plus/icons-vue'
 import {
-  KeyCodes,
-  type AgcTextInlineEditorMovelValue,
+  type AgcTextInlineEditorModelValue,
   type IAgcTextInlineEditorEmits,
   type IAgcTextInlineEditorProps
 } from './types.ts'
 
-const textInput = ref()
+const textInput = ref<HTMLInputElement | null>(null)
 
-const modelValue = defineModel<AgcTextInlineEditorMovelValue>({
+const modelValue = defineModel<AgcTextInlineEditorModelValue>({
   required: true,
 })
 
@@ -69,46 +76,21 @@ const editingModelValue = ref<string | number>('')
 async function startEdit (): Promise<void> {
   editingModelValue.value = modelValue.value ?? ''
   isEditing.value = true
-  await nextTick(() => textInput.value.focus())
+  await nextTick(() => textInput.value?.focus())
 }
 
 function confirmEdit (): void {
   if (editingModelValue.value !== modelValue.value) {
-    emit('change', editingModelValue.value)
+    modelValue.value = editingModelValue.value
   }
   isEditing.value = false
 }
 
 function cancelEdit (): void {
-  const CANCEL_DELAY_MS = 200
-
-  setTimeout(() => {
-    editingModelValue.value = ''
-    isEditing.value = false
-    emit('blur')
-  }, CANCEL_DELAY_MS)
+  editingModelValue.value = modelValue.value
+  isEditing.value = false
+  emit('blur')
 }
-
-function handleKeys (event: KeyboardEvent): void {
-  const { key, isTrusted } = event
-
-  if (!isTrusted) {
-    console.error('key is not trusted')
-  } else if (key === KeyCodes.ENTER) {
-    confirmEdit()
-  } else if (key === KeyCodes.ESCAPE) {
-    cancelEdit()
-  }
-}
-
-watch(isEditing, (newValue: boolean) => {
-  if (newValue) {
-    document.addEventListener('keyup', handleKeys)
-  } else {
-    document.removeEventListener('keyup', handleKeys)
-    emit('blur')
-  }
-})
 
 onMounted(() => {
   if (startEditing) {
@@ -127,6 +109,9 @@ onMounted(() => {
     gap: 8px;
     .text-inline-editor__inner-actions {
       opacity: 0;
+    }
+    &:hover .text-inline-editor__inner-actions {
+      opacity: 1;
     }
   }
   .text-inline-editor__input {

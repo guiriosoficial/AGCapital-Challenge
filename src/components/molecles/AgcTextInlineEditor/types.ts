@@ -1,15 +1,10 @@
-export enum KeyCodes {
-  ENTER = 'Enter',
-  ESCAPE = 'Escape'
-}
-
-export type AgcTextInlineEditorMovelValue = string | number
+export type AgcTextInlineEditorModelValue = string | number
 
 export interface IAgcTextInlineEditorProps {
   startEditing?: boolean
 }
 
 export interface IAgcTextInlineEditorEmits {
-  (e: 'change', value: AgcTextInlineEditorMovelValue): void
+  (e: 'change', value: AgcTextInlineEditorModelValue): void
   (e: 'blur'): void
 }

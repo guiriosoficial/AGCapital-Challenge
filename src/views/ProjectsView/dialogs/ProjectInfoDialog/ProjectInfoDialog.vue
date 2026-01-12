@@ -66,7 +66,7 @@ interface Props extends NewProject, Partial<Omit<Project, keyof NewProject>>{
 
 const {
   props: project,
-  isDialogVisible,
+  isOpen,
   toggle
 } = useDialog() as IUseDialog<Props>
 const projectStore = useProjectsStore()
@@ -102,7 +102,7 @@ const projectInfoModel = reactive<ProjectInfoForm>({
 const isEditingProject = computed(() => Boolean(project.value?.id))
 
 function handleCloseDialog () {
-  isDialogVisible.value = false
+  isOpen.value = false
 }
 
 function handleCreateEditProject () {
@@ -137,7 +137,7 @@ async function handleCreateProject (clientId: string) {
   }
 }
 
-watch(isDialogVisible, (newVal: boolean): void => {
+watch(isOpen, (newVal: boolean): void => {
   if (newVal && project.value?.id) {
     projectInfoModel.name = project.value.name
     projectInfoModel.description = project.value.description

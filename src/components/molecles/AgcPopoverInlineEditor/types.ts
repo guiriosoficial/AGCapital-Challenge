@@ -6,9 +6,5 @@ export interface IAgcPopoverInlineEditorOption {
 }
 
 export interface IAgcPopoverInlineEditorProps {
-  options?: IAgcPopoverInlineEditorOption[]
-}
-
-export interface IAgcPopoverInlineEditorEmits {
-  (e: 'change', value: AgcPopoverInlineEditorModelValue): void
+  options?: readonly IAgcPopoverInlineEditorOption[]
 }

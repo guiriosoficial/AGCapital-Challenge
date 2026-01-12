@@ -29,12 +29,12 @@
         <AgcTextInlineEditor
           v-model="task.description"
           class="tasks-view-container__task-card-description"
-          @change="handleEditTaskDescriptions(task.id, $event)"
+          @update:model-value="handleEditTaskDescriptions(task.id, $event)"
         />
         <AgcPopoverInlineEditor
           v-model="task.status"
           :options="statusOptions"
-          @input="handleEditTaskStatus(task.id, $event)"
+          @update:model-value="handleEditTaskStatus(task.id, $event)"
         >
           <template #reference>
             <AgcTag
@@ -296,6 +296,41 @@ function goToHome () {
           width: 100%;
           margin-right: 0;
         }
+      }
+    }
+  }
+}
+</style>
+
+<style lang="scss">
+.tasks-view-container {
+  .tasks-view-container__body {
+    .tasks-view-container__new-task-card {
+      .tasks-view-container__new-task-card-body {
+        gap: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+    .tasks-view-container__task-card {
+      .tasks-view-container__task-card-body {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+        gap: 16px;
+        width: 100%;
+      }
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .tasks-view-container {
+    .tasks-view-container__task-card {
+      .tasks-view-container__task-card-body {
+        flex-direction: column;
       }
     }
   }

@@ -340,6 +340,7 @@ function handleEditClient (clientId: string, clientName: string): void {
         .projects-view-container__collapse-header-actions {
           opacity: 0;
           gap: 4px;
+          transition: var(--el-transition-duration);
           display: flex;
         }
       }
