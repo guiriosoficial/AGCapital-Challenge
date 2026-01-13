@@ -1,9 +1,8 @@
-<!-- TODO: shadow="hover" as default-->
 <template>
   <ElCard
     v-bind="$attrs"
     :body-class="bodyClass"
-    :shadow="shadow"
+    shadow="hover"
     @click="emit('click', $event)"
   >
     <template
@@ -18,7 +17,7 @@
 
 <script setup lang="ts">
 import { ElCard } from 'element-plus'
-import type { IAgcCardProps, IAgcCardEmits } from './types.ts'
+import type { IAgcCardProps, IAgcCardEmits } from './types'
 
 defineOptions({
   name: 'AgcCard',
@@ -27,7 +26,6 @@ defineOptions({
 
 const {
   bodyClass,
-  shadow = 'hover'
 } = defineProps<IAgcCardProps>()
 
 const emit = defineEmits<IAgcCardEmits>()

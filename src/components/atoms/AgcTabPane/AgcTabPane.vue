@@ -5,19 +5,13 @@
     :name="name"
     :disabled="disabled"
   >
-    <template
-      v-if="$slots.label"
-      #label
-    >
-      <slot name="label" />
-    </template>
     <slot />
   </ElTabPane>
 </template>
 
 <script setup lang="ts">
 import { ElTabPane } from 'element-plus'
-import type { IAgcTabPaneProps } from './types.ts'
+import type { IAgcTabPaneProps } from './types'
 
 defineOptions({
   name: 'AgcTabPane',

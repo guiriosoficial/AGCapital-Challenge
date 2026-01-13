@@ -9,7 +9,7 @@
 
 <script setup lang="ts">
 import { ElTag } from 'element-plus'
-import type { IAgcTagProps } from './types.ts'
+import type { IAgcTagProps } from './types'
 
 defineOptions({
   name: 'AgcTag',

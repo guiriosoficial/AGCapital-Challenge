@@ -1,4 +1,3 @@
-<!-- TODO: Remove FormInstance -->
 <template>
   <ElForm
     ref="instance"
@@ -17,6 +16,7 @@ import { ref } from 'vue'
 import type { FormInstance } from 'element-plus'
 import type { IAgcFormProps, IAgcFormExpose } from './types'
 
+// TODO: Remove FormInstance
 const instance = ref<FormInstance | null>()
 
 defineOptions({

@@ -1,7 +1,6 @@
-<!-- TODO: defineExpode focus() -->
 <template>
   <ElInput
-    ref="instance"
+    ref="inputInstanceRef"
     v-model="modelValue"
     v-bind="$attrs"
     :type="type"
@@ -16,7 +15,8 @@ import { ElInput } from 'element-plus'
 import { ref } from 'vue'
 import type { AgcInputModelValue, IAgcInputProps } from './types'
 
-const instance = ref<unknown>(null)
+// TODO: Review instance type
+const inputInstanceRef = ref<unknown>(null)
 
 defineOptions({
   name: 'AgcInput',

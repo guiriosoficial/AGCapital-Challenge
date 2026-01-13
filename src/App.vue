@@ -7,10 +7,10 @@
 
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
-import AgcHeader from '@/components/molecles/AgcHeader'
+import { AgcHeader } from '@/components/molecles/AgcHeader'
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .main-container {
   max-width: 1800px;
   margin: 40px auto;

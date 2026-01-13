@@ -33,15 +33,15 @@
 </template>
 
 <script setup lang="ts">
-import { AgcPopover } from '@/components/atoms/AgcPopover'
+import { AgcPopover, type AgcPopoverComponent } from '@/components/atoms/AgcPopover'
 import { ref, computed } from 'vue'
 import type {
   AgcPopoverInlineEditorModelValue,
   IAgcPopoverInlineEditorProps,
   IAgcPopoverInlineEditorOption
-} from './types.ts'
+} from './types'
 
-const popoverInlineEditorRef = ref<InstanceType<typeof AgcPopover> | null>(null)
+const popoverInlineEditorRef = ref<AgcPopoverComponent | null>(null)
 
 const modelValue = defineModel<AgcPopoverInlineEditorModelValue>({
   required: true
@@ -65,7 +65,7 @@ function handleSelect (option: IAgcPopoverInlineEditorOption): void {
 }
 </script>
 
-<!-- TODO: Review this -->
+<!-- TODO: Review styles -->
 <style lang="scss">
   .popover-inline-editor__popper-class {
     padding: 12px 0 !important;

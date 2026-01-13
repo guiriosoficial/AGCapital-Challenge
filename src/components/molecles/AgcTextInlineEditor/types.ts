@@ -1,3 +1,7 @@
+import AgcTextInlineEditor from './AgcTextInlineEditor.vue'
+
+export type AgcTextInlineEditorComponent = InstanceType<typeof AgcTextInlineEditor>
+
 export type AgcTextInlineEditorModelValue = string
 
 export interface IAgcTextInlineEditorEmits {

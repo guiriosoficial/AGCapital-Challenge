@@ -21,6 +21,7 @@ import { ElPopover } from 'element-plus'
 import { ref } from 'vue'
 import type { IAgcPopoverProps, IAgcInputExpose } from './types'
 
+// TODO: Review instance type
 const popoverInstanceRef = ref<InstanceType<typeof ElPopover>>()
 
 defineOptions({

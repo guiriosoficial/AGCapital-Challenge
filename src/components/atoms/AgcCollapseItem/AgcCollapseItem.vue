@@ -1,8 +1,5 @@
 <template>
-  <ElCollapseItem
-    v-bind="$attrs"
-    :title="title"
-  >
+  <ElCollapseItem v-bind="$attrs">
     <template
       v-if="$slots.title"
       #title
@@ -15,14 +12,9 @@
 
 <script setup lang="ts">
 import { ElCollapseItem } from 'element-plus'
-import type { IAgcCollapseItemProps } from './typea.ts'
 
 defineOptions({
   name: 'AgcCollapseItem',
   inheritAttrs: false
 })
-
-const {
-  title = ''
-} = defineProps<IAgcCollapseItemProps>()
 </script>

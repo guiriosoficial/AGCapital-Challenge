@@ -1,3 +1,7 @@
+import AgcPopover from './AgcPopover.vue'
+
+export type AgcPopoverComponent = InstanceType<typeof AgcPopover>
+
 export type AgcPopoverPlacement =
   | 'top'
   | 'top-start'

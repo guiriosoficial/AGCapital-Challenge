@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 import { ElButton } from 'element-plus'
-import type { IAgcButtonProps, IAgcButtonEmits } from './types.ts'
+import type { IAgcButtonProps, IAgcButtonEmits } from './types'
 
 defineOptions({
   name: 'AgcButton',

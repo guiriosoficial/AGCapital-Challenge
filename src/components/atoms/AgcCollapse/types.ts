@@ -1,5 +1,3 @@
-export type AgcCollapseModelValue = string | number
+import AgcCollapse from './AgcCollapse.vue'
 
-export interface IAgcCollapseEmits {
-  (e: 'change', value: AgcCollapseModelValue | AgcCollapseModelValue[]): void
-}
+export type AgcCollapseComponent = InstanceType<typeof AgcCollapse>

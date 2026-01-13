@@ -55,7 +55,7 @@ import type {
   AgcTextInlineEditorModelValue,
   IAgcTextInlineEditorEmits,
   IAgcTextInlineEditorExposes
-} from './types.ts'
+} from './types'
 
 const modelValue = defineModel<AgcTextInlineEditorModelValue>({
   required: true,

@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 import { ElFormItem } from 'element-plus'
-import type { IAgcFormItemProps } from './types.ts'
+import type { IAgcFormItemProps } from './types'
 
 defineOptions({
   name: 'AgcFormItem',

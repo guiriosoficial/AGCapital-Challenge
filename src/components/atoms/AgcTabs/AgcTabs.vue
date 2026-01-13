@@ -4,12 +4,6 @@
     v-model="modelValue"
     v-bind="$attrs"
   >
-    <template
-      v-if="$slots.addIcon"
-      #add-icon
-    >
-      <slot name="add-icon" />
-    </template>
     <slot />
   </ElTabs>
 </template>

@@ -9,51 +9,24 @@
         {{ projectsStore.currentProject?.name }} Tasks
       </div>
       <AgcToolbar
+        v-model:search-term="searchQuery"
         hide-action
         input-text="Search tasks"
+        class="tasks-view-container__input-search"
       />
-<!--      <AgcInput-->
-<!--        v-model="searchQuery"-->
-<!--        :prefix-icon="Search"-->
-<!--        placeholder="Search tasks"-->
-<!--        class="tasks-view-container__input-search"-->
-<!--      />-->
     </header>
     <div
       v-loading="isLoadingTasks"
       class="tasks-view-container__body"
     >
-      <AgcCard
+      <AgcTaskCard
         v-for="task in filteredTasks"
         :key="task.id"
-        class="tasks-view-container__task-card"
-        body-class="tasks-view-container__task-card-body"
-      >
-        <AgcTextInlineEditor
-          v-model="task.description"
-          class="tasks-view-container__task-card-description"
-          @update:model-value="handleEditTaskDescriptions(task.id, $event)"
-        />
-        <AgcPopoverInlineEditor
-          v-model="task.status"
-          :options="statusOptions"
-          @update:model-value="handleEditTaskStatus(task.id, $event)"
-        >
-          <template #reference>
-            <AgcTag
-              :type="getStatusTagTypes(task.status)"
-              class="tasks-view-container__task-status-tag"
-            >
-              {{ task.status }}
-            </AgcTag>
-          </template>
-        </AgcPopoverInlineEditor>
-        <AgcIcon
-          :icon="Delete"
-          class="tasks-view-container__task-card-actions hover-icon hover-icon--danger"
-          @click.stop="handleDeleteTask(task.id)"
-        />
-      </AgcCard>
+        :task="task"
+        @delete="handleConfirmDeleteTask($event.id)"
+        @update-description="handleEditTaskDescriptions(task.id, $event)"
+        @update-status="handleEditTaskStatus(task.id, $event)"
+      />
 
       <AgcCard
         v-if="!isCreatingTask"
@@ -71,7 +44,6 @@
         v-else
         class="tasks-view-container__task-card"
         body-class="tasks-view-container__task-card-body"
-        shadow="always"
       >
         <AgcTextInlineEditor
           ref="newTaskInputRef"
@@ -88,19 +60,18 @@
 <script setup lang="ts">
 import {computed, ref, onBeforeMount, nextTick} from 'vue'
 import { filterByTerm } from '@/utils'
-import { Plus, Delete, Back } from '@element-plus/icons-vue'
+import { Plus, Back } from '@element-plus/icons-vue'
 import useTasksStore, { TaskStatuses, type Task } from '@/stores/tasksStore'
 import { useRouter, useRoute } from 'vue-router'
 import { AgcCard } from '@/components/atoms/AgcCard'
 import { AgcIcon } from '@/components/atoms/AgcIcon'
-import { AgcTag } from '@/components/atoms/AgcTag'
 import { AgcToolbar } from '@/components/molecles/AgcToolbar'
-import { AgcPopoverInlineEditor } from '@/components/molecles/AgcPopoverInlineEditor'
 import { AgcTextInlineEditor } from '@/components/molecles/AgcTextInlineEditor'
 import { useMessageBox } from '@/composables/useMessageBox'
 import { useNotification } from '@/composables/useNotification'
 import useProjectsStore from '@/stores/projectsStore'
 import { storeToRefs } from 'pinia'
+import {AgcTaskCard} from "@/components/molecles/AgcTaskCard";
 
 const messageBox = useMessageBox()
 const notification = useNotification()
@@ -109,25 +80,6 @@ const tasksStore = useTasksStore()
 const route = useRoute()
 const router = useRouter()
 const projectId = String(route.params.projectId)
-
-const statusOptions = [
-  {
-    label: 'Todo',
-    value: TaskStatuses.TODO
-  },
-  {
-    label: 'Doing',
-    value: TaskStatuses.DOING
-  },
-  {
-    label: 'Done',
-    value: TaskStatuses.DONE
-  },
-  {
-    label: 'Cancelled',
-    value: TaskStatuses.CANCELLED
-  }
-]
 
 const searchQuery = ref('')
 const isCreatingTask = ref(false)
@@ -182,28 +134,20 @@ async function handleEditTaskStatus (taskId: string, taskStatus: TaskStatuses): 
   }
 }
 
-function handleDeleteTask (taskId: string) {
+function handleConfirmDeleteTask (taskId: string) {
   messageBox.confirm(
     'Caution!',
     'Are you sure you want to delete this task?',
     { confirmButtonText: 'Delete' }
-  ).then(() => {
-    tasksStore.deleteTask(taskId)
-      .then(() => notification.success('Task deleted successfully'))
-      .catch(() => notification.error('Error deleting task, please try again'))
-  })
+  ).then(() => handleDeleteTask(taskId))
 }
 
-function getStatusTagTypes (status: TaskStatuses): 'primary' | 'success' | 'info' | 'warning' | 'danger' | undefined {
-  switch (status) {
-    case TaskStatuses.TODO:
-      return 'warning'
-    case TaskStatuses.DOING:
-      return 'primary'
-    case TaskStatuses.DONE:
-      return 'success'
-    case TaskStatuses.CANCELLED:
-      return 'danger'
+async function handleDeleteTask (taskId: string) {
+  try {
+    await tasksStore.deleteTask(taskId)
+    notification.success('Task deleted successfully')
+  } catch {
+    notification.error('Error deleting task, please try again')
   }
 }
 

@@ -33,9 +33,9 @@
 </template>
 
 <script setup lang="ts">
-import AgcButton from '@/components/atoms/AgcButton'
-import AgcIcon from '@/components/atoms/AgcIcon'
-import AgcCard from '@/components/atoms/AgcCard'
+import { AgcButton } from '@/components/atoms/AgcButton'
+import { AgcIcon } from '@/components/atoms/AgcIcon'
+import { AgcCard } from '@/components/atoms/AgcCard'
 import { Delete, EditPen } from '@element-plus/icons-vue'
 import { computed } from 'vue'
 import { ProjectStatuses } from '@/stores/projectsStore'

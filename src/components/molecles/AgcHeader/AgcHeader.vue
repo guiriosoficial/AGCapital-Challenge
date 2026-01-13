@@ -13,6 +13,7 @@ import { ProjectStatuses } from '@/stores/projectsStore'
 
 const router = useRouter()
 
+// TODO: Get last tab (save in store)
 function goToHome() {
   router.push({
     name: 'projects',
