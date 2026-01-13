@@ -1,8 +1,8 @@
-<!-- TODO: Verificar/Implementar defineExpose, @validate -->
+<!-- TODO: Remove FormInstance -->
 <template>
   <ElForm
     ref="instance"
-    :class="$attrs.class"
+    v-bind="$attrs"
     :model="model"
     :rules="rules"
     :label-position="labelPosition"
@@ -13,14 +13,16 @@
 
 <script setup lang="ts">
 import { ElForm } from 'element-plus'
-import type { FormInstance } from 'element-plus'
 import { ref } from 'vue'
-import type {
-  IAgcFormProps,
-  IAgcFormExpose
-} from './types'
+import type { FormInstance } from 'element-plus'
+import type { IAgcFormProps, IAgcFormExpose } from './types'
 
 const instance = ref<FormInstance | null>()
+
+defineOptions({
+  name: 'AgcForm',
+  inheritAttrs: false
+})
 
 const {
   model = {},
@@ -28,5 +30,7 @@ const {
   labelPosition = 'right',
 } = defineProps<IAgcFormProps>()
 
-defineExpose<IAgcFormExpose>({ instance })
+defineExpose<IAgcFormExpose>({
+  validate: (cb) => instance.value?.validate(cb)
+})
 </script>

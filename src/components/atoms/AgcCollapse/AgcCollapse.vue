@@ -1,7 +1,8 @@
+<!-- TODO: Remove @change -->
 <template>
   <ElCollapse
     v-model="modelValue"
-    :class="$attrs.class"
+    v-bind="$attrs"
     @change="emit('change', $event)"
   >
     <slot />
@@ -10,10 +11,12 @@
 
 <script setup lang="ts">
 import { ElCollapse } from 'element-plus'
-import type {
-  AgcCollapseModelValue,
-  IAgcCollapseEmits,
-} from './types.ts'
+import type { AgcCollapseModelValue, IAgcCollapseEmits } from './types.ts'
+
+defineOptions({
+  name: 'AgcCollapse',
+  inheritAttrs: false
+})
 
 const modelValue = defineModel<AgcCollapseModelValue | AgcCollapseModelValue[]>({
   default: () => []

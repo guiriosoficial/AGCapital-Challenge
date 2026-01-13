@@ -2,10 +2,10 @@
   <AgcDialog
     v-if="isOpen"
     v-model="isOpen"
-    title="Add a new client"
+    :title="dialogTitle"
   >
     <AgcForm
-      ref="clientInfoRulesRef"
+      ref="clientInfoFormRef"
       :model="clientInfoModel"
       :rules="clientInfoRules"
       label-position="top"
@@ -27,9 +27,9 @@
       </AgcButton>
       <AgcButton
         type="primary"
-        @click="handleCreateEditClient"
+        @click="handleValidateClient"
       >
-        {{ isEditingClient ? 'Edit' : 'Create' }}
+        {{ confirmButtonLabel }}
       </AgcButton>
     </template>
   </AgcDialog>
@@ -44,23 +44,30 @@ import AgcFormItem from '@/components/atoms/AgcFormItem'
 import AgcInput from '@/components/atoms/AgcInput'
 import type { FormRules } from 'element-plus'
 import useClientStore, { type Client } from '@/stores/clientsStore'
-import { useDialog, type IUseDialog } from '@/composables/useDialog'
+import { useDialog } from '@/composables/useDialog'
 import { useNotification } from '@/composables/useNotification'
-
-const {
-  props: client,
-  isOpen,
-  toggle
-} = useDialog() as IUseDialog<Client>
-const clientStore = useClientStore()
-const notification = useNotification()
+import type { NewClient } from "@/stores/clientsStore/models.ts";
 
 interface ClientInfoForm {
   name: string
 }
 
-const clientInfoRulesRef = ref<InstanceType<typeof AgcForm>>()
+const {
+  props: client,
+  isOpen,
+  open
+} = useDialog<Client>()
+const notification = useNotification()
+const clientStore = useClientStore()
 
+// TODO: Import Type from component
+const clientInfoFormRef = ref<InstanceType<typeof AgcForm> | null>(null)
+
+const clientInfoModel = reactive<NewClient>({
+  name: ''
+})
+
+// TODO: Abstrair FormRules
 const clientInfoRules = reactive<FormRules<ClientInfoForm>>({
   name: {
     required: true,
@@ -69,33 +76,42 @@ const clientInfoRules = reactive<FormRules<ClientInfoForm>>({
   }
 })
 
-const clientInfoModel = reactive<ClientInfoForm>({
-  name: ''
-})
-
 const isEditingClient = computed(() => Boolean(client.value?.id))
 
-function handleCloseDialog (): void {
-  isOpen.value = false
-}
+const dialogTitle = computed(() => {
+  return isEditingClient.value
+    ? `Edit ${client.value?.name}`
+    : 'Add a new client'
+})
 
-function handleCreateEditClient (): void {
-  clientInfoRulesRef?.value?.instance?.validate((valid) => {
-    if (!valid || !client.value) return
+const confirmButtonLabel = computed(() => {
+  return isEditingClient.value
+    ? 'Edit'
+    : 'Create'
+})
 
-    if (isEditingClient.value) {
-      handleEditClient(client.value.id)
-    } else {
-      handleCreateClient()
-    }
+function handleValidateClient () {
+  clientInfoFormRef?.value?.validate((valid) => {
+    if (!valid) return
 
-    handleCloseDialog()
+    handleEditCreateClient()
   })
 }
 
-async function handleEditClient (projectId) {
+function handleEditCreateClient () {
+  if (isEditingClient.value) {
+    handleEditClient()
+  } else {
+    handleCreateClient()
+  }
+
+  handleCloseDialog()
+}
+
+async function handleEditClient () {
   try {
-    await clientStore.updateClient(projectId, clientInfoModel)
+    const clientId = client.value?.id ?? ''
+    await clientStore.updateClient(clientId, clientInfoModel)
     notification.success('Client updated successfully')
   } catch {
     notification.error('Error updating client, please try again')
@@ -111,15 +127,19 @@ async function handleCreateClient () {
   }
 }
 
+function handleCloseDialog () {
+  isOpen.value = false
+}
+
 watch(isOpen, (newVal: boolean): void => {
   if (newVal && client.value?.id) {
-    clientInfoModel.name = client.value.name
+    Object.assign(clientInfoModel, client.value)
   } else {
     clientInfoModel.name = ''
   }
 })
 
 defineExpose({
-  toggle
+  open
 })
 </script>

@@ -8,12 +8,16 @@
         <AgcIcon :icon="Back" />
         {{ projectsStore.currentProject?.name }} Tasks
       </div>
-      <AgcInput
-        v-model="searchQuery"
-        :prefix-icon="Search"
-        placeholder="Search tasks"
-        class="tasks-view-container__input-search"
+      <AgcToolbar
+        hide-action
+        input-text="Search tasks"
       />
+<!--      <AgcInput-->
+<!--        v-model="searchQuery"-->
+<!--        :prefix-icon="Search"-->
+<!--        placeholder="Search tasks"-->
+<!--        class="tasks-view-container__input-search"-->
+<!--      />-->
     </header>
     <div
       v-loading="isLoadingTasks"
@@ -24,7 +28,6 @@
         :key="task.id"
         class="tasks-view-container__task-card"
         body-class="tasks-view-container__task-card-body"
-        shadow="hover"
       >
         <AgcTextInlineEditor
           v-model="task.description"
@@ -54,10 +57,9 @@
 
       <AgcCard
         v-if="!isCreatingTask"
-        shadow="hover"
         class="tasks-view-container__new-task-card"
         body-class="tasks-view-container__new-task-card-body"
-        @click="isCreatingTask = true"
+        @click="handleStartCreate"
       >
         <AgcIcon
           :icon="Plus"
@@ -72,10 +74,10 @@
         shadow="always"
       >
         <AgcTextInlineEditor
+          ref="newTaskInputRef"
           v-model="newTaskDescription"
           class="tasks-view-container__task-card-description"
-          start-editing
-          @change="handleCreateTask($event)"
+          @update:model-value="handleCreateTask"
           @blur="isCreatingTask = false"
         />
       </AgcCard>
@@ -84,14 +86,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onBeforeMount } from 'vue'
+import {computed, ref, onBeforeMount, nextTick} from 'vue'
 import { filterByTerm } from '@/utils'
-import { Plus, Delete, Search, Back } from '@element-plus/icons-vue'
+import { Plus, Delete, Back } from '@element-plus/icons-vue'
 import useTasksStore, { TaskStatuses, type Task } from '@/stores/tasksStore'
 import { useRouter, useRoute } from 'vue-router'
 import AgcCard from '@/components/atoms/AgcCard'
 import AgcIcon from '@/components/atoms/AgcIcon'
-import AgcInput from '@/components/atoms/AgcInput'
+import AgcToolbar from '@/components/molecles/AgcToolbar'
 import AgcPopoverInlineEditor from '@/components/molecles/AgcPopoverInlineEditor'
 import AgcTag from '@/components/atoms/AgcTag'
 import AgcTextInlineEditor from '@/components/molecles/AgcTextInlineEditor'
@@ -131,6 +133,8 @@ const searchQuery = ref('')
 const isCreatingTask = ref(false)
 const newTaskDescription = ref('')
 
+const newTaskInputRef = ref()
+
 const { isLoadingTasks, projectTasks } = storeToRefs(tasksStore)
 
 const filteredTasks = computed((): Task[] => {
@@ -145,6 +149,11 @@ onBeforeMount(async () => {
     goToHome()
   }
 })
+
+function handleStartCreate () {
+  isCreatingTask.value = true
+  nextTick(() => newTaskInputRef.value?.startEdit())
+}
 
 async function handleCreateTask (taskDescription: string): Promise<void> {
   try {

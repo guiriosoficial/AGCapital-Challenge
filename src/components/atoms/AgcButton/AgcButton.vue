@@ -1,7 +1,6 @@
 <template>
   <ElButton
-    :class="$attrs.class"
-    :style="$attrs.style"
+    v-bind="$attrs"
     :type="type"
     :link="link"
     :disabled="disabled"
@@ -14,10 +13,12 @@
 
 <script setup lang="ts">
 import { ElButton } from 'element-plus'
-import type {
-  IAgcButtonEmits,
-  IAgcButtonProps
-} from './types.ts'
+import type { IAgcButtonProps, IAgcButtonEmits } from './types.ts'
+
+defineOptions({
+  name: 'AgcButton',
+  inheritAttrs: false
+})
 
 const {
   type = '',

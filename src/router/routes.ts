@@ -8,8 +8,8 @@ export const routes = [
       {
         path: ':tab',
         name: 'projects',
-        component: ProjectsView,
-        props: true
+        props: true,
+        component: ProjectsView
       },
       {
         path: 'id/:projectId/tasks/',

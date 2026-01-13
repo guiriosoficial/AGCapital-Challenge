@@ -17,7 +17,8 @@ export interface IUseMessageBox {
     title: string,
     message: string,
     options?: IMessageBoxOptions
-  ) => Promise<boolean>
+  ) => Promise<'confirmed' | 'cancelled'>
+  // TODO: Review this type
 
   prompt: (
     title: string,
@@ -57,17 +58,18 @@ async function confirm (
   title: string,
   message: string,
   options: IMessageBoxOptions = {}
-): Promise<boolean> {
+): Promise<'confirmed' | 'cancelled'> {
   try {
     await ElMessageBox.confirm(
       message,
       title,
       resolveOptions(options)
     )
-    return true
+    return Promise.resolve('confirmed')
   } catch {
-    return false
+    return Promise.reject('cancelled')
   }
+  // TODO: Review this returns
 }
 
 async function prompt (

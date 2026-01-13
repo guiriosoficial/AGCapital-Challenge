@@ -1,10 +1,9 @@
-export type AgcTextInlineEditorModelValue = string | number
-
-export interface IAgcTextInlineEditorProps {
-  startEditing?: boolean
-}
+export type AgcTextInlineEditorModelValue = string
 
 export interface IAgcTextInlineEditorEmits {
-  (e: 'change', value: AgcTextInlineEditorModelValue): void
   (e: 'blur'): void
+}
+
+export interface IAgcTextInlineEditorExposes {
+  startEdit: () => Promise<void>
 }

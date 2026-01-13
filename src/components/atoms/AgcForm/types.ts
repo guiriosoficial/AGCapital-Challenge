@@ -1,5 +1,4 @@
-import type { FormRules, FormInstance } from 'element-plus'
-import type { Ref } from 'vue'
+import type { FormRules } from 'element-plus'
 
 export type AgcFormModel = Record<string, unknown>
 
@@ -8,7 +7,7 @@ export type AgcFormLabelPosition = 'top' | 'left' | 'right'
 export type AgcFormRules = FormRules
 
 export interface IAgcFormExpose {
-  instance: Ref<FormInstance | null | undefined, FormInstance | null | undefined>
+  validate: (callback?: (valid: boolean) => void) => Promise<boolean> | undefined
 }
 
 export interface IAgcFormProps {

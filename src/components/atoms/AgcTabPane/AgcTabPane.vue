@@ -1,6 +1,6 @@
-<!-- TODO: Verificar/Implementar Props v-loading, :key (v-bind) -->
 <template>
   <ElTabPane
+    v-bind="$attrs"
     :label="label"
     :name="name"
     :disabled="disabled"
@@ -18,6 +18,11 @@
 <script setup lang="ts">
 import { ElTabPane } from 'element-plus'
 import type { IAgcTabPaneProps } from './types.ts'
+
+defineOptions({
+  name: 'AgcTabPane',
+  inheritAttrs: false
+})
 
 const {
   label,

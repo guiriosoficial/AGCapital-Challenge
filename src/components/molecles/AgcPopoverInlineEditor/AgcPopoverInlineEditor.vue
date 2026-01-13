@@ -1,39 +1,35 @@
 <template>
-  <div class="popover-inline-editor">
-    <AgcPopover
-      ref="popoverEditor"
-      placement="bottom"
-      trigger="click"
-      class="popover-inline-editor__popover"
-      popper-class="popover-inline-editor__popper-class"
+  <AgcPopover
+    ref="popoverInlineEditorRef"
+    class="popover-inline-editor"
+    popper-class="popover-inline-editor__popper-class"
+  >
+    <ul
+      role="listbox"
+      class="popover-inline-editor__list"
     >
-      <ul
-        role="listbox"
-        class="popover-inline-editor__list"
+      <li
+        v-for="option in options"
+        :key="option.value"
+        :class="{ 'popover-inline-editor__option--selected': isSelected(option) }"
+        role="option"
+        class="popover-inline-editor__option"
+        @click="handleSelect(option)"
+        @keydown.enter.space.prevent="handleSelect(option)"
       >
-        <li
-          v-for="option in options"
-          :key="option.value"
-          :class="{ 'popover-inline-editor__option--selected': isSelected(option) }"
-          role="option"
-          class="popover-inline-editor__option"
-          @click="handleSelect(option)"
-          @keydown.enter.space.prevent="handleSelect(option)"
-        >
-          {{ option.label }}
-        </li>
-      </ul>
-      <template #reference>
-        <slot
-          v-if="$slots.reference"
-          name="reference"
-        />
-        <span v-else>
-          {{ selectedOption?.label || '—' }}
-        </span>
-      </template>
-    </AgcPopover>
-  </div>
+        {{ option.label }}
+      </li>
+    </ul>
+    <template #reference>
+      <slot
+        v-if="$slots.reference"
+        name="reference"
+      />
+      <span v-else>
+        {{ selectedOption?.label || '—' }}
+      </span>
+    </template>
+  </AgcPopover>
 </template>
 
 <script setup lang="ts">
@@ -45,7 +41,7 @@ import type {
   IAgcPopoverInlineEditorOption
 } from './types.ts'
 
-const popoverEditor = ref<InstanceType<typeof AgcPopover> | null>(null)
+const popoverInlineEditorRef = ref<InstanceType<typeof AgcPopover> | null>(null)
 
 const modelValue = defineModel<AgcPopoverInlineEditorModelValue>({
   required: true
@@ -65,14 +61,14 @@ function isSelected (option: IAgcPopoverInlineEditorOption): boolean {
 
 function handleSelect (option: IAgcPopoverInlineEditorOption): void {
   modelValue.value = option.value
-  popoverEditor.value?.hide()
+  popoverInlineEditorRef.value?.hide()
 }
 </script>
 
+<!-- TODO: Review this -->
 <style lang="scss">
   .popover-inline-editor__popper-class {
     padding: 12px 0 !important;
-
     .popover-inline-editor__list {
       list-style: none;
       margin: 0;
@@ -90,5 +86,4 @@ function handleSelect (option: IAgcPopoverInlineEditorOption): void {
       }
     }
   }
-
 </style>

@@ -1,6 +1,6 @@
 <template>
   <ElTag
-    :class="$attrs.class"
+    v-bind="$attrs"
     :type="type"
   >
     <slot />
@@ -9,10 +9,12 @@
 
 <script setup lang="ts">
 import { ElTag } from 'element-plus'
+import type { IAgcTagProps } from './types.ts'
 
-import type {
-  IAgcTagProps
-} from './types.ts'
+defineOptions({
+  name: 'AgcTag',
+  inheritAttrs: false
+})
 
 const {
   type = 'primary',

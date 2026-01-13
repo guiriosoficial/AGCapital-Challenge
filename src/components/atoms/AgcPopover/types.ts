@@ -1,9 +1,3 @@
-export type AgcPopoverTrigger =
-  | 'click'
-  | 'focus'
-  | 'hover'
-  | 'contextmenu'
-
 export type AgcPopoverPlacement =
   | 'top'
   | 'top-start'
@@ -19,7 +13,6 @@ export type AgcPopoverPlacement =
   | 'right-end'
 
 export interface IAgcPopoverProps {
-  trigger?: AgcPopoverTrigger
   placement?: AgcPopoverPlacement
   popperClass?: string
 }

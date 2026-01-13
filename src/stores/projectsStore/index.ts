@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { ClientProjects, Project, EditableProject, NewProject } from './models'
 import { ProjectStatuses } from './models'
@@ -20,7 +20,7 @@ const useProjectsStore = defineStore('projectsStore', () => {
 
   async function searchProjectsByClients (status: ProjectStatuses, searchTerm?: string): Promise<void> {
     isLoadingProjects.value = true
-    const query = { status, searchTerm }
+    const query = { status: status.toUpperCase(), searchTerm }
     const data = await api.searchProjectsByClients(query)
     projectsByClients.value = data.value
     isLoadingProjects.value = false

@@ -1,6 +1,6 @@
 <template>
   <ElIcon
-    :class="$attrs.class"
+    v-bind="$attrs"
     :color="color"
     :size="size"
     @click="emit('click', $event)"
@@ -11,10 +11,12 @@
 
 <script setup lang="ts">
 import { ElIcon } from 'element-plus'
-import type {
-  IAgcIconEmits,
-  IAgcIconProps
-} from './types.ts'
+import type { IAgcIconProps, IAgcIconEmits } from './types.ts'
+
+defineOptions({
+  name: 'AgcIcon',
+  inheritAttrs: false
+})
 
 const {
   color,

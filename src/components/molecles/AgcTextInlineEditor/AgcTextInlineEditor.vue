@@ -19,10 +19,10 @@
       class="text-inline-editor__input"
     >
       <input
-        ref="textInput"
-        type="text"
+        ref="textInlineEditorRef"
         v-model="editingModelValue"
         class="text-inline-editor__input-inner"
+        type="text"
         @blur.self="cancelEdit"
         @keydown.enter.prevent="confirmEdit"
         @keydown.esc.prevent="cancelEdit"
@@ -49,40 +49,34 @@
 
 <script setup lang="ts">
 import AgcIcon from '@/components/atoms/AgcIcon'
-import { ref, nextTick, watch, onMounted } from 'vue'
+import { ref, nextTick } from 'vue'
 import { EditPen, Check, Close } from '@element-plus/icons-vue'
-import {
-  type AgcTextInlineEditorModelValue,
-  type IAgcTextInlineEditorEmits,
-  type IAgcTextInlineEditorProps
+import type {
+  AgcTextInlineEditorModelValue,
+  IAgcTextInlineEditorEmits,
+  IAgcTextInlineEditorExposes
 } from './types.ts'
-
-const textInput = ref<HTMLInputElement | null>(null)
 
 const modelValue = defineModel<AgcTextInlineEditorModelValue>({
   required: true,
 })
 
-const {
-  startEditing = false
-} = defineProps<IAgcTextInlineEditorProps>()
-
 const emit = defineEmits<IAgcTextInlineEditorEmits>()
 
-const isEditing = ref<boolean>(false)
+const textInlineEditorRef = ref<HTMLInputElement | null>(null)
 
-const editingModelValue = ref<string | number>('')
+const editingModelValue = ref<AgcTextInlineEditorModelValue>('')
+
+const isEditing = ref<boolean>(false)
 
 async function startEdit (): Promise<void> {
   editingModelValue.value = modelValue.value ?? ''
   isEditing.value = true
-  await nextTick(() => textInput.value?.focus())
+  await nextTick(() => textInlineEditorRef.value?.focus())
 }
 
 function confirmEdit (): void {
-  if (editingModelValue.value !== modelValue.value) {
-    modelValue.value = editingModelValue.value
-  }
+  modelValue.value = editingModelValue.value
   isEditing.value = false
 }
 
@@ -92,13 +86,12 @@ function cancelEdit (): void {
   emit('blur')
 }
 
-onMounted(() => {
-  if (startEditing) {
-    startEdit()
-  }
+defineExpose<IAgcTextInlineEditorExposes>({
+  startEdit
 })
 </script>
 
+<!-- TODO: Review this -->
 <style lang="scss" scoped>
 .text-inline-editor {
   width: 100%;

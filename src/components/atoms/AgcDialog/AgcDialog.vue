@@ -1,11 +1,14 @@
 <template>
   <ElDialog
     v-model="modelValue"
-    :class="$attrs.class"
+    v-bind="$attrs"
     :title="title"
   >
     <slot />
-    <template v-if="$slots.footer" #footer>
+    <template
+      v-if="$slots.footer"
+      #footer
+    >
       <slot name="footer" />
     </template>
   </ElDialog>
@@ -13,10 +16,12 @@
 
 <script setup lang="ts">
 import { ElDialog } from 'element-plus'
-import type {
-  IAgcDialogProps,
-  AgcDialogModelValue
-} from './types'
+import type { AgcDialogModelValue, IAgcDialogProps } from './types'
+
+defineOptions({
+  name: 'AgcDialog',
+  inheritAttrs: false
+})
 
 const modelValue = defineModel<AgcDialogModelValue>({
   required: true

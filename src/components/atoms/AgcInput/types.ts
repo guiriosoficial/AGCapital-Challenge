@@ -1,6 +1,6 @@
 import type { Component } from 'vue'
 
-export type AgcInputModelValue = string | number
+export type AgcInputModelValue = string | number | undefined
 
 export type AgcInputType =
   | 'text'
@@ -17,8 +17,4 @@ export interface IAgcInputProps {
   placeholder?: string
   disabled?: boolean
   prefixIcon?: string | Component
-}
-
-export interface IAgcInputEmits {
-  (e: 'input', value: AgcInputModelValue): void
 }

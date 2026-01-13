@@ -1,6 +1,6 @@
 <template>
   <ElFormItem
-    :class="$attrs.class"
+    v-bind="$attrs"
     :prop="prop"
     :label="label"
     :required="required"
@@ -12,6 +12,11 @@
 <script setup lang="ts">
 import { ElFormItem } from 'element-plus'
 import type { IAgcFormItemProps } from './types.ts'
+
+defineOptions({
+  name: 'AgcFormItem',
+  inheritAttrs: false
+})
 
 const {
   prop,

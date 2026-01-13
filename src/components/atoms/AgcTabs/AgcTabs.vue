@@ -1,9 +1,13 @@
+<!-- TODO: Remove @tab-change (use @update) -->
 <template>
   <ElTabs
     v-model="modelValue"
-    @tab-change="emit('tab-change', $event)"
+    v-bind="$attrs"
   >
-    <template v-if="$slots.addIcon" #add-icon>
+    <template
+      v-if="$slots.addIcon"
+      #add-icon
+    >
       <slot name="add-icon" />
     </template>
     <slot />
@@ -12,14 +16,14 @@
 
 <script setup lang="ts">
 import { ElTabs } from 'element-plus'
-import type {
-  AgcTabsModelValue,
-  IAgcTabsEmits,
-} from './types.ts'
+import type { AgcTabsModelValue } from './types'
+
+defineOptions({
+  name: 'AgcTabs',
+  inheritAttrs: false
+})
 
 const modelValue = defineModel<AgcTabsModelValue>({
   required: true
 })
-
-const emit = defineEmits<IAgcTabsEmits>()
 </script>

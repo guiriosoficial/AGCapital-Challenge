@@ -1,10 +1,12 @@
 <template>
   <ElCollapseItem
-    :class="$attrs.class"
+    v-bind="$attrs"
     :title="title"
-    :name="name"
   >
-    <template v-if="$slots.title" #title>
+    <template
+      v-if="$slots.title"
+      #title
+    >
       <slot name="title" />
     </template>
     <slot />
@@ -15,8 +17,12 @@
 import { ElCollapseItem } from 'element-plus'
 import type { IAgcCollapseItemProps } from './typea.ts'
 
+defineOptions({
+  name: 'AgcCollapseItem',
+  inheritAttrs: false
+})
+
 const {
-  title = '',
-  name,
+  title = ''
 } = defineProps<IAgcCollapseItemProps>()
 </script>
