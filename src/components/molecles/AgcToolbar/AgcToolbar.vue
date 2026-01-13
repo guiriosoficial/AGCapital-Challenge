@@ -22,9 +22,9 @@
 </template>
 
 <script setup lang="ts">
-import AgcButton from '@/components/atoms/AgcButton'
+import { AgcButton } from '@/components/atoms/AgcButton'
 import type { AgcInputModelValue } from '@/components/atoms/AgcInput/types'
-import AgcInput from '@/components/atoms/AgcInput'
+import { AgcInput } from '@/components/atoms/AgcInput'
 import { Plus, Search } from '@element-plus/icons-vue'
 import { useDebounce } from '@/composables/useDebounce'
 import type { IAgcToolbarProps, IAgcToolbarEmits } from './types'

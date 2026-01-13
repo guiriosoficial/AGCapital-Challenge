@@ -1,3 +1,1 @@
-import AgcProjectCard from './AgcProjectCard.vue'
-
-export default AgcProjectCard
+export { default as AgcProjectCard } from './AgcProjectCard.vue'

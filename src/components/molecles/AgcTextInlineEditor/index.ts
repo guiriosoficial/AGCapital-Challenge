@@ -1,3 +1,1 @@
-import AgcTextInlineEditor from './AgcTextInlineEditor.vue'
-
-export default AgcTextInlineEditor
+export { default as AgcTextInlineEditor } from './AgcTextInlineEditor.vue'

@@ -48,7 +48,7 @@
 </template>
 
 <script setup lang="ts">
-import AgcIcon from '@/components/atoms/AgcIcon'
+import { AgcIcon } from '@/components/atoms/AgcIcon'
 import { ref, nextTick } from 'vue'
 import { EditPen, Check, Close } from '@element-plus/icons-vue'
 import type {

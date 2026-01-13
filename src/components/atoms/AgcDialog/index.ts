@@ -1,3 +1,1 @@
-import AgcDialog from './AgcDialog.vue'
-
-export default AgcDialog
+export { default as AgcDialog } from './AgcDialog.vue'

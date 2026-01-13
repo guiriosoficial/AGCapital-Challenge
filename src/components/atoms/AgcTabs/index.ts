@@ -1,3 +1,1 @@
-import AgcTabs from './AgcTabs.vue'
-
-export default AgcTabs
+export { default as AgcTabs } from './AgcTabs.vue'

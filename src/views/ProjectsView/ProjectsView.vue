@@ -92,14 +92,14 @@
 </template>
 
 <script setup lang="ts">
-import AgcCard from '@/components/atoms/AgcCard'
-import AgcCollapse from '@/components/atoms/AgcCollapse'
-import AgcCollapseItem from '@/components/atoms/AgcCollapseItem'
-import AgcIcon from '@/components/atoms/AgcIcon'
-import AgcTabPane from '@/components/atoms/AgcTabPane'
-import AgcTabs from '@/components/atoms/AgcTabs'
-import AgcToolbar from '@/components/molecles/AgcToolbar'
-import AgcProjectCard from '@/components/molecles/AgcProjectCard'
+import { AgcCard } from '@/components/atoms/AgcCard'
+import { AgcCollapse } from '@/components/atoms/AgcCollapse'
+import { AgcCollapseItem } from '@/components/atoms/AgcCollapseItem'
+import { AgcIcon } from '@/components/atoms/AgcIcon'
+import { AgcTabPane } from '@/components/atoms/AgcTabPane'
+import { AgcTabs } from '@/components/atoms/AgcTabs'
+import { AgcToolbar } from '@/components/molecles/AgcToolbar'
+import { AgcProjectCard } from '@/components/molecles/AgcProjectCard'
 import { computed, ref, defineAsyncComponent, onBeforeMount } from 'vue'
 import { Plus, Delete, EditPen, FolderDelete } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'

@@ -33,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import AgcPopover from '@/components/atoms/AgcPopover'
+import { AgcPopover } from '@/components/atoms/AgcPopover'
 import { ref, computed } from 'vue'
 import type {
   AgcPopoverInlineEditorModelValue,

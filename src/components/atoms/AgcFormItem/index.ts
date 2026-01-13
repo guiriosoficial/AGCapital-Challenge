@@ -1,3 +1,1 @@
-import AgcFormItem from './AgcFormItem.vue'
-
-export default AgcFormItem
+export { default as AgcFormItem } from './AgcFormItem.vue'

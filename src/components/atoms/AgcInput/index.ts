@@ -1,3 +1,2 @@
-import AgcInput from './AgcInput.vue'
+export { default as AgcInput } from './AgcInput.vue'
 
-export default AgcInput

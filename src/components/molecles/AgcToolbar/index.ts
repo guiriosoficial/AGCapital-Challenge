@@ -1,3 +1,1 @@
-import AgcToolbar from './AgcToolbar.vue'
-
-export default AgcToolbar
+export { default as AgcToolbar } from './AgcToolbar.vue'

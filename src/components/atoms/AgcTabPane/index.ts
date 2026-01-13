@@ -1,3 +1,1 @@
-import AgcTabPane from './AgcTabPane.vue'
-
-export default AgcTabPane
+export { default as AgcTabPane } from './AgcTabPane.vue'

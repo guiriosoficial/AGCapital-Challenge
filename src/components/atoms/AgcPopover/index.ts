@@ -1,3 +1,2 @@
-import AgcPopover from './AgcPopover.vue'
+export { default as AgcPopover } from './AgcPopover.vue'
 
-export default AgcPopover

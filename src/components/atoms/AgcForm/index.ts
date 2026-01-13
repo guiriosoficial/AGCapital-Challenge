@@ -1,3 +1,1 @@
-import AgcForm from './AgcForm.vue'
-
-export default AgcForm
+export { default as AgcForm }  from './AgcForm.vue'

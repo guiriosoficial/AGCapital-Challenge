@@ -1,3 +1,1 @@
-import AgcIcon from './AgcIcon.vue'
-
-export default AgcIcon
+export { default as AgcIcon } from './AgcIcon.vue'

@@ -1,3 +1,1 @@
-import AgcTag from './AgcTag.vue'
-
-export default AgcTag
+export { default as AgcTag } from './AgcTag.vue'

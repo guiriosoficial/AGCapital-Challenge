@@ -49,11 +49,11 @@
 
 <script setup lang="ts">
 import { reactive, watch, ref, computed } from 'vue'
-import AgcButton from '@/components/atoms/AgcButton'
-import AgcDialog from '@/components/atoms/AgcDialog'
-import AgcForm from '@/components/atoms/AgcForm'
-import AgcFormItem from '@/components/atoms/AgcFormItem'
-import AgcInput from '@/components/atoms/AgcInput'
+import { AgcButton } from '@/components/atoms/AgcButton'
+import { AgcDialog } from '@/components/atoms/AgcDialog'
+import { AgcForm } from '@/components/atoms/AgcForm'
+import { AgcFormItem } from '@/components/atoms/AgcFormItem'
+import { AgcInput } from '@/components/atoms/AgcInput'
 import type { Client } from '@/stores/clientsStore'
 import type { FormRules } from 'element-plus'
 import { useDialog  } from '@/composables/useDialog'

@@ -1,3 +1,1 @@
-import AgcHeader from './AgcHeader.vue'
-
-export default AgcHeader
+export { default as AgcHeader } from './AgcHeader.vue'

@@ -1,3 +1,1 @@
-import AgcPopoverInlineEditor from './AgcPopoverInlineEditor.vue'
-
-export default AgcPopoverInlineEditor
+export { default as AgcPopoverInlineEditor } from './AgcPopoverInlineEditor.vue'

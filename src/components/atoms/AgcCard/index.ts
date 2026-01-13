@@ -1,3 +1,1 @@
-import AgcCard from './AgcCard.vue'
-
-export default AgcCard
+export { default as AgcCard } from './AgcCard.vue'

@@ -1,3 +1,1 @@
-import AgcCollapse from './AgcCollapse.vue'
-
-export default AgcCollapse
+export { default as AgcCollapse } from './AgcCollapse.vue'

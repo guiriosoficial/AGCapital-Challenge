@@ -1,3 +1,1 @@
-import AgcButton from './AgcButton.vue'
-
-export default AgcButton
+export { default as AgcButton } from './AgcButton.vue'
