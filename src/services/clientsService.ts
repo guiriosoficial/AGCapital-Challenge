@@ -17,7 +17,7 @@ export const clientsService = {
 
   async createClient(data: ClientDoc): Promise<void> {
     const clientCollection = collection(db, clientsPath)
-    await addDoc(clientCollection, data)
+    await addDoc(clientCollection, { ...data })
   },
 
   async updateClient(data: ClientDoc, clientId: string): Promise<void> {

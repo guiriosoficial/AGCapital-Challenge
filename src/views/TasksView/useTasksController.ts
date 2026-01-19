@@ -57,6 +57,9 @@ export function useTasksController (projectId: string) {
   ) {
     const snapshot = backup()
 
+    const taskItem = tasks.value.find((t) => t.id === taskId)
+    if (taskItem) Object.assign(taskItem, task)
+
     try {
       await tasksService.updateTask(taskId, task)
       notification.success('Task description updated successfully')

@@ -39,6 +39,7 @@ npm run lint:fix
 
 ## TODO
 - Create Tests
-- Handle Changes In Real Time
+- Handle Optimistic Updates
+- Resolve TODOs
 
 > **NOTE:** I Got de Job! 💸
