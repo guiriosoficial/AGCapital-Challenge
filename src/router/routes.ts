@@ -12,7 +12,7 @@ export const routes = [
         component: ProjectsView
       },
       {
-        path: 'id/:projectId/tasks/',
+        path: ':projectId/tasks/',
         name: 'project-tasks',
         component: TasksView
       },

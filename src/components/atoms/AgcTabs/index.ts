@@ -1,6 +1,6 @@
 export { default as AgcTabs } from './AgcTabs.vue'
 
 export type {
-  AgcTabsComponent,
+  AgcTabsInstance,
   AgcTabsModelValue
 } from './types'

@@ -1,6 +1,6 @@
 import AgcCard from './AgcCard.vue'
 
-export type AgcCardComponent = InstanceType<typeof AgcCard>
+export type AgcCardInstance = InstanceType<typeof AgcCard>
 
 export type AgcCardShadow =
   | 'always'

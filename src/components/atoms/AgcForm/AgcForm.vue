@@ -1,23 +1,21 @@
 <template>
   <ElForm
-    ref="instance"
+    ref="formInstanceRef"
     v-bind="$attrs"
     :model="model"
     :rules="rules"
-    :label-position="labelPosition"
+    label-position="top"
   >
     <slot />
   </ElForm>
 </template>
 
 <script setup lang="ts">
-import { ElForm } from 'element-plus'
+import { ElForm, type FormInstance } from 'element-plus'
 import { ref } from 'vue'
-import type { FormInstance } from 'element-plus'
 import type { IAgcFormProps, IAgcFormExpose } from './types'
 
-// TODO: Remove FormInstance
-const instance = ref<FormInstance | null>()
+const formInstanceRef = ref<FormInstance | null>(null)
 
 defineOptions({
   name: 'AgcForm',
@@ -27,10 +25,11 @@ defineOptions({
 const {
   model = {},
   rules = {},
-  labelPosition = 'right',
 } = defineProps<IAgcFormProps>()
 
 defineExpose<IAgcFormExpose>({
-  validate: (cb) => instance.value?.validate(cb)
+  validate: (cb) => formInstanceRef.value?.validate(cb),
+  resetFields: () => formInstanceRef.value?.resetFields(),
+  resetValidation: () => formInstanceRef.value?.clearValidate()
 })
 </script>

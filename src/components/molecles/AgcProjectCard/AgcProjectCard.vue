@@ -38,7 +38,7 @@ import { AgcIcon } from '@/components/atoms/AgcIcon'
 import { AgcCard } from '@/components/atoms/AgcCard'
 import { Delete, EditPen } from '@element-plus/icons-vue'
 import { computed } from 'vue'
-import { ProjectStatuses } from '@/stores/projectsStore'
+import { ProjectStatus } from '@/models/projectModel'
 import type { IAgcProjectCardProps, IAgcProjectCardEmits } from './types'
 
 const { project } = defineProps<IAgcProjectCardProps>()
@@ -46,7 +46,7 @@ const { project } = defineProps<IAgcProjectCardProps>()
 const emit = defineEmits<IAgcProjectCardEmits>()
 
 const moveProjectButtonLabel = computed(() => {
-  return project.status === ProjectStatuses.OPEN
+  return project.status === ProjectStatus.OPEN
     ? 'Close'
     : 'Reopen'
 })
@@ -64,7 +64,11 @@ function handleDeleteProject () {
 }
 
 function handleMoveProject () {
-  emit('move', project)
+  const newStatus = project.status === ProjectStatus.OPEN
+    ? ProjectStatus.CLOSED
+    : ProjectStatus.OPEN
+
+  emit('move', newStatus)
 }
 </script>
 

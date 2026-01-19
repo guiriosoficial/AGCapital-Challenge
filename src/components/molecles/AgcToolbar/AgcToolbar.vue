@@ -23,7 +23,6 @@
 
 <script setup lang="ts">
 import { AgcButton } from '@/components/atoms/AgcButton'
-import type { AgcInputModelValue } from '@/components/atoms/AgcInput/types'
 import { AgcInput } from '@/components/atoms/AgcInput'
 import { Plus, Search } from '@element-plus/icons-vue'
 import { useDebounce } from '@/composables/useDebounce'
@@ -43,11 +42,11 @@ const {
 
 const emit = defineEmits<IAgcToolbarEmits>()
 
-const debouncedSearch = useDebounce((value: AgcInputModelValue) => {
+const debouncedSearch = useDebounce((value: string) => {
   emit('search', value)
 }, searchDelay)
 
-function handleInputUpdate (value: AgcInputModelValue) {
+function handleInputUpdate (value: string) {
   debouncedSearch(value)
 }
 
@@ -56,6 +55,7 @@ function handleActionClick (event: MouseEvent) {
 }
 </script>
 
+<!-- TODO: Review this styles -->
 <style scoped lang="scss">
 //.toolbar {
 //  position: absolute;

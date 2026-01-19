@@ -1,7 +1,7 @@
 export { default as AgcInput } from './AgcInput.vue'
 
 export type {
-  AgcInputComponent,
+  AgcInputInstance,
   AgcInputModelValue,
   AgcInputType,
   IAgcInputProps

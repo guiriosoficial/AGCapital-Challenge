@@ -1,7 +1,7 @@
 export { default as AgcDialog } from './AgcDialog.vue'
 
 export type {
-  AgcDialogComponent,
+  AgcDialogInstance,
   AgcDialogModelValue,
   IAgcDialogProps
 } from './types'

@@ -1,6 +1,6 @@
 import AgcDialog from './AgcDialog.vue'
 
-export type AgcDialogComponent = InstanceType<typeof AgcDialog>
+export type AgcDialogInstance = InstanceType<typeof AgcDialog>
 
 export type AgcDialogModelValue = boolean
 

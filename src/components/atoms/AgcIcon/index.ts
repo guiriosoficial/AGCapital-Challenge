@@ -1,7 +1,7 @@
 export { default as AgcIcon } from './AgcIcon.vue'
 
 export type {
-  AgcIconComponent,
+  AgcIconInstance,
   IAgcIconProps,
   IAgcIconEmits
 } from './types'

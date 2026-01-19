@@ -1,6 +1,6 @@
 export { default as AgcTabPane } from './AgcTabPane.vue'
 
 export type {
-  AgcTabPaneComponent,
+  AgcTabPaneInstance,
   IAgcTabPaneProps
 } from './types'

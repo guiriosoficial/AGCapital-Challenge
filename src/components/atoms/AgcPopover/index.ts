@@ -1,7 +1,7 @@
 export { default as AgcPopover } from './AgcPopover.vue'
 
 export type {
-  AgcPopoverComponent,
+  AgcPopoverInstance,
   AgcPopoverPlacement,
   IAgcPopoverProps,
   IAgcInputExpose

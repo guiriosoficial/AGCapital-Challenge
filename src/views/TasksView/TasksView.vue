@@ -6,17 +6,18 @@
         @click="goToHome"
       >
         <AgcIcon :icon="Back" />
-        {{ projectsStore.currentProject?.name }} Tasks
+<!--        {{ projectsStore.currentProject?.name }}-->
+        Tasks
       </div>
       <AgcToolbar
-        v-model:search-term="searchQuery"
+        v-model:search-term="searchTerm"
         hide-action
         input-text="Search tasks"
         class="tasks-view-container__input-search"
       />
     </header>
     <div
-      v-loading="isLoadingTasks"
+      v-loading="isLoading"
       class="tasks-view-container__body"
     >
       <AgcTaskCard
@@ -24,8 +25,8 @@
         :key="task.id"
         :task="task"
         @delete="handleConfirmDeleteTask($event.id)"
-        @update-description="handleEditTaskDescriptions(task.id, $event)"
-        @update-status="handleEditTaskStatus(task.id, $event)"
+        @update-description="updateTask(task.id, $event)"
+        @update-status="updateTask(task.id, $event)"
       />
 
       <AgcCard
@@ -58,46 +59,48 @@
 </template>
 
 <script setup lang="ts">
-import {computed, ref, onBeforeMount, nextTick} from 'vue'
+import { computed, ref, onBeforeMount, nextTick } from 'vue'
 import { filterByTerm } from '@/utils'
 import { Plus, Back } from '@element-plus/icons-vue'
-import useTasksStore, { TaskStatuses, type Task } from '@/stores/tasksStore'
 import { useRouter, useRoute } from 'vue-router'
 import { AgcCard } from '@/components/atoms/AgcCard'
 import { AgcIcon } from '@/components/atoms/AgcIcon'
 import { AgcToolbar } from '@/components/molecles/AgcToolbar'
 import { AgcTextInlineEditor } from '@/components/molecles/AgcTextInlineEditor'
+import { AgcTaskCard } from '@/components/molecles/AgcTaskCard'
+import { useTasksController } from '@/views/TasksView/useTasksController'
 import { useMessageBox } from '@/composables/useMessageBox'
-import { useNotification } from '@/composables/useNotification'
-import useProjectsStore from '@/stores/projectsStore'
-import { storeToRefs } from 'pinia'
-import {AgcTaskCard} from "@/components/molecles/AgcTaskCard";
+import { ProjectStatus } from '@/models/projectModel'
+import type { Task } from '@/models/taskModel'
 
 const messageBox = useMessageBox()
-const notification = useNotification()
-const projectsStore = useProjectsStore()
-const tasksStore = useTasksStore()
 const route = useRoute()
 const router = useRouter()
 const projectId = String(route.params.projectId)
 
-const searchQuery = ref('')
+const searchTerm = ref('')
 const isCreatingTask = ref(false)
 const newTaskDescription = ref('')
 
 const newTaskInputRef = ref()
 
-const { isLoadingTasks, projectTasks } = storeToRefs(tasksStore)
-
 const filteredTasks = computed((): Task[] => {
-  return filterByTerm(projectTasks.value, searchQuery.value, ['description', 'status'])
+  return filterByTerm(tasks.value, searchTerm.value, ['description', 'status'])
 })
+
+const {
+  isLoading,
+  tasks,
+  fetchTasks,
+  createTask,
+  updateTask,
+  deleteTask
+} = useTasksController(projectId)
 
 onBeforeMount(async () => {
   try {
-    await tasksStore.searchTasksByProject(projectId)
+    await fetchTasks()
   } catch {
-    notification.error('Error loading tasks')
     goToHome()
   }
 })
@@ -107,31 +110,12 @@ function handleStartCreate () {
   nextTick(() => newTaskInputRef.value?.startEdit())
 }
 
-async function handleCreateTask (taskDescription: string): Promise<void> {
-  try {
-    await tasksStore.createTask(projectId, taskDescription)
-    notification.success('Task created successfully')
-  } catch {
-    notification.error('Error creating task, please try again')
-  }
-}
-
-async function handleEditTaskDescriptions (taskId: string, taskDescription: string): Promise<void> {
-  try {
-    await tasksStore.updateTaskDescriptions(taskId, taskDescription)
-    notification.success('Task description updated successfully')
-  } catch {
-    notification.error('Error updating task description, please try again')
-  }
-}
-
-async function handleEditTaskStatus (taskId: string, taskStatus: TaskStatuses): Promise<void> {
-  try {
-    await tasksStore.updateTaskStatus(taskId, taskStatus)
-    notification.success('Task status updated successfully')
-  } catch {
-    notification.error('Error updating task status, please try again')
-  }
+async function handleCreateTask (description: string): Promise<void> {
+  await createTask(description)
+    .then(() => {
+      isCreatingTask.value = false
+      newTaskDescription.value = ''
+    })
 }
 
 function handleConfirmDeleteTask (taskId: string) {
@@ -139,22 +123,13 @@ function handleConfirmDeleteTask (taskId: string) {
     'Caution!',
     'Are you sure you want to delete this task?',
     { confirmButtonText: 'Delete' }
-  ).then(() => handleDeleteTask(taskId))
-}
-
-async function handleDeleteTask (taskId: string) {
-  try {
-    await tasksStore.deleteTask(taskId)
-    notification.success('Task deleted successfully')
-  } catch {
-    notification.error('Error deleting task, please try again')
-  }
+  ).then(() => deleteTask(taskId))
 }
 
 function goToHome () {
   router.push({
     name: 'projects',
-    params: { tab: 'open' }
+    params: { tab: ProjectStatus.OPEN }
   })
 }
 </script>

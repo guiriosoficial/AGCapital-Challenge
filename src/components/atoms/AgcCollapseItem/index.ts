@@ -1,3 +1,3 @@
 export { default as AgcCollapseItem } from './AgcCollapseItem.vue'
 
-export type { AgcCollapseItemComponent } from './types'
+export type { AgcCollapseItemInstance } from './types'

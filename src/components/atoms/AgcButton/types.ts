@@ -1,7 +1,7 @@
 import AgcButton from './AgcButton.vue'
 import type { Component } from 'vue'
 
-export type AgcButtonComponent = InstanceType<typeof AgcButton>
+export type AgcButtonInstance = InstanceType<typeof AgcButton>
 
 export type AgcButtonType =
   | 'primary'

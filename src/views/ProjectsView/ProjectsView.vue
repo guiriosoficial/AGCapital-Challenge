@@ -2,26 +2,29 @@
   <article class="projects-view-container">
     <AgcToolbar
       v-model:search-term="searchTerm"
-      :disabled="isLoadingProjects"
+      :disabled="isLoading"
       input-text="Search for projects os clients"
       action-text="Add Client"
       class="projects-view-container__tabs-actions"
-      @action-click="handleCreateEditClient()"
+      @action-click="handleOpenClientDialog()"
       @search="handleSearch"
     />
-    <AgcTabs v-model="activeTab">
+    <AgcTabs
+      :model-value="activeTab"
+      @update:model-value="handleChangeTab"
+    >
       <AgcTabPane
         v-for="tab in tabs"
         :key="tab.name"
-        v-loading="isLoadingProjects"
-        :disabled="isLoadingProjects"
-        :name="tab.name.toLowerCase()"
+        v-loading="isLoading"
+        :disabled="isLoading"
+        :name="tab.name"
         :label="tab.title"
       >
-<!--        TODO: Default open-->
+        <!-- TODO: Default open-->
         <AgcCollapse class="projects-view-container__collapse-clients">
           <AgcCollapseItem
-            v-for="client in projectsByClients"
+            v-for="client in projectsByClient"
             :key="client.id"
           >
             <template #title>
@@ -32,13 +35,13 @@
                     :icon="EditPen"
                     :size="16"
                     class="hover-icon"
-                    @click.stop="handleCreateEditClient(client)"
+                    @click.stop="handleOpenClientDialog(client)"
                   />
                   <AgcIcon
                     :icon="Delete"
                     :size="16"
                     class="hover-icon hover-icon--danger"
-                    @click.stop="handleConfirmDeleteClient(client)"
+                    @click.stop="handleDeleteClient(client)"
                   />
                 </span>
               </div>
@@ -48,19 +51,19 @@
                 v-for="project in client.projects"
                 :key="project.id"
                 :project="project"
-                @click="handleClickProject(project)"
-                @edit="handleCreateEditProjectDialog(
+                @click="handleClickProject($event)"
+                @edit="handleOpenProjectDialog(
                   { id: client.id, name: client.name },
-                  project
+                  $event
                 )"
                 @delete="handleConfirmDeleteProject(project.id, project.name)"
-                @move="handleMoveProject(project.id, project.status)"
+                @move="moveProject($event, project.id)"
               />
               <AgcCard
-                v-if="activeTab.toUpperCase() === ProjectStatuses.OPEN"
+                v-if="isInOpenTab"
                 class="projects-view-container__new-project-card"
                 body-class="projects-view-container__new-project-card-body"
-                @click="handleCreateEditProjectDialog({ id: client.id, name: client.name })"
+                @click="handleOpenProjectDialog({ id: client.id, name: client.name })"
               >
                 <AgcIcon
                   :icon="Plus"
@@ -74,7 +77,7 @@
           </AgcCollapseItem>
         </AgcCollapse>
         <div
-          v-if="projectsByClients.length === 0"
+          v-if="projectsByClient.length === 0"
           class="projects-view-container__empty-state"
         >
           <AgcIcon
@@ -87,8 +90,16 @@
     </AgcTabs>
   </article>
 
-  <ClientInfoDialog ref="clientInfoDialogRef" />
-  <ProjectInfoDialog ref="projectInfoDialogRef" />
+  <ClientInfoDialog
+    ref="clientInfoDialogRef"
+    @submit:update="handleUpdateClient"
+    @submit:create="handleCreateClient"
+  />
+  <ProjectInfoDialog
+    ref="projectInfoDialogRef"
+    @submit:update="handleUpdateProject"
+    @submit:create="handleCreateProject"
+  />
 </template>
 
 <script setup lang="ts">
@@ -100,34 +111,28 @@ import { AgcTabPane } from '@/components/atoms/AgcTabPane'
 import { AgcTabs } from '@/components/atoms/AgcTabs'
 import { AgcToolbar } from '@/components/molecles/AgcToolbar'
 import { AgcProjectCard } from '@/components/molecles/AgcProjectCard'
-import { computed, ref, defineAsyncComponent, onBeforeMount } from 'vue'
 import { Plus, Delete, EditPen, FolderDelete } from '@element-plus/icons-vue'
+import { computed, ref, defineAsyncComponent, onBeforeMount } from 'vue'
 import { useRouter } from 'vue-router'
-import useClientStore, { type Client } from '@/stores/clientsStore'
 import { useMessageBox } from '@/composables/useMessageBox'
-import useProjectsStore, {
-  ProjectStatuses,
-  type Project
-} from '@/stores/projectsStore'
-import { useNotification } from '@/composables/useNotification'
-import { storeToRefs } from 'pinia'
+import { useProjectsController } from '@/views/ProjectsView/useProjectsController'
+import { ProjectStatus, type Project, type ProjectDoc, } from '@/models/projectModel'
+import type { Client, ClientDoc } from '@/models/clientModel'
+import type { IProjectsViewProps } from './types'
 
 const ClientInfoDialog = defineAsyncComponent(() => import('./dialogs/ClientInfoDialog'))
 const ProjectInfoDialog = defineAsyncComponent(() => import('./dialogs/ProjectInfoDialog'))
 
-const clientStore = useClientStore()
 const messageBox = useMessageBox()
-const notification = useNotification()
-const projectsStore = useProjectsStore()
 const router = useRouter()
 
 const tabs = [
   {
-    name: ProjectStatuses.OPEN,
+    name: ProjectStatus.OPEN,
     title: 'Open Projects'
   },
   {
-    name: ProjectStatuses.CLOSED,
+    name: ProjectStatus.CLOSED,
     title: 'Closed Projects'
   }
 ]
@@ -136,78 +141,83 @@ const projectInfoDialogRef = ref<InstanceType<typeof ProjectInfoDialog> | null>(
 const clientInfoDialogRef = ref<InstanceType<typeof ClientInfoDialog> | null>(null)
 const searchTerm = ref<string>('')
 
-const {
-  isLoadingProjects,
-  projectsByClients
-} = storeToRefs(projectsStore)
+const props = defineProps<IProjectsViewProps>()
 
-const props = defineProps<{ tab: ProjectStatuses }>()
+const activeTab = computed(() => props.tab)
 
-const activeTab = computed({
-  get: () => props.tab,
-  set: (value: ProjectStatuses) => handleChangeTab(value)
-})
+const isInOpenTab = computed(() => activeTab.value === ProjectStatus.OPEN)
 
 onBeforeMount(() => {
-  handleFetchData(activeTab.value, searchTerm.value)
+  fetchProjects(activeTab.value, searchTerm.value)
 })
 
-// TODO: Check param type (remove number on input)
-function handleSearch (value?: string | number) {
-  handleFetchData(activeTab.value, String(value))
-}
+const {
+  isLoading,
+  projectsByClient,
+  fetchProjects,
+  createProject,
+  updateProject,
+  deleteProject,
+  moveProject,
+  createClient,
+  updateClient,
+  deleteClient
+} = useProjectsController()
 
-function handleChangeTab (tab: ProjectStatuses) {
+function handleChangeTab (tab: ProjectStatus) {
   router.push({
     name: 'projects',
-    params: { tab: tab.toLowerCase() }
+    params: { tab }
   })
 
-  handleFetchData(tab, searchTerm.value)
+  fetchProjects(tab, searchTerm.value)
 }
 
-async function handleFetchData (status: ProjectStatuses, searchTerm?: string) {
-  try {
-    await projectsStore.searchProjectsByClients(status, searchTerm)
-  } catch {
-    notification.error('Error fetching projects, please try again')
-  }
+function handleSearch (value?: string) {
+  fetchProjects(activeTab.value, String(value))
 }
 
-function handleCreateEditClient (client?: Client) {
+function handleOpenClientDialog (client?: Client) {
   clientInfoDialogRef.value?.open(client)
 }
 
-function handleConfirmDeleteClient (client: Client) {
+async function handleCreateClient (clientInfoForm: ClientDoc) {
+  await createClient(clientInfoForm)
+    .then(() => clientInfoDialogRef.value?.close())
+}
+
+async function handleUpdateClient (clientInfoForm: Client) {
+  await updateClient(clientInfoForm)
+    .then(() => clientInfoDialogRef.value?.close())
+}
+
+function handleDeleteClient (client: Client) {
   messageBox.confirm(
     'Caution!',
     `Are you sure you want to delete this client? (${client.name})`,
     { confirmButtonText: 'Delete' }
-  ).then(() => handleDeleteClient(client.id))
-}
-
-async function handleDeleteClient (clientId: string) {
-  try {
-    await clientStore.deleteClient(clientId)
-    notification.success('Client deleted successfully')
-  } catch {
-    notification.error('Error deleting client, please try again')
-  }
+  ).then(() => deleteClient(client.id))
 }
 
 function handleClickProject (project: Project): void {
-  projectsStore.setCurrentProject(project)
-
   router.push({
     name: 'project-tasks',
-    params: {
-      projectId: project.id
-    }
+    params: { projectId: project.id }
   })
 }
 
-function handleCreateEditProjectDialog (client: Client, project?: Project): void {
+function handleOpenProjectDialog (client: Client, project?: Project): void {
   projectInfoDialogRef.value?.open({ ...project, client })
+}
+
+async function handleCreateProject (projectInfoModel: ProjectDoc & { clientId: string }) {
+  await createProject(projectInfoModel)
+    .then(() => projectInfoDialogRef.value?.close())
+}
+
+async function handleUpdateProject (projectInfoModel: Project) {
+  await updateProject(projectInfoModel)
+    .then(() => projectInfoDialogRef.value?.close())
 }
 
 function handleConfirmDeleteProject (projectId: string, projectName: string): void {
@@ -215,27 +225,7 @@ function handleConfirmDeleteProject (projectId: string, projectName: string): vo
     'Caution!',
     `Are you sure you want to delete this project? (${projectName})`,
     { confirmButtonText: 'Delete' }
-  ).then(() => handleDeleteProject(projectId))
-}
-
-async function handleDeleteProject (projectId: string) {
-  try {
-    await projectsStore.deleteProject(projectId)
-    notification.success('Project deleted successfully')
-  } catch {
-    notification.error('Error deleting project, please try again')
-  }
-}
-
-async function handleMoveProject (projectId: string, status: ProjectStatuses): Promise<void> {
-  const newStatus = status === ProjectStatuses.OPEN ? ProjectStatuses.CLOSED : ProjectStatuses.OPEN
-
-  try {
-    await projectsStore.editProjectStatus(projectId, { status: newStatus })
-    notification.success('Project status changed successfully')
-  } catch {
-    notification.error('Error changing project status, please try again')
-  }
+  ).then(() => deleteProject(projectId))
 }
 </script>
 

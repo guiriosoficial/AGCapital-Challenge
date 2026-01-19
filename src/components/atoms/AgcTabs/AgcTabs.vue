@@ -1,4 +1,3 @@
-<!-- TODO: Remove @tab-change (use @update) -->
 <template>
   <ElTabs
     v-model="modelValue"
@@ -8,7 +7,7 @@
   </ElTabs>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends AgcTabsModelValue">
 import { ElTabs } from 'element-plus'
 import type { AgcTabsModelValue } from './types'
 
@@ -17,7 +16,7 @@ defineOptions({
   inheritAttrs: false
 })
 
-const modelValue = defineModel<AgcTabsModelValue>({
+const modelValue = defineModel<T>({
   required: true
 })
 </script>

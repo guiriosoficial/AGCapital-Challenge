@@ -17,12 +17,11 @@
 </template>
 
 <script setup lang="ts">
-import { ElPopover } from 'element-plus'
+import { ElPopover, type PopoverInstance } from 'element-plus'
 import { ref } from 'vue'
 import type { IAgcPopoverProps, IAgcInputExpose } from './types'
 
-// TODO: Review instance type
-const popoverInstanceRef = ref<InstanceType<typeof ElPopover>>()
+const popoverInstanceRef = ref<PopoverInstance | null>(null)
 
 defineOptions({
   name: 'AgcPopover',

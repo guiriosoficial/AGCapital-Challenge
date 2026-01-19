@@ -1,7 +1,7 @@
 export { default as AgcButton } from './AgcButton.vue'
 
 export type {
-  AgcButtonComponent,
+  AgcButtonInstance,
   AgcButtonType,
   AgcButtonIcon,
   IAgcButtonProps,

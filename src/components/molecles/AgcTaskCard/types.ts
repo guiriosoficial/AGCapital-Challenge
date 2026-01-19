@@ -1,5 +1,5 @@
 import AgcTaskCard from './AgcTaskCard.vue'
-import type { Task } from '@/stores/tasksStore'
+import type { Task, TaskDoc } from '@/models/taskModel'
 
 export type AgcTaskCardComponent = InstanceType<typeof AgcTaskCard>
 
@@ -9,6 +9,5 @@ export interface IAgcTaskCardProps {
 
 export interface IAgcTaskCardEmits {
   (e: 'delete', task: Task): void
-  (e: 'update-status', status: string): void
-  (e: 'update-description', value: string): void
+  (e: 'update', task: Partial<TaskDoc>): void
 }

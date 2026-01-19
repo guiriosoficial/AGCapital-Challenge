@@ -1,7 +1,7 @@
 export { default as AgcCard } from './AgcCard.vue'
 
 export type {
-  AgcCardComponent,
+  AgcCardInstance,
   AgcCardShadow,
   IAgcCardProps,
   IAgcCardEmits

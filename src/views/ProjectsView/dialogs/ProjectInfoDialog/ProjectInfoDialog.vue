@@ -1,14 +1,12 @@
 <template>
   <AgcDialog
-    v-if="isOpen"
     v-model="isOpen"
     :title="dialogTitle"
   >
     <AgcForm
-      ref="projectInfoRulesRef"
-      :model="projectInfoModel"
-      :rules="projectInfoRules"
-      label-position="top"
+      ref="projectFormRef"
+      :model="projectForm"
+      :rules="projectFormRules"
       class="full-width"
     >
       <AgcFormItem
@@ -17,7 +15,7 @@
         required
       >
         <AgcInput
-          v-model="projectInfoModel.name"
+          v-model="projectForm.name"
           class="full-width"
         />
       </AgcFormItem>
@@ -27,7 +25,7 @@
         required
       >
         <AgcInput
-          v-model="projectInfoModel.description"
+          v-model="projectForm.description"
           type="textarea"
           class="full-width"
         />
@@ -48,55 +46,40 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, watch, ref, computed } from 'vue'
+import { AgcForm, type AgcFormInstance, type AgcFormRules } from '@/components/atoms/AgcForm'
 import { AgcButton } from '@/components/atoms/AgcButton'
 import { AgcDialog } from '@/components/atoms/AgcDialog'
-import { AgcForm } from '@/components/atoms/AgcForm'
 import { AgcFormItem } from '@/components/atoms/AgcFormItem'
 import { AgcInput } from '@/components/atoms/AgcInput'
-import type { Client } from '@/stores/clientsStore'
-import type { FormRules } from 'element-plus'
+import { reactive, watch, ref, computed } from 'vue'
 import { useDialog  } from '@/composables/useDialog'
-import { useNotification } from '@/composables/useNotification'
-import useProjectsStore, { type Project, type NewProject, ProjectStatuses } from '@/stores/projectsStore'
-
-interface Props extends Partial<NewProject>, Partial<Omit<Project, keyof NewProject>> {
-  client: Client
-}
+import { ProjectForm } from '@/models/projectModel'
+import type { IProjectFormDialogProps, IProjectFormDialogEmits } from './types'
 
 const {
   props: project,
   isOpen,
-  open
-} = useDialog<Props>()
-const notification = useNotification()
-const projectStore = useProjectsStore()
+  open,
+  close
+} = useDialog<IProjectFormDialogProps>()
 
-// TODO: Import Type from component
-const projectInfoRulesRef = ref<InstanceType<typeof AgcForm>>()
+const emit = defineEmits<IProjectFormDialogEmits>()
 
-const projectInfoModel = reactive<NewProject>({
-  name: '',
-  description: '',
-  status: ProjectStatuses.OPEN
-})
+const projectFormRef = ref<AgcFormInstance | null>(null)
 
-// TODO: Remove FormRules
-const projectInfoRules = reactive<FormRules<NewProject>>({
-  name: [
-    {
-      required: true,
-      message: 'Please enter a project name',
-      trigger: 'change'
-    }
-  ],
-  description: [
-    {
-      required: true,
-      message: 'Please enter a project description',
-      trigger: 'change'
-    }
-  ]
+const projectForm = reactive<ProjectForm>(createProjectForm())
+
+const projectFormRules = reactive<AgcFormRules<ProjectForm>>({
+  name: {
+    required: true,
+    message: 'Please enter a project name',
+    trigger: 'change'
+  },
+  description: {
+    required: true,
+    message: 'Please enter a project description',
+    trigger: 'change'
+  }
 })
 
 const isEditingProject = computed(() => Boolean(project.value?.id))
@@ -113,8 +96,12 @@ const confirmButtonLabel = computed(() => {
     : 'Create'
 })
 
+function createProjectForm (): ProjectForm {
+  return new ProjectForm()
+}
+
 function handleValidateProject () {
-  projectInfoRulesRef.value?.validate((valid: boolean) => {
+  projectFormRef.value?.validate((valid: boolean) => {
     if (!valid || !project.value) return
 
     handleCreateEditProject()
@@ -123,51 +110,38 @@ function handleValidateProject () {
 
 function handleCreateEditProject () {
   if (isEditingProject.value) {
-    handleEditProject()
+    const eventForm = {
+      id: project.value?.id ?? '',
+      ...projectForm
+    }
+    emit('submit:update', eventForm)
   } else {
-    handleCreateProject()
+    const eventForm = {
+      clientId: project.value?.client.id ??  '',
+      ...projectForm
+    }
+    emit('submit:create', eventForm)
   }
 
   handleCloseDialog()
 }
 
-async function handleEditProject () {
-  try {
-    const projectId = project.value?.id ?? ''
-    await projectStore.editProject(projectId, projectInfoModel)
-    notification.success('Project updated successfully')
-  } catch {
-    notification.error('Error updating project, please try again')
-  }
-}
-
-async function handleCreateProject () {
-  try {
-    const clientId = project.value?.client.id ?? ''
-    await projectStore.createProject(clientId, projectInfoModel)
-    notification.success('Project created successfully')
-  } catch {
-    notification.error('Error creating project, please try again')
-  }
-}
-
 function handleCloseDialog () {
   isOpen.value = false
+  projectFormRef.value?.resetFields()
+  projectFormRef.value?.resetValidation()
 }
 
-// TODO: Criar model de Reset
 watch(isOpen, (newVal: boolean): void => {
   if (newVal && project.value?.id) {
-    Object.assign(projectInfoModel, project.value)
+    Object.assign(projectForm, project.value)
   } else {
-    Object.assign(projectInfoModel, {
-      name: '',
-      description: ''
-    })
+    Object.assign(projectForm, new ProjectForm)
   }
 })
 
 defineExpose({
-  open
+  open,
+  close
 })
 </script>

@@ -32,8 +32,8 @@
   </AgcPopover>
 </template>
 
-<script setup lang="ts">
-import { AgcPopover, type AgcPopoverComponent } from '@/components/atoms/AgcPopover'
+<script setup lang="ts" generic="T extends AgcPopoverInlineEditorModelValue = string">
+import { AgcPopover, type AgcPopoverInstance } from '@/components/atoms/AgcPopover'
 import { ref, computed } from 'vue'
 import type {
   AgcPopoverInlineEditorModelValue,
@@ -41,9 +41,9 @@ import type {
   IAgcPopoverInlineEditorOption
 } from './types'
 
-const popoverInlineEditorRef = ref<AgcPopoverComponent | null>(null)
+const popoverInlineEditorRef = ref<AgcPopoverInstance | null>(null)
 
-const modelValue = defineModel<AgcPopoverInlineEditorModelValue>({
+const modelValue = defineModel<T>({
   required: true
 })
 

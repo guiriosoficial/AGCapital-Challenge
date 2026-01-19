@@ -37,26 +37,26 @@ import { AgcTextInlineEditor } from '@/components/molecles/AgcTextInlineEditor'
 import { AgcCard } from '@/components/atoms/AgcCard'
 import { AgcTag } from '@/components/atoms/AgcTag'
 import { AgcPopoverInlineEditor } from '@/components/molecles/AgcPopoverInlineEditor'
-import { TaskStatuses } from "@/stores/tasksStore";
+import { TaskStatus } from '@/models/taskModel'
 import { computed } from 'vue'
 import type { IAgcTaskCardProps, IAgcTaskCardEmits } from './types'
 
 const statusOptions = [
   {
     label: 'Todo',
-    value: TaskStatuses.TODO
+    value: TaskStatus.TODO
   },
   {
     label: 'Doing',
-    value: TaskStatuses.DOING
+    value: TaskStatus.DOING
   },
   {
     label: 'Done',
-    value: TaskStatuses.DONE
+    value: TaskStatus.DONE
   },
   {
     label: 'Cancelled',
-    value: TaskStatuses.CANCELLED
+    value: TaskStatus.CANCELLED
   }
 ]
 
@@ -66,25 +66,25 @@ const emit = defineEmits<IAgcTaskCardEmits>()
 
 const statusTagTypes = computed(() => {
   switch (task.status) {
-    case TaskStatuses.TODO:
+    case TaskStatus.TODO:
       return 'warning'
-    case TaskStatuses.DOING:
+    case TaskStatus.DOING:
       return 'primary'
-    case TaskStatuses.DONE:
+    case TaskStatus.DONE:
       return 'success'
-    case TaskStatuses.CANCELLED:
+    case TaskStatus.CANCELLED:
       return 'danger'
     default:
       return undefined
   }
 })
 
-function handleEditTaskDescriptions (value: string) {
-  emit('update-description', value)
+function handleEditTaskDescriptions (description: string) {
+  emit('update', { description })
 }
 
-function handleEditTaskStatus (status: string) {
-  emit('update-status', status)
+function handleEditTaskStatus (status: TaskStatus) {
+  emit('update', { status })
 }
 
 function handleDeleteTask () {

@@ -10,20 +10,19 @@
   />
 </template>
 
-<script setup lang="ts">
-import { ElInput } from 'element-plus'
+<script setup lang="ts" generic="T extends AgcInputModelValue = string">
+import { ElInput, type InputInstance } from 'element-plus'
 import { ref } from 'vue'
 import type { AgcInputModelValue, IAgcInputProps } from './types'
 
-// TODO: Review instance type
-const inputInstanceRef = ref<unknown>(null)
+const inputInstanceRef = ref<InputInstance | null>(null)
 
 defineOptions({
   name: 'AgcInput',
   inheritAttrs: false
 })
 
-const modelValue = defineModel<AgcInputModelValue>({
+const modelValue = defineModel<T>({
   required: true
 })
 

@@ -1,5 +1,3 @@
-import type { AgcInputModelValue } from '@/components/atoms/AgcInput/types'
-
 export interface IAgcToolbarProps {
   inputText?: string
   actionText?: string
@@ -9,6 +7,6 @@ export interface IAgcToolbarProps {
 }
 
 export interface IAgcToolbarEmits {
-  (e: 'search', value: AgcInputModelValue): void
+  (e: 'search', value: string): void
   (e: 'action-click', event: MouseEvent): void
 }

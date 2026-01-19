@@ -1,3 +1,3 @@
 import AgcCollapse from './AgcCollapse.vue'
 
-export type AgcCollapseComponent = InstanceType<typeof AgcCollapse>
+export type AgcCollapseInstance = InstanceType<typeof AgcCollapse>

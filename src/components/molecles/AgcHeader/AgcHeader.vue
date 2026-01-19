@@ -9,7 +9,7 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import { ProjectStatuses } from '@/stores/projectsStore'
+import { ProjectStatus } from '@/models/projectModel'
 
 const router = useRouter()
 
@@ -18,7 +18,7 @@ function goToHome() {
   router.push({
     name: 'projects',
     params: {
-      tab: ProjectStatuses.OPEN
+      tab: ProjectStatus.OPEN
     }
   })
 }

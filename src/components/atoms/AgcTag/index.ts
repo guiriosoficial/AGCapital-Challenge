@@ -1,7 +1,7 @@
 export { default as AgcTag } from './AgcTag.vue'
 
 export type {
-  AgcTagComponent,
+  AgcTagInstance,
   AgcTagType,
   IAgcTagProps
 } from './types'

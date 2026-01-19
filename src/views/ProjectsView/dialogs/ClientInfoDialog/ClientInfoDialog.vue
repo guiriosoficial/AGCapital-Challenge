@@ -1,14 +1,12 @@
 <template>
   <AgcDialog
-    v-if="isOpen"
     v-model="isOpen"
     :title="dialogTitle"
   >
     <AgcForm
-      ref="clientInfoFormRef"
-      :model="clientInfoModel"
-      :rules="clientInfoRules"
-      label-position="top"
+      ref="clientFormRef"
+      :model="clientForm"
+      :rules="clientFormRules"
     >
       <AgcFormItem
         label="Client name"
@@ -16,7 +14,7 @@
         required
       >
         <AgcInput
-          v-model="clientInfoModel.name"
+          v-model="clientForm.name"
           class="full-width"
         />
       </AgcFormItem>
@@ -36,39 +34,30 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, watch, ref, computed } from 'vue'
+import { AgcForm, type AgcFormInstance, type AgcFormRules } from '@/components/atoms/AgcForm'
 import { AgcButton } from '@/components/atoms/AgcButton'
 import { AgcDialog } from '@/components/atoms/AgcDialog'
-import { AgcForm } from '@/components/atoms/AgcForm'
 import { AgcFormItem } from '@/components/atoms/AgcFormItem'
 import { AgcInput } from '@/components/atoms/AgcInput'
-import type { FormRules } from 'element-plus'
-import useClientStore, { type Client } from '@/stores/clientsStore'
+import { reactive, watch, ref, computed } from 'vue'
 import { useDialog } from '@/composables/useDialog'
-import { useNotification } from '@/composables/useNotification'
-import type { NewClient } from "@/stores/clientsStore/models.ts";
-
-interface ClientInfoForm {
-  name: string
-}
+import { ClientForm } from '@/models/clientModel'
+import type { IClientFormDialogProps, IClientFormDialogEmits } from './types'
 
 const {
   props: client,
   isOpen,
-  open
-} = useDialog<Client>()
-const notification = useNotification()
-const clientStore = useClientStore()
+  open,
+  close
+} = useDialog<IClientFormDialogProps>()
 
-// TODO: Import Type from component
-const clientInfoFormRef = ref<InstanceType<typeof AgcForm> | null>(null)
+const emit = defineEmits<IClientFormDialogEmits>()
 
-const clientInfoModel = reactive<NewClient>({
-  name: ''
-})
+const clientFormRef = ref<AgcFormInstance | null>(null)
 
-// TODO: Abstrair FormRules
-const clientInfoRules = reactive<FormRules<ClientInfoForm>>({
+const clientForm = reactive<ClientForm>(createClientForm())
+
+const clientFormRules = reactive<AgcFormRules<ClientForm>>({
   name: {
     required: true,
     message: 'Please input client name',
@@ -90,56 +79,46 @@ const confirmButtonLabel = computed(() => {
     : 'Create'
 })
 
+function createClientForm (): ClientForm {
+  return new ClientForm()
+}
+
 function handleValidateClient () {
-  clientInfoFormRef?.value?.validate((valid) => {
+  clientFormRef?.value?.validate((valid) => {
     if (!valid) return
 
-    handleEditCreateClient()
+    handleUpdateCreateClient()
   })
 }
 
-function handleEditCreateClient () {
+function handleUpdateCreateClient () {
   if (isEditingClient.value) {
-    handleEditClient()
+    const eventForm = {
+      id: client.value?.id ?? '',
+      ...clientForm
+    }
+    emit('submit:update', eventForm)
   } else {
-    handleCreateClient()
-  }
-
-  handleCloseDialog()
-}
-
-async function handleEditClient () {
-  try {
-    const clientId = client.value?.id ?? ''
-    await clientStore.updateClient(clientId, clientInfoModel)
-    notification.success('Client updated successfully')
-  } catch {
-    notification.error('Error updating client, please try again')
-  }
-}
-
-async function handleCreateClient () {
-  try {
-    await clientStore.createClient(clientInfoModel)
-    notification.success('Client created successfully')
-  } catch {
-    notification.error('Error creating client, please try again')
+    emit('submit:create', clientForm)
   }
 }
 
 function handleCloseDialog () {
   isOpen.value = false
+  clientFormRef.value?.resetFields()
+  clientFormRef.value?.resetValidation()
 }
 
 watch(isOpen, (newVal: boolean): void => {
   if (newVal && client.value?.id) {
-    Object.assign(clientInfoModel, client.value)
+    Object.assign(clientForm, client.value)
   } else {
-    clientInfoModel.name = ''
+    Object.assign(clientForm, new ClientForm)
   }
 })
 
 defineExpose({
-  open
+  open,
+  close
 })
 </script>

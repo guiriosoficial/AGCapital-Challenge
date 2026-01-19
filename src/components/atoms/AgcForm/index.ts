@@ -1,7 +1,7 @@
 export { default as AgcForm }  from './AgcForm.vue'
 
 export type {
-  AgcFormComponent,
+  AgcFormInstance,
   AgcFormModel,
   AgcFormRules,
   AgcFormLabelPosition,

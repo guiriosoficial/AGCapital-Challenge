@@ -1,6 +1,6 @@
 export { default as AgcFormItem } from './AgcFormItem.vue'
 
 export type {
-  AgcFormItemComponent,
+  AgcFormItemInstance,
   IAgcFormItemProps
 } from './types'

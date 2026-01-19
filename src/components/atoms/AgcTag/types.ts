@@ -1,6 +1,6 @@
 import AgcTag from './AgcTag.vue'
 
-export type AgcTagComponent = InstanceType<typeof AgcTag>
+export type AgcTagInstance = InstanceType<typeof AgcTag>
 
 export type AgcTagType =
   | 'primary'
