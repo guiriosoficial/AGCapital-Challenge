@@ -1,4 +1,4 @@
-export enum TaskStatuses {
+export enum TaskStatus {
   TODO = 'TODO',
   DOING = 'DOING',
   DONE = 'DONE',
@@ -8,7 +8,7 @@ export enum TaskStatuses {
 export interface Task {
   id: string
   description: string
-  status: TaskStatuses
+  status: TaskStatus
 }
 
-export type NewTasks = Omit<Task, 'id'>
+export type TaskDoc = Omit<Task, 'id'>
