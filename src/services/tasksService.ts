@@ -16,13 +16,13 @@ export const tasksService = {
     }))
   },
 
-  async createTask(task: TaskDoc, projectId: string): Promise<void> {
+  async createTask(task: TaskDoc, projectId: string): Promise<string> {
     const tasksCollection = collection(db, tasksPath)
-    const body = {
+    const docRef = await addDoc(tasksCollection, {
       projectId,
       ...task
-    }
-    await addDoc(tasksCollection, body)
+    })
+    return docRef.id
   },
 
   async updateTask(taskId: string, body: Partial<TaskDoc>): Promise<void> {

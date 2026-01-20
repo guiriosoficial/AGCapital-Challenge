@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { clone } from '@/utils/clone'
+import { cloneDeep } from '@/utils/cloneDeep'
 import { projectsService } from '@/services/projectsService'
 import { clientsService } from '@/services/clientsService'
 import { useNotification } from '@/composables/useNotification'
@@ -18,7 +18,7 @@ export function useProjectsController () {
   const projectsByClient = ref<ProjectsByClient[]>([])
 
   function backup () {
-    return clone(projectsByClient.value)
+    return cloneDeep(projectsByClient.value)
   }
 
   function rollback (snapshot: ProjectsByClient[]) {
@@ -42,8 +42,9 @@ export function useProjectsController () {
 
   async function createClient (form: ClientDoc) {
     const snapshot = backup()
+    const tempId = new Date().getTime().toString()
     const tempClient = {
-      id: '',
+      id: tempId,
       projects: [],
       ...form,
     }
@@ -51,8 +52,10 @@ export function useProjectsController () {
     projectsByClient.value.push(tempClient)
 
     try {
-      await clientsService.createClient(form)
+      const newId = await clientsService.createClient(form)
       notification.success('Client created successfully')
+      const newItem = projectsByClient.value.find((c) => c.id === tempId)
+      if (newItem) newItem.id = newId
     } catch {
       rollback(snapshot)
       notification.error('Error creating client, please try again')

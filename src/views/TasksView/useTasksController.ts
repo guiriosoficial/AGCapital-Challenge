@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { clone } from '@/utils/clone'
+import { cloneDeep } from '@/utils/cloneDeep'
 import { tasksService } from '@/services/tasksService'
 import { useNotification } from '@/composables/useNotification'
 import { TaskStatus, type Task, type TaskDoc } from '@/models/taskModel'
@@ -11,7 +11,7 @@ export function useTasksController (projectId: string) {
   const tasks = ref<Task[]>([])
 
   function backup () {
-    return clone(tasks.value)
+    return cloneDeep(tasks.value)
   }
 
   function rollback (snapshot: Task[]) {

@@ -41,5 +41,6 @@ npm run lint:fix
 - Create Tests
 - Handle Optimistic Updates
 - Resolve TODOs
+- Remove Element Variables (var(--el...))
 
 > **NOTE:** I Got de Job! 💸

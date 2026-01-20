@@ -50,13 +50,13 @@ export const projectsService = {
       }))
   },
 
-  async createProject(data: ProjectDoc, clientId: string): Promise<void> {
+  async createProject(data: ProjectDoc, clientId: string): Promise<string> {
     const projectsCollection = collection(db, projectsPath)
-
-    await addDoc(projectsCollection, {
+    const docRef = await addDoc(projectsCollection, {
       clientId,
       ...data
     })
+    return docRef.id
   },
 
   async updateProject(data: Partial<ProjectDoc>, projectId: string): Promise<void> {

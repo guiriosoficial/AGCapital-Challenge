@@ -1,6 +1,3 @@
 export { default as filterByTerm } from './filterByTerm'
 export { default as normalizeString } from './normalizeString'
-export { default as fetch } from './fetch'
 export { default as buildQuery } from './buildQuery'
-export { default as assertExists } from './assertExists'
-export { default as assertIndex } from './assertIndex'
