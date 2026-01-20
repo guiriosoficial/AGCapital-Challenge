@@ -6,14 +6,14 @@
   >
     <ul
       role="listbox"
-      class="popover-inline-editor__list"
+      class="popover-inline-editor__options"
     >
       <li
         v-for="option in options"
         :key="option.value"
-        :class="{ 'popover-inline-editor__option--selected': isSelected(option) }"
+        :class="{ 'popover-inline-editor__options-item--selected': isSelected(option) }"
         role="option"
-        class="popover-inline-editor__option"
+        class="popover-inline-editor__options-item"
         @click="handleSelect(option)"
         @keydown.enter.space.prevent="handleSelect(option)"
       >
@@ -49,41 +49,40 @@ const modelValue = defineModel<T>({
 
 const {
   options = []
-} = defineProps<IAgcPopoverInlineEditorProps>()
+} = defineProps<IAgcPopoverInlineEditorProps<T>>()
 
-const selectedOption = computed<IAgcPopoverInlineEditorOption | null>(() => {
+const selectedOption = computed<IAgcPopoverInlineEditorOption<T> | null>(() => {
   return options.find(option => option.value === modelValue.value) ?? null
 })
 
-function isSelected (option: IAgcPopoverInlineEditorOption): boolean {
+function isSelected (option: IAgcPopoverInlineEditorOption<T>): boolean {
   return option.value === modelValue.value
 }
 
-function handleSelect (option: IAgcPopoverInlineEditorOption): void {
+function handleSelect (option: IAgcPopoverInlineEditorOption<T>): void {
   modelValue.value = option.value
   popoverInlineEditorRef.value?.hide()
 }
 </script>
 
-<!-- TODO: Review styles -->
 <style lang="scss">
-  .popover-inline-editor__popper-class {
-    padding: 12px 0 !important;
-    .popover-inline-editor__list {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      .popover-inline-editor__option {
-        cursor: pointer;
-        padding: 6px 24px;
-        &:hover {
-          background-color:  var(--el-bg-color-page);
-        }
-        &--selected {
-          color: var(--el-color-primary);
-          font-weight: 600;
-        }
+.popover-inline-editor__popper-class {
+  padding: 12px 0 !important;
+  .popover-inline-editor__options {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    .popover-inline-editor__options-item {
+      cursor: pointer;
+      padding: 6px 24px;
+      &:hover {
+        background-color:  var(--el-bg-color-page);
+      }
+      &--selected {
+        color: var(--el-color-primary);
+        font-weight: 600;
       }
     }
   }
+}
 </style>

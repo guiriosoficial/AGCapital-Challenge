@@ -39,8 +39,8 @@ npm run lint:fix
 
 ## TODO
 - Create Tests
-- Handle Optimistic Updates
 - Resolve TODOs
 - Remove Element Variables (var(--el...))
+- Adjust Breakpoints
 
 > **NOTE:** I Got de Job! 💸

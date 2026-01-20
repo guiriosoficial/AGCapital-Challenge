@@ -91,8 +91,7 @@ defineExpose<IAgcTextInlineEditorExposes>({
 })
 </script>
 
-<!-- TODO: Review this -->
-<style lang="scss" scoped>
+<style scoped lang="scss">
 .text-inline-editor {
   width: 100%;
   .text-inline-editor__inner {

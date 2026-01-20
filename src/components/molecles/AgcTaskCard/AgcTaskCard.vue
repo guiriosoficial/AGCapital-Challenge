@@ -3,15 +3,13 @@
     class="task-card"
     body-class="task-card__body"
   >
-    <!-- TODO: Remove Prop Mutating -->
     <AgcTextInlineEditor
-      v-model="task.description"
+      :model-value="task.description"
       class="task-card__description"
       @update:model-value="handleEditTaskDescriptions($event)"
     />
-    <!-- TODO: Remove Prop Mutating -->
     <AgcPopoverInlineEditor
-      v-model="task.status"
+      :model-value="task.status"
       :options="statusOptions"
       @update:model-value="handleEditTaskStatus($event)"
     >
@@ -39,8 +37,8 @@ import { AgcTextInlineEditor } from '@/components/molecles/AgcTextInlineEditor'
 import { AgcCard } from '@/components/atoms/AgcCard'
 import { AgcTag } from '@/components/atoms/AgcTag'
 import { AgcPopoverInlineEditor } from '@/components/molecles/AgcPopoverInlineEditor'
-import { TaskStatus } from '@/models/taskModel'
 import { computed } from 'vue'
+import { TaskStatus } from '@/models/taskModel'
 import type { IAgcTaskCardProps, IAgcTaskCardEmits } from './types'
 
 const statusOptions = [
@@ -96,16 +94,8 @@ function handleDeleteTask () {
 
 <style scoped lang="scss">
 .task-card {
-  display: flex;
-  align-items: center;
   font-size: 16px;
   .task-card__body {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: relative;
-    gap: 16px;
-    width: 100%;
     .task-card__status-tag {
       width: 120px;
       margin-right: 32px;
