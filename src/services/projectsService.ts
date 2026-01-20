@@ -1,44 +1,36 @@
 import { clientsService } from '@/services/clientsService'
 import { db } from '@/plugins/firebase'
-import { collection, doc, getDocs, addDoc, updateDoc, deleteDoc, where, query, QueryConstraint } from 'firebase/firestore/lite'
-import type { Project, ProjectDoc, ProjectsByClient } from '@/models/projectModel'
+import { collection, doc, getDocs, addDoc, updateDoc, deleteDoc, where, query, type FirestoreDataConverter, type QueryDocumentSnapshot } from 'firebase/firestore/lite'
+import { normalizeString } from '@/utils'
+import type { Project, ProjectDoc, ProjectsByClient, ProjectStatus } from '@/models/projectModel'
 
 const projectsPath = 'projects'
 
 export const projectsService = {
-  async searchProjectsByClient(status: string, searchTerm?: string): Promise<ProjectsByClient[]> {
+  async searchProjectsByClient(status: ProjectStatus, searchTerm?: string): Promise<ProjectsByClient[]> {
+    const normalizedSearchTerm = normalizeString(searchTerm ?? '')
     const clientsList = await clientsService.searchClients()
 
-    const constraints: QueryConstraint[] = [
+    const constraints = [
       where('status', '==', status.toUpperCase())
     ]
 
-    if (searchTerm) {
-      const term = searchTerm.trim().toLowerCase()
-
+    if (normalizedSearchTerm) {
       constraints.push(
-        where('name_lc', '>=', term),
-        where('name_lc', '<=', term + '\uf8ff')
+        where('name_lc', '>=', normalizedSearchTerm),
+        where('name_lc', '<=', normalizedSearchTerm + '\uf8ff')
       )
     }
 
-    const projectsCollection = collection(db, projectsPath)
-    const projectsQuery = query(
-      projectsCollection,
-      ...constraints
-    )
-
+    const projectsCollection = collection(db, projectsPath).withConverter(projectConverter)
+    const projectsQuery = query(projectsCollection, ...constraints)
     const projectsSnapshot = await getDocs(projectsQuery)
-    const projectsList = projectsSnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data() as ProjectDoc & { clientId: string },
-    }))
+    const projectsList = projectsSnapshot.docs.map(d => d.data())
 
     const projectsByClient = projectsList.reduce((acc, project) => {
-      if (!acc[project.clientId]) {
-        acc[project.clientId] = []
-      }
+      if (!acc[project.clientId]) acc[project.clientId] = []
       acc[project.clientId]?.push(project)
+
       return acc
     }, {} as Record<string, Project[]>)
 
@@ -50,13 +42,14 @@ export const projectsService = {
       }))
   },
 
-  async createProject(data: ProjectDoc, clientId: string): Promise<string> {
+  async createProject(data: ProjectDoc): Promise<Project> {
     const projectsCollection = collection(db, projectsPath)
-    const docRef = await addDoc(projectsCollection, {
-      clientId,
+    const docRef = await addDoc(projectsCollection, data)
+
+    return {
+      id: docRef.id,
       ...data
-    })
-    return docRef.id
+    }
   },
 
   async updateProject(data: Partial<ProjectDoc>, projectId: string): Promise<void> {
@@ -69,3 +62,15 @@ export const projectsService = {
     await deleteDoc(newProjectRef)
   }
 }
+
+const projectConverter: FirestoreDataConverter<Project> = {
+  fromFirestore(snapshot: QueryDocumentSnapshot): Project {
+    const data = snapshot.data() as ProjectDoc
+
+    return {
+      id: snapshot.id,
+      ...data
+    }
+  }
+}
+

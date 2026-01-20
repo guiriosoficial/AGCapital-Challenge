@@ -10,18 +10,17 @@ export const tasksService = {
     const constraints = where('projectId', '==', projectId)
     const tasksQuery = query(tasksCollection, constraints)
     const tasksRef = await getDocs(tasksQuery)
+
     return tasksRef.docs.map((doc) => ({
       id: doc.id,
       ...doc.data() as TaskDoc
     }))
   },
 
-  async createTask(task: TaskDoc, projectId: string): Promise<string> {
+  async createTask(payload: TaskDoc): Promise<string> {
     const tasksCollection = collection(db, tasksPath)
-    const docRef = await addDoc(tasksCollection, {
-      projectId,
-      ...task
-    })
+    const docRef = await addDoc(tasksCollection, payload)
+
     return docRef.id
   },
 

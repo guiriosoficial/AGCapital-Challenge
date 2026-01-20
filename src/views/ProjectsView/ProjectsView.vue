@@ -194,9 +194,9 @@ async function handleCreateClient (clientInfoForm: ClientDoc) {
     .then(() => clientInfoDialogRef.value?.close())
 }
 
-async function handleUpdateClient (clientInfoForm: Client) {
-  await updateClient(clientInfoForm)
-    .then(() => clientInfoDialogRef.value?.close())
+function handleUpdateClient (clientInfoForm: Client) {
+  updateClient(clientInfoForm)
+  clientInfoDialogRef.value?.close()
 }
 
 function handleDeleteClient (client: Client) {
@@ -219,14 +219,14 @@ function handleOpenProjectDialog (client: Client, project?: Project): void {
   projectInfoDialogRef.value?.open({ ...project, client })
 }
 
-async function handleCreateProject (projectInfoModel: ProjectDoc & { clientId: string }) {
+async function handleCreateProject (projectInfoModel: ProjectDoc) {
   await createProject(projectInfoModel)
     .then(() => projectInfoDialogRef.value?.close())
 }
 
-async function handleUpdateProject (projectInfoModel: Project) {
-  await updateProject(projectInfoModel)
-    .then(() => projectInfoDialogRef.value?.close())
+function handleUpdateProject (projectInfoModel: Project) {
+  updateProject(projectInfoModel)
+  projectInfoDialogRef.value?.close()
 }
 
 function handleConfirmDeleteProject (projectId: string, projectName: string): void {

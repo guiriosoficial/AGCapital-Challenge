@@ -40,37 +40,25 @@ export function useProjectsController () {
     }
   }
 
-  async function createClient (form: ClientDoc) {
-    const snapshot = backup()
-    const tempId = new Date().getTime().toString()
-    const tempClient = {
-      id: tempId,
-      projects: [],
-      ...form,
-    }
-
-    projectsByClient.value.push(tempClient)
-
+  async function createClient (client: ClientDoc) {
     try {
-      const newId = await clientsService.createClient(form)
+      const newClient = await clientsService.createClient(client)
+      projectsByClient.value.push(newClient)
       notification.success('Client created successfully')
-      const newItem = projectsByClient.value.find((c) => c.id === tempId)
-      if (newItem) newItem.id = newId
     } catch {
-      rollback(snapshot)
       notification.error('Error creating client, please try again')
     }
   }
 
   async function updateClient (client: Client) {
+    const { id, ...data } = client
     const snapshot = backup()
 
-    const clientItem = projectsByClient.value.find((c) => c.id === client.id)
-    if (clientItem) Object.assign(clientItem, client)
+    const currentClient = projectsByClient.value.find((c) => c.id === id)
+    if (currentClient) Object.assign(currentClient, data)
 
     try {
-      const { id, ...form } = client
-      await clientsService.updateClient(form, id)
+      await clientsService.updateClient(data, id)
       notification.success('Client updated successfully')
     } catch {
       rollback(snapshot)
@@ -92,37 +80,26 @@ export function useProjectsController () {
     }
   }
 
-  async function createProject (
-    payload: ProjectDoc & { clientId: string }
-  ) {
-    const { clientId, ...form } = payload
-    const snapshot = backup()
-    const tempProject = {
-      id: '',
-      ...form,
-    }
-
-    const projectItem = projectsByClient.value.find((c) => c.id === clientId)
-    if (projectItem) projectItem.projects.push(tempProject)
-
+  async function createProject (payload: ProjectDoc) {
     try {
-      await projectsService.createProject(form, clientId)
+      const newProject = await projectsService.createProject(payload)
+      const currentProject = projectsByClient.value.find((c) => c.id === payload.clientId)
+      if (currentProject) currentProject.projects.push(newProject)
       notification.success('Project created successfully')
     } catch {
-      rollback(snapshot)
       notification.error('Error creating project, please try again')
     }
   }
 
   async function updateProject (project: Project) {
-    const { id, ...form } = project
+    const { id, ...data } = project
     const snapshot = backup()
 
-    const projectItem = findProject(id)
-    if (projectItem) Object.assign(projectItem.project, form)
+    const currentProject = findProject(id)
+    if (currentProject) Object.assign(currentProject.project, data)
 
     try {
-      await projectsService.updateProject(form, id)
+      await projectsService.updateProject(data, id)
       notification.success('Project updated successfully')
     } catch {
       rollback(snapshot)
@@ -133,8 +110,8 @@ export function useProjectsController () {
   async function deleteProject (projectId: string) {
     const snapshot = backup()
 
-    const projectItem = findProject(projectId)
-    if (projectItem) projectItem.client.projects = projectItem.client.projects.filter(p => p.id !== projectId)
+    const currentProject = findProject(projectId)
+    if (currentProject) currentProject.client.projects = currentProject.client.projects.filter(p => p.id !== projectId)
 
     try {
       await projectsService.deleteProject(projectId)
@@ -149,17 +126,14 @@ export function useProjectsController () {
     status: ProjectStatus,
     projectId: string
   ) {
+    const data = { status }
     const snapshot = backup()
-    const tempProject = { status }
 
     const projectItem = findProject(projectId)
-    if (projectItem) Object.assign(projectItem.project, tempProject)
+    if (projectItem) Object.assign(projectItem.project, data)
 
     try {
-      await projectsService.updateProject(
-        tempProject,
-        projectId
-      )
+      await projectsService.updateProject(data, projectId)
       notification.success('Project status changed successfully')
     } catch {
       rollback(snapshot)

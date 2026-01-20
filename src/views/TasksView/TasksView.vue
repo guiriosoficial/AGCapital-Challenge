@@ -74,6 +74,7 @@ import { usePageStore } from '@/stores/pageStore'
 import { filterByTerm } from '@/utils'
 import { ProjectStatus } from '@/models/projectModel'
 import type { Task } from '@/models/taskModel'
+import type { ITasksViewProps } from './types.ts'
 
 const messageBox = useMessageBox()
 const pageStore = usePageStore()
@@ -86,7 +87,7 @@ const newTaskDescription = ref('')
 const newTaskInputRef = ref()
 
 const { currentProject } = storeToRefs(pageStore)
-const projectId = currentProject.value?.id ?? ''
+const { projectId } = defineProps<ITasksViewProps>()
 
 const filteredTasks = computed((): Task[] => {
   return filterByTerm(tasks.value, searchTerm.value, ['description', 'status'])

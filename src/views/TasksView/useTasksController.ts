@@ -20,6 +20,7 @@ export function useTasksController (projectId: string) {
 
   async function fetchTasks () {
     isLoading.value = true
+
     try {
       tasks.value = await tasksService.searchTasksByProject(projectId)
     } catch {
@@ -31,19 +32,23 @@ export function useTasksController (projectId: string) {
 
   async function createTask (description: string) {
     const snapshot = backup()
+    const tempId = new Date().getTime().toString()
     const payload = {
       description,
       status: TaskStatus.TODO
     }
     const tempTask = {
-      id: '',
+      id: tempId,
+      projectId,
       ...payload
     }
 
     tasks.value.push(tempTask)
 
     try {
-      await tasksService.createTask(payload, projectId)
+      const newId = await tasksService.createTask({ ...payload, projectId })
+      const currentTask = tasks.value.find((t) => t.id === tempId)
+      if (currentTask) Object.assign(currentTask, { id: newId })
       notification.success('Task created successfully')
     } catch {
       rollback(snapshot)

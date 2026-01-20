@@ -14,6 +14,7 @@ export const routes = [
       {
         path: ':projectId/tasks/',
         name: 'project-tasks',
+        props: true,
         component: TasksView
       },
       {
