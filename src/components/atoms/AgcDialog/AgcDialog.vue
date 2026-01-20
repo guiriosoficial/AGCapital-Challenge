@@ -3,6 +3,10 @@
     v-model="modelValue"
     v-bind="$attrs"
     :title="title"
+    :close-on-click-modal="!disabled"
+    :close-on-press-escape="!disabled"
+    :show-close="!disabled"
+    destroy-on-close
   >
     <slot />
     <template
@@ -28,6 +32,7 @@ const modelValue = defineModel<AgcDialogModelValue>({
 })
 
 const {
-  title = ''
+  title = '',
+  disabled = false
 } = defineProps<IAgcDialogProps>()
 </script>

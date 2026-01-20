@@ -32,7 +32,7 @@ export function useTasksController (projectId: string) {
 
   async function createTask (description: string) {
     const snapshot = backup()
-    const tempId = new Date().getTime().toString()
+    const tempId = `temp_${new Date().getTime().toString()}`
     const payload = {
       description,
       status: TaskStatus.TODO
@@ -57,8 +57,8 @@ export function useTasksController (projectId: string) {
   }
 
   async function updateTask (
-    taskId: string,
-    task: Partial<TaskDoc>
+    task: Partial<Omit<TaskDoc, 'projectId'>>,
+    taskId: string
   ) {
     const snapshot = backup()
 
@@ -66,7 +66,7 @@ export function useTasksController (projectId: string) {
     if (taskItem) Object.assign(taskItem, task)
 
     try {
-      await tasksService.updateTask(taskId, task)
+      await tasksService.updateTask(task, taskId)
       notification.success('Task description updated successfully')
     } catch {
       rollback(snapshot)

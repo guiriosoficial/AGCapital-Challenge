@@ -2,6 +2,7 @@
   <AgcDialog
     v-model="isOpen"
     :title="dialogTitle"
+    :disabled="loading"
   >
     <AgcForm
       ref="clientFormRef"
@@ -15,16 +16,21 @@
       >
         <AgcInput
           v-model="clientForm.name"
+          :disabled="loading"
           class="full-width"
         />
       </AgcFormItem>
     </AgcForm>
     <template #footer>
-      <AgcButton @click="handleCloseDialog">
+      <AgcButton
+        :disabled="loading"
+        @click="handleCloseDialog"
+      >
         Cancel
       </AgcButton>
       <AgcButton
         type="primary"
+        :loading="loading"
         @click="handleValidateClient"
       >
         {{ confirmButtonLabel }}
@@ -42,7 +48,7 @@ import { AgcInput } from '@/components/atoms/AgcInput'
 import { reactive, watch, ref, computed } from 'vue'
 import { useDialog } from '@/composables/useDialog'
 import { ClientForm } from '@/models/clientModel'
-import type { IClientFormDialogProps, IClientFormDialogEmits } from './types'
+import type { IClientFormDialogProps, IClientFormDialogEmits, IClientInfoDialogProps } from './types'
 
 const {
   props: client,
@@ -51,11 +57,13 @@ const {
   close
 } = useDialog<IClientFormDialogProps>()
 
+const { loading } = defineProps<IClientInfoDialogProps>()
+
 const emit = defineEmits<IClientFormDialogEmits>()
 
 const clientFormRef = ref<AgcFormInstance | null>(null)
 
-const clientForm = reactive<ClientForm>(new ClientForm())
+const clientForm = reactive<ClientForm>(new ClientForm)
 
 const clientFormRules = reactive<AgcFormRules<ClientForm>>({
   name: {
@@ -100,13 +108,13 @@ function handleUpdateCreateClient () {
 }
 
 function handleCloseDialog () {
-  isOpen.value = false
   clientFormRef.value?.resetFields()
   clientFormRef.value?.resetValidation()
+  isOpen.value = false
 }
 
 watch(isOpen, (newVal: boolean): void => {
-  if (newVal && client.value?.id) {
+  if (newVal && isEditingClient) {
     Object.assign(clientForm, client.value)
   } else {
     Object.assign(clientForm, new ClientForm)

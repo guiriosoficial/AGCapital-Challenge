@@ -2,6 +2,7 @@
   <AgcDialog
     v-model="isOpen"
     :title="dialogTitle"
+    :disabled="loading"
   >
     <AgcForm
       ref="projectFormRef"
@@ -16,6 +17,7 @@
       >
         <AgcInput
           v-model="projectForm.name"
+          :disabled="loading"
           class="full-width"
         />
       </AgcFormItem>
@@ -26,17 +28,22 @@
       >
         <AgcInput
           v-model="projectForm.description"
+          :disabled="loading"
           type="textarea"
           class="full-width"
         />
       </AgcFormItem>
     </AgcForm>
     <template #footer>
-      <AgcButton @click="handleCloseDialog">
+      <AgcButton
+        :disabled="loading"
+        @click="handleCloseDialog"
+      >
         Cancel
       </AgcButton>
       <AgcButton
         type="primary"
+        :loading="loading"
         @click="handleValidateProject"
       >
         {{ confirmButtonLabel }}
@@ -54,7 +61,7 @@ import { AgcInput } from '@/components/atoms/AgcInput'
 import { reactive, watch, ref, computed } from 'vue'
 import { useDialog  } from '@/composables/useDialog'
 import { ProjectForm } from '@/models/projectModel'
-import type { IProjectFormDialogProps, IProjectFormDialogEmits } from './types'
+import type {IProjectFormDialogProps, IProjectFormDialogEmits, IProjectInfoDialogProps} from './types'
 
 const {
   props: project,
@@ -62,6 +69,8 @@ const {
   open,
   close
 } = useDialog<IProjectFormDialogProps>()
+
+const { loading } = defineProps<IProjectInfoDialogProps>()
 
 const emit = defineEmits<IProjectFormDialogEmits>()
 
@@ -84,10 +93,12 @@ const projectFormRules = reactive<AgcFormRules<ProjectForm>>({
 
 const isEditingProject = computed(() => Boolean(project.value?.id))
 
+const client = computed(() => project.value?.client)
+
 const dialogTitle = computed(() => {
   return isEditingProject.value
-    ? `Edit ${project.value?.name} project of ${project.value?.client.name}`
-    : `Create a new project for ${project.value?.client.name}`
+    ? `Edit ${project.value?.name} project of ${client.value?.name}`
+    : `Create a new project for ${client.value?.name}`
 })
 
 const confirmButtonLabel = computed(() => {
@@ -108,12 +119,13 @@ function handleCreateEditProject () {
   if (isEditingProject.value) {
     const eventForm = {
       id: project.value?.id ?? '',
+      clientId: client.value?.id ??  '',
       ...projectForm
     }
     emit('submit:update', eventForm)
   } else {
     const eventForm = {
-      clientId: project.value?.client.id ??  '',
+      clientId: client.value?.id ??  '',
       ...projectForm
     }
     emit('submit:create', eventForm)

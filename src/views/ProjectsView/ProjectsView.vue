@@ -2,7 +2,7 @@
   <article class="projects-view-container">
     <AgcToolbar
       v-model:search-term="searchTerm"
-      :disabled="isLoading"
+      :disabled="isLoadingData"
       input-text="Search for projects os clients"
       action-text="Add Client"
       class="projects-view-container__tabs-actions"
@@ -16,8 +16,8 @@
       <AgcTabPane
         v-for="tab in tabs"
         :key="tab.name"
-        v-loading="isLoading"
-        :disabled="isLoading"
+        v-loading="isLoadingData"
+        :disabled="isLoadingData"
         :name="tab.name"
         :label="tab.title"
       >
@@ -90,11 +90,13 @@
 
   <ClientInfoDialog
     ref="clientInfoDialogRef"
+    :loading="isLoadingDialog"
     @submit:update="handleUpdateClient"
     @submit:create="handleCreateClient"
   />
   <ProjectInfoDialog
     ref="projectInfoDialogRef"
+    :loading="isLoadingDialog"
     @submit:update="handleUpdateProject"
     @submit:create="handleCreateProject"
   />
@@ -116,7 +118,7 @@ import { useRouter } from 'vue-router'
 import { useMessageBox } from '@/composables/useMessageBox'
 import { useProjectsController } from '@/views/ProjectsView/useProjectsController'
 import { usePageStore } from '@/stores/pageStore'
-import { ProjectStatus, type Project, type ProjectDoc, } from '@/models/projectModel'
+import {ProjectStatus, type Project, type ProjectDoc, type ProjectsByClient,} from '@/models/projectModel'
 import type { Client, ClientDoc } from '@/models/clientModel'
 import type { IProjectsViewProps } from './types'
 
@@ -159,7 +161,8 @@ onBeforeMount(() => {
 })
 
 const {
-  isLoading,
+  isLoadingData,
+  isLoadingDialog,
   projectsByClient,
   fetchProjects,
   createProject,
@@ -185,8 +188,13 @@ function handleSearch (value?: string) {
   fetchProjects(activeTab.value, String(value))
 }
 
-function handleOpenClientDialog (client?: Client) {
-  clientInfoDialogRef.value?.open(client)
+function handleOpenClientDialog (client?: ProjectsByClient) {
+  if (client) {
+    const { projects: _projects, ...data } = client
+    clientInfoDialogRef.value?.open(data)
+  } else {
+    clientInfoDialogRef.value?.open()
+  }
 }
 
 async function handleCreateClient (clientInfoForm: ClientDoc) {

@@ -5,6 +5,7 @@
     :link="link"
     :disabled="disabled"
     :icon="icon"
+    :loading="loading"
     @click="emit('click', $event)"
   >
     <slot />
@@ -24,6 +25,7 @@ const {
   type = '',
   disabled = false,
   link = false,
+  loading = false,
   icon,
 } = defineProps<IAgcButtonProps>()
 

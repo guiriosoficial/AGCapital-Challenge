@@ -14,7 +14,8 @@ import type {
 export function useProjectsController () {
   const notification = useNotification()
 
-  const isLoading = ref(false)
+  const isLoadingData = ref(false)
+  const isLoadingDialog = ref(false)
   const projectsByClient = ref<ProjectsByClient[]>([])
 
   function backup () {
@@ -29,24 +30,28 @@ export function useProjectsController () {
     projectStatus: ProjectStatus,
     searchTerm?: string
   ) {
-    isLoading.value = true
+    isLoadingData.value = true
 
     try {
       projectsByClient.value = await projectsService.searchProjectsByClient(projectStatus, searchTerm)
     } catch {
       notification.error('Error fetching projects, please try again')
     } finally {
-      isLoading.value = false
+      isLoadingData.value = false
     }
   }
 
   async function createClient (client: ClientDoc) {
+    isLoadingDialog.value = true
+
     try {
       const newClient = await clientsService.createClient(client)
       projectsByClient.value.push(newClient)
       notification.success('Client created successfully')
     } catch {
       notification.error('Error creating client, please try again')
+    } finally {
+      isLoadingDialog.value = false
     }
   }
 
@@ -80,14 +85,18 @@ export function useProjectsController () {
     }
   }
 
-  async function createProject (payload: ProjectDoc) {
+  async function createProject (project: ProjectDoc) {
+    isLoadingDialog.value = true
+
     try {
-      const newProject = await projectsService.createProject(payload)
-      const currentProject = projectsByClient.value.find((c) => c.id === payload.clientId)
-      if (currentProject) currentProject.projects.push(newProject)
+      const newProject = await projectsService.createProject(project)
+      const currentProjectByClient = projectsByClient.value.find((c) => c.id === project.clientId)
+      if (currentProjectByClient) currentProjectByClient.projects.push(newProject)
       notification.success('Project created successfully')
     } catch {
       notification.error('Error creating project, please try again')
+    } finally {
+      isLoadingDialog.value = false
     }
   }
 
@@ -151,7 +160,8 @@ export function useProjectsController () {
   }
 
   return {
-    isLoading,
+    isLoadingData,
+    isLoadingDialog,
     projectsByClient,
     fetchProjects,
     createClient,
