@@ -1,7 +1,3 @@
-import AgcCard from './AgcCard.vue'
-
-export type AgcCardInstance = InstanceType<typeof AgcCard>
-
 export type AgcCardShadow =
   | 'always'
   | 'hover'

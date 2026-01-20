@@ -1,7 +1,4 @@
-import AgcIcon from './AgcIcon.vue'
 import type { Component } from 'vue'
-
-export type AgcIconInstance = InstanceType<typeof AgcIcon>
 
 export interface IAgcIconProps {
   color?: string

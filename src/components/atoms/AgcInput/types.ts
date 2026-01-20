@@ -1,10 +1,5 @@
-import AgcInput from './AgcInput.vue'
 import type { Component } from 'vue'
 
-// TODO: Use import type { ComponentPublicInstance } from 'vue'
-export type AgcInputInstance = InstanceType<typeof AgcInput>
-
-// TODO: Review type number
 export type AgcInputModelValue = string | number | undefined
 
 export type AgcInputType =

@@ -1,6 +1,10 @@
 import type { Client, ClientForm } from '@/models/clientModel'
 
-export type IClientFormDialogProps = Omit<Client, 'id'> & Partial<Pick<Client, 'id'>>
+export type IClientFormDialogProps = Client | undefined
+
+export interface IClientInfoDialogProps {
+  loading?: boolean
+}
 
 export interface IClientFormDialogEmits {
   (e: 'submit:create', client: ClientForm): void

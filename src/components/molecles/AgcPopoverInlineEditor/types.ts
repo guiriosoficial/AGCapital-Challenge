@@ -1,15 +1,10 @@
-import AgcPopoverInlineEditor from './AgcPopoverInlineEditor.vue'
-
-export type AgcPopoverInlineEditorComponent = InstanceType<typeof AgcPopoverInlineEditor>
-
-// TODO: Review type number
 export type AgcPopoverInlineEditorModelValue = string | number
 
-export interface IAgcPopoverInlineEditorOption {
-  value: AgcPopoverInlineEditorModelValue
+export interface IAgcPopoverInlineEditorOption<T = AgcPopoverInlineEditorModelValue> {
+  value: T
   label: string
 }
 
-export interface IAgcPopoverInlineEditorProps {
-  options?: readonly IAgcPopoverInlineEditorOption[]
+export interface IAgcPopoverInlineEditorProps<T = AgcPopoverInlineEditorModelValue> {
+  options?: readonly IAgcPopoverInlineEditorOption<T>[]
 }

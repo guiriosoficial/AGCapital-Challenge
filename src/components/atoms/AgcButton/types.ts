@@ -1,7 +1,4 @@
-import AgcButton from './AgcButton.vue'
 import type { Component } from 'vue'
-
-export type AgcButtonInstance = InstanceType<typeof AgcButton>
 
 export type AgcButtonType =
   | 'primary'
@@ -17,6 +14,7 @@ export interface IAgcButtonProps {
   type?: AgcButtonType
   icon?: AgcButtonIcon
   disabled?: boolean
+  loading?: boolean
   link?: boolean
 }
 

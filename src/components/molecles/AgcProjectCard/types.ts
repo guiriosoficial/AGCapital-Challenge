@@ -1,7 +1,4 @@
-import AgcProjectCard from './AgcProjectCard.vue'
 import type { Project, ProjectStatus } from '@/models/projectModel.ts'
-
-export type AgcProjectCardComponent = InstanceType<typeof AgcProjectCard>
 
 export interface IAgcProjectCardProps {
   project: Project
