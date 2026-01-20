@@ -1,6 +1,6 @@
 import { clientsService } from '@/services/clientsService'
 import { db } from '@/plugins/firebase'
-import { collection, doc, getDocs, addDoc, updateDoc, deleteDoc, where, query, type FirestoreDataConverter, type QueryDocumentSnapshot } from 'firebase/firestore/lite'
+import { collection, doc, getDocs, addDoc, updateDoc, deleteDoc, where, query, type FirestoreDataConverter } from 'firebase/firestore/lite'
 import { normalizeString } from '@/utils'
 import type { Project, ProjectDoc, ProjectsByClient, ProjectStatus } from '@/models/projectModel'
 
@@ -42,19 +42,19 @@ export const projectsService = {
       }))
   },
 
-  async createProject(data: ProjectDoc): Promise<Project> {
+  async createProject(payload: ProjectDoc): Promise<Project> {
     const projectsCollection = collection(db, projectsPath)
-    const docRef = await addDoc(projectsCollection, data)
+    const docRef = await addDoc(projectsCollection, payload)
 
     return {
       id: docRef.id,
-      ...data
+      ...payload
     }
   },
 
-  async updateProject(data: Partial<ProjectDoc>, projectId: string): Promise<void> {
+  async updateProject(payload: Partial<ProjectDoc>, projectId: string): Promise<void> {
     const newProjectRef = doc(db, projectsPath, projectId)
-    await updateDoc(newProjectRef, data)
+    await updateDoc(newProjectRef, payload)
   },
 
   async deleteProject(projectId: string): Promise<void> {
@@ -64,7 +64,11 @@ export const projectsService = {
 }
 
 const projectConverter: FirestoreDataConverter<Project> = {
-  fromFirestore(snapshot: QueryDocumentSnapshot): Project {
+  toFirestore(modelObject) {
+    const { id: _id, ...form } = modelObject
+    return form
+  },
+  fromFirestore(snapshot) {
     const data = snapshot.data() as ProjectDoc
 
     return {

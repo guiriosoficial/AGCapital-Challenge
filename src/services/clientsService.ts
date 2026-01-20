@@ -13,20 +13,20 @@ export const clientsService = {
     return clientsSnap.docs.map(d => d.data())
   },
 
-  async createClient(data: ClientDoc): Promise<ProjectsByClient> {
+  async createClient(payload: ClientDoc): Promise<ProjectsByClient> {
     const clientCollection = collection(db, clientsPath)
-    const docRef = await addDoc(clientCollection, { ...data })
+    const docRef = await addDoc(clientCollection, payload)
 
     return {
       id: docRef.id,
       projects: [],
-      ...data
+      ...payload
     }
   },
 
-  async updateClient(data: ClientDoc, clientId: string): Promise<void> {
+  async updateClient(payload: ClientDoc, clientId: string): Promise<void> {
     const clientRef = doc(db, clientsPath, clientId)
-    await updateDoc(clientRef, data)
+    await updateDoc(clientRef, payload)
   },
 
   async deleteClient(clientId: string): Promise<void> {
@@ -36,7 +36,11 @@ export const clientsService = {
 }
 
 const clientConverter: FirestoreDataConverter<Client> = {
-  fromFirestore(snapshot: QueryDocumentSnapshot): Client {
+  toFirestore(modelObject) {
+    const { id: _id, ...form } = modelObject
+    return form
+  },
+  fromFirestore(snapshot: QueryDocumentSnapshot) {
     const data = snapshot.data() as ClientDoc
 
     return {
