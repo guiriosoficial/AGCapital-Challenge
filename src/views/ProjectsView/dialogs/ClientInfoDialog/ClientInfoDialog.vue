@@ -55,7 +55,7 @@ const emit = defineEmits<IClientFormDialogEmits>()
 
 const clientFormRef = ref<AgcFormInstance | null>(null)
 
-const clientForm = reactive<ClientForm>(createClientForm())
+const clientForm = reactive<ClientForm>(new ClientForm())
 
 const clientFormRules = reactive<AgcFormRules<ClientForm>>({
   name: {
@@ -78,10 +78,6 @@ const confirmButtonLabel = computed(() => {
     ? 'Edit'
     : 'Create'
 })
-
-function createClientForm (): ClientForm {
-  return new ClientForm()
-}
 
 function handleValidateClient () {
   clientFormRef?.value?.validate((valid) => {

@@ -8,6 +8,7 @@ export enum ProjectStatus {
 export interface Project {
   id: string
   name: string
+  clientId: string
   description: string
   status: ProjectStatus
 }
@@ -18,18 +19,8 @@ export interface ProjectsByClient extends Client {
   projects: Project[]
 }
 
-export class ProjectForm implements ProjectDoc {
+export class ProjectForm implements Omit<ProjectDoc, 'clientId'> {
   name: string = ''
   description: string = ''
   status: ProjectStatus = ProjectStatus.OPEN
-
-  constructor(
-    name: string = '',
-    description: string = '',
-    status: ProjectStatus = ProjectStatus.OPEN
-  ) {
-    this.name = name
-    this.description = description
-    this.status = status
-  }
 }

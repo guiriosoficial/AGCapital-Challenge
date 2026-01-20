@@ -67,7 +67,7 @@ const emit = defineEmits<IProjectFormDialogEmits>()
 
 const projectFormRef = ref<AgcFormInstance | null>(null)
 
-const projectForm = reactive<ProjectForm>(createProjectForm())
+const projectForm = reactive<ProjectForm>(new ProjectForm())
 
 const projectFormRules = reactive<AgcFormRules<ProjectForm>>({
   name: {
@@ -95,10 +95,6 @@ const confirmButtonLabel = computed(() => {
     ? 'Edit'
     : 'Create'
 })
-
-function createProjectForm (): ProjectForm {
-  return new ProjectForm()
-}
 
 function handleValidateProject () {
   projectFormRef.value?.validate((valid: boolean) => {
@@ -134,7 +130,8 @@ function handleCloseDialog () {
 
 watch(isOpen, (newVal: boolean): void => {
   if (newVal && project.value?.id) {
-    Object.assign(projectForm, project.value)
+    const { client: _client, ...form } = project.value
+    Object.assign(projectForm, form)
   } else {
     Object.assign(projectForm, new ProjectForm)
   }
