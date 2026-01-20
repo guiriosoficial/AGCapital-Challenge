@@ -111,9 +111,11 @@ import { AgcToolbar } from '@/components/molecles/AgcToolbar'
 import { AgcProjectCard } from '@/components/molecles/AgcProjectCard'
 import { Plus, Delete, EditPen, FolderDelete } from '@element-plus/icons-vue'
 import { computed, ref, defineAsyncComponent, onBeforeMount } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import { useMessageBox } from '@/composables/useMessageBox'
 import { useProjectsController } from '@/views/ProjectsView/useProjectsController'
+import { usePageStore } from '@/stores/pageStore'
 import { ProjectStatus, type Project, type ProjectDoc, } from '@/models/projectModel'
 import type { Client, ClientDoc } from '@/models/clientModel'
 import type { IProjectsViewProps } from './types'
@@ -145,6 +147,13 @@ const activeTab = computed(() => props.tab)
 
 const isInOpenTab = computed(() => activeTab.value === ProjectStatus.OPEN)
 
+const pageStore = usePageStore()
+
+const {
+  lastTab,
+  currentProject
+} = storeToRefs(pageStore)
+
 onBeforeMount(() => {
   fetchProjects(activeTab.value, searchTerm.value)
 })
@@ -163,6 +172,7 @@ const {
 } = useProjectsController()
 
 function handleChangeTab (tab: ProjectStatus) {
+  lastTab.value = tab
   router.push({
     name: 'projects',
     params: { tab }
@@ -198,6 +208,7 @@ function handleDeleteClient (client: Client) {
 }
 
 function handleClickProject (project: Project): void {
+  currentProject.value = project
   router.push({
     name: 'project-tasks',
     params: { projectId: project.id }
@@ -321,10 +332,6 @@ function handleConfirmDeleteProject (projectId: string, projectName: string): vo
   .projects-view-container {
     .el-tabs__header {
       margin-bottom: 48px;
-    }
-    .projects-view-container__tabs-actions {
-      top: 56px;
-      width: 100%;
     }
     .projects-view-container__collapse-clients {
       .projects-view-container__projects-list {

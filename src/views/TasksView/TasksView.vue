@@ -6,7 +6,7 @@
         @click="goToHome"
       >
         <AgcIcon :icon="Back" />
-<!--        {{ projectsStore.currentProject?.name }}-->
+        {{ currentProject?.name }}
         Tasks
       </div>
       <AgcToolbar
@@ -59,30 +59,34 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onBeforeMount, nextTick } from 'vue'
-import { filterByTerm } from '@/utils'
 import { Plus, Back } from '@element-plus/icons-vue'
-import { useRouter, useRoute } from 'vue-router'
 import { AgcCard } from '@/components/atoms/AgcCard'
 import { AgcIcon } from '@/components/atoms/AgcIcon'
 import { AgcToolbar } from '@/components/molecles/AgcToolbar'
 import { AgcTextInlineEditor } from '@/components/molecles/AgcTextInlineEditor'
 import { AgcTaskCard } from '@/components/molecles/AgcTaskCard'
+import { computed, ref, onBeforeMount, nextTick, onBeforeUnmount } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useRouter } from 'vue-router'
 import { useTasksController } from '@/views/TasksView/useTasksController'
 import { useMessageBox } from '@/composables/useMessageBox'
+import { usePageStore } from '@/stores/pageStore'
+import { filterByTerm } from '@/utils'
 import { ProjectStatus } from '@/models/projectModel'
 import type { Task } from '@/models/taskModel'
 
 const messageBox = useMessageBox()
-const route = useRoute()
+const pageStore = usePageStore()
 const router = useRouter()
-const projectId = String(route.params.projectId)
 
 const searchTerm = ref('')
 const isCreatingTask = ref(false)
 const newTaskDescription = ref('')
 
 const newTaskInputRef = ref()
+
+const { currentProject } = storeToRefs(pageStore)
+const projectId = currentProject.value?.id ?? ''
 
 const filteredTasks = computed((): Task[] => {
   return filterByTerm(tasks.value, searchTerm.value, ['description', 'status'])
@@ -103,6 +107,10 @@ onBeforeMount(async () => {
   } catch {
     goToHome()
   }
+})
+
+onBeforeUnmount(() => {
+  currentProject.value = null
 })
 
 function handleStartCreate () {
@@ -143,6 +151,7 @@ function goToHome () {
     justify-content: space-between;
     height: 48px;
     gap: 16px;
+    position: relative;
     .tasks-view-container__header-title {
       display: flex;
       gap: 8px;
@@ -150,9 +159,6 @@ function goToHome () {
       font-size: 18px;
       font-weight: 500;
       cursor: pointer;
-    }
-    .tasks-view-container__input-search {
-      width: 320px;
     }
   }
   .tasks-view-container__body {
@@ -208,6 +214,14 @@ function goToHome () {
       &:hover .text-inline-editor__inner-actions {
         opacity: 1;
       }
+    }
+  }
+}
+
+@media (max-width: 800px) {
+  .tasks-view-container {
+    .tasks-view-container__body {
+      margin-top: 48px;
     }
   }
 }
