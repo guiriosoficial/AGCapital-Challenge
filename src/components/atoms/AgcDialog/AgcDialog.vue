@@ -31,13 +31,3 @@ const {
   title = ''
 } = defineProps<IAgcDialogProps>()
 </script>
-
-<style lang="scss">
-.el-dialog {
-  padding: 24px;
-  .el-dialog__headerbtn {
-    top: 12px;
-    right: 12px;
-  }
-}
-</style>

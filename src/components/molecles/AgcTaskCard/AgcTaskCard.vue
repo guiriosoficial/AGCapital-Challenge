@@ -1,13 +1,15 @@
 <template>
   <AgcCard
-    class="tasks-view-container__task-card"
-    body-class="tasks-view-container__task-card-body"
+    class="task-card"
+    body-class="task-card__body"
   >
+    <!-- TODO: Remove Prop Mutating -->
     <AgcTextInlineEditor
       v-model="task.description"
-      class="tasks-view-container__task-card-description"
+      class="task-card__description"
       @update:model-value="handleEditTaskDescriptions($event)"
     />
+    <!-- TODO: Remove Prop Mutating -->
     <AgcPopoverInlineEditor
       v-model="task.status"
       :options="statusOptions"
@@ -16,7 +18,7 @@
       <template #reference>
         <AgcTag
           :type="statusTagTypes"
-          class="tasks-view-container__task-status-tag"
+          class="task-card__status-tag"
         >
           {{ task.status }}
         </AgcTag>
@@ -24,7 +26,7 @@
     </AgcPopoverInlineEditor>
     <AgcIcon
       :icon="Delete"
-      class="tasks-view-container__task-card-actions hover-icon hover-icon--danger"
+      class="task-card__actions hover-icon hover-icon--danger"
       @click.stop="handleDeleteTask"
     />
   </AgcCard>
@@ -93,25 +95,25 @@ function handleDeleteTask () {
 </script>
 
 <style scoped lang="scss">
-.tasks-view-container__task-card {
+.task-card {
   display: flex;
   align-items: center;
   font-size: 16px;
-  .tasks-view-container__task-card-body {
+  .task-card__body {
     display: flex;
     align-items: center;
     justify-content: space-between;
     position: relative;
     gap: 16px;
     width: 100%;
-    .tasks-view-container__task-status-tag {
+    .task-card__status-tag {
       width: 120px;
       margin-right: 32px;
       font-weight: 500;
       cursor: pointer;
     }
   }
-  .tasks-view-container__task-card-actions {
+  .task-card__actions {
     position: absolute;
     top: 24px;
     right: 24px;
@@ -121,20 +123,20 @@ function handleDeleteTask () {
     gap: 8px;
     width: fit-content;
   }
-  &:hover .tasks-view-container__task-card-actions,
+  &:hover .task-card__actions,
   &:hover .text-inline-editor__inner-actions {
     opacity: 1;
   }
 }
 
 @media (max-width: 600px) {
-  .tasks-view-container__task-card {
-    .tasks-view-container__task-card-body {
+  .task-card {
+    .task-card__body {
       flex-direction: column;
-      .tasks-view-container__task-card-description {
+      .task-card__description {
         width: calc(100% - 40px);
       }
-      .tasks-view-container__task-status-tag {
+      .task-card__status-tag {
         width: 100%;
         margin-right: 0;
       }
@@ -144,8 +146,8 @@ function handleDeleteTask () {
 </style>
 
 <style lang="scss">
-.tasks-view-container__task-card {
-  .tasks-view-container__task-card-body {
+.task-card {
+  .task-card__body {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -156,8 +158,8 @@ function handleDeleteTask () {
 }
 
 @media (max-width: 600px) {
-  .tasks-view-container__task-card {
-    .tasks-view-container__task-card-body {
+  .task-card {
+    .task-card__body {
       flex-direction: column;
     }
   }

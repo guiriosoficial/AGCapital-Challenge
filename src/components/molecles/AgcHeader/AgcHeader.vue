@@ -10,15 +10,17 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import { ProjectStatus } from '@/models/projectModel'
+import { usePageStore } from '@/stores/pageStore'
+
+const pageStore = usePageStore()
 
 const router = useRouter()
 
-// TODO: Get last tab (save in store)
 function goToHome() {
   router.push({
     name: 'projects',
     params: {
-      tab: ProjectStatus.OPEN
+      tab: pageStore.lastTab ?? ProjectStatus.OPEN
     }
   })
 }

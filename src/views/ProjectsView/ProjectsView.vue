@@ -33,13 +33,11 @@
                 <span class="projects-view-container__collapse-header-actions">
                   <AgcIcon
                     :icon="EditPen"
-                    :size="16"
                     class="hover-icon"
                     @click.stop="handleOpenClientDialog(client)"
                   />
                   <AgcIcon
                     :icon="Delete"
-                    :size="16"
                     class="hover-icon hover-icon--danger"
                     @click.stop="handleDeleteClient(client)"
                   />
@@ -236,18 +234,6 @@ function handleConfirmDeleteProject (projectId: string, projectName: string): vo
     font-size: 18px !important;
     height: 48px !important;
   }
-  .projects-view-container__tabs-actions {
-    position: absolute;
-    top: 8px;
-    right: 0;
-    z-index: 99;
-    display: flex;
-    gap: 8px;
-    width: 400px;
-    .projects-view-container__input-search {
-      flex: 1;
-    }
-  }
   .projects-view-container__collapse-clients {
     border: none;
     .el-collapse-item__header {
@@ -262,7 +248,9 @@ function handleConfirmDeleteProject (projectId: string, projectName: string): vo
         .projects-view-container__collapse-header-actions {
           opacity: 0;
           gap: 4px;
+          font-size: 16px;
           transition: var(--el-transition-duration);
+          margin-left: 4px;
           display: flex;
         }
       }

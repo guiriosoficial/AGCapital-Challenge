@@ -1,12 +1,12 @@
 <template>
   <AgcCard
-    class="projects-view-container__project-card"
+    class="project-card"
     @click="handleClickProject"
   >
     <template #header>
-      <div class="projects-view-container__project-card-header">
+      <div class="project-card__header">
         {{ project.name }}
-        <span class="projects-view-container__card-header-actions">
+        <span class="card-header__header-actions">
           <AgcIcon
             :icon="EditPen"
             class="hover-icon"
@@ -24,7 +24,7 @@
     <AgcButton
       link
       type="primary"
-      class="projects-view-container__project-card-link-action"
+      class="project-card__footer-action"
       @click.stop="handleMoveProject"
     >
       {{ moveProjectButtonLabel }}
@@ -72,24 +72,22 @@ function handleMoveProject () {
 }
 </script>
 
-<!-- TODO: Review class names -->
 <style scoped lang="scss">
-.projects-view-container__project-card {
-  // background-color: var(--el-bg-color-page);
-  background: linear-gradient(162deg, rgba(64,158,255,0.2) 0%, rgba(64,158,255,0) 100%);
+.project-card {
+  background-color: var(--el-bg-color-page);
   cursor: pointer;
-  .projects-view-container__project-card-link-action {
+  .project-card__footer-action {
     float: right;
     font-size: 16px;
     margin: 12px -4px -4px 12px;
   }
-  .projects-view-container__project-card-header {
+  .project-card__header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     font-weight: 500;
     font-size: 16px;
-    .projects-view-container__card-header-actions {
+    .card-header__header-actions {
       display: flex;
       gap: 4px;
       opacity: 0;
@@ -97,7 +95,7 @@ function handleMoveProject () {
       cursor: pointer;
     }
   }
-  &:hover .projects-view-container__project-card-header .projects-view-container__card-header-actions {
+  &:hover .project-card__header .card-header__header-actions {
     opacity: 1;
   }
 }

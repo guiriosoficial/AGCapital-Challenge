@@ -17,7 +17,6 @@ defineOptions({
   inheritAttrs: false
 })
 
-// TODO: Review default size
 const {
   size = '1em',
   icon

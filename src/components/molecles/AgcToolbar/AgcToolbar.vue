@@ -55,25 +55,24 @@ function handleActionClick (event: MouseEvent) {
 }
 </script>
 
-<!-- TODO: Review this styles -->
 <style scoped lang="scss">
-//.toolbar {
-//  position: absolute;
-//  top: 8px;
-//  right: 0;
-//  z-index: 99;
-//  display: flex;
-//  gap: 8px;
-//  width: 400px;
-//  .toolbar__input-search {
-//    flex: 1;
-//  }
-//}
+.toolbar {
+  position: absolute;
+  top: 8px;
+  right: 0;
+  z-index: 99;
+  display: flex;
+  gap: 8px;
+  width: 400px;
+  .toolbar__input-search {
+    flex: 1;
+  }
+}
 
-//@media (max-width: 800px) {
-//  .toolbar {
-//    top: 56px;
-//    width: 100%;
-//  }
-//}
+@media (max-width: 800px) {
+  .toolbar {
+    top: 56px;
+    width: 100%;
+  }
+}
 </style>
