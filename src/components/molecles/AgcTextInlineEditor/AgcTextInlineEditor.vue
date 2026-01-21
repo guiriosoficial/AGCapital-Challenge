@@ -24,23 +24,23 @@
         class="text-inline-editor__input-inner"
         type="text"
         @blur.self="cancelEdit"
-        @keydown.enter.prevent="confirmEdit"
         @keydown.esc.prevent="cancelEdit"
+        @keydown.enter.prevent="confirmEdit"
       >
       <span class="text-inline-editor__input-inner-actions">
         <AgcIcon
           :icon="Check"
           role="button"
           class="hover-icon"
+          @mousedown.prevent
           @click.stop="confirmEdit"
-          @keydown.enter.space.prevent="confirmEdit"
         />
         <AgcIcon
           :icon="Close"
           role="button"
           class="hover-icon hover-icon--danger"
+          @mousedown.prevent
           @click.stop="cancelEdit"
-          @keydown.enter.space.prevent="cancelEdit"
         />
       </span>
     </div>
@@ -69,10 +69,10 @@ const editingModelValue = ref<AgcTextInlineEditorModelValue>('')
 
 const isEditing = ref<boolean>(false)
 
-async function startEdit (): Promise<void> {
+function startEdit (): void {
   editingModelValue.value = modelValue.value ?? ''
   isEditing.value = true
-  await nextTick(() => textInlineEditorRef.value?.focus())
+  nextTick(() => textInlineEditorRef.value?.focus())
 }
 
 function confirmEdit (): void {

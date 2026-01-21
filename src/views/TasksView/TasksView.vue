@@ -25,8 +25,7 @@
         :key="task.id"
         :task="task"
         @delete="handleConfirmDeleteTask($event.id)"
-        @update-description="updateTask($event, task.id)"
-        @update-status="updateTask($event, task.id)"
+        @update="updateTask($event, task.id)"
       />
 
       <AgcCard

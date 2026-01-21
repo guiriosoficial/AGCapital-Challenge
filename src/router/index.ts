@@ -6,4 +6,13 @@ const router = createRouter({
   routes
 })
 
+router.beforeEach((to, _from, next) => {
+  const lowerCasedPath = to.path.toLowerCase()
+  if (lowerCasedPath !== to.path) {
+    next(lowerCasedPath)
+  } else {
+    next()
+  }
+})
+
 export default router

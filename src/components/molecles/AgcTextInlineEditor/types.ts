@@ -9,5 +9,5 @@ export interface IAgcTextInlineEditorEmits {
 }
 
 export interface IAgcTextInlineEditorExposes {
-  startEdit: () => Promise<void>
+  startEdit: () => void
 }

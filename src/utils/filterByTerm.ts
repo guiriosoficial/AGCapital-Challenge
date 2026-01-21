@@ -1,6 +1,6 @@
-import normalizeString from './normalizeString'
+import { normalizeString } from '@/utils'
 
-function filterByTerm<T> (
+export function filterByTerm<T> (
   array: T[] = [],
   term: string = '',
   keys: (keyof T)[] | keyof T = []
@@ -21,5 +21,3 @@ function filterByTerm<T> (
     return normalizeString(String(item)).includes(normalizedTerm)
   })
 }
-
-export default filterByTerm

@@ -1,3 +1,3 @@
-export { default as filterByTerm } from './filterByTerm'
-export { default as normalizeString } from './normalizeString'
-export { default as buildQuery } from './buildQuery'
+export { filterByTerm } from './filterByTerm'
+export { normalizeString } from './normalizeString'
+export { cloneDeep } from './cloneDeep'

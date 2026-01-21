@@ -6,7 +6,6 @@
       :disabled="disabled"
       :placeholder="inputText"
       class="toolbar__input-search"
-      @update:model-value="handleInputUpdate"
     />
     <AgcButton
       v-if="!hideAction"
@@ -25,7 +24,6 @@
 import { AgcButton } from '@/components/atoms/AgcButton'
 import { AgcInput } from '@/components/atoms/AgcInput'
 import { Plus, Search } from '@element-plus/icons-vue'
-import { useDebounce } from '@/composables/useDebounce'
 import type { IAgcToolbarProps, IAgcToolbarEmits } from './types'
 
 const searchTerm = defineModel<string>('searchTerm', {
@@ -35,20 +33,11 @@ const searchTerm = defineModel<string>('searchTerm', {
 const {
   actionText = '',
   inputText = '',
-  searchDelay = 800,
   hideAction = false,
   disabled = false
 } = defineProps<IAgcToolbarProps>()
 
 const emit = defineEmits<IAgcToolbarEmits>()
-
-const debouncedSearch = useDebounce((value: string) => {
-  emit('search', value)
-}, searchDelay)
-
-function handleInputUpdate (value: string) {
-  debouncedSearch(value)
-}
 
 function handleActionClick (event: MouseEvent) {
   emit('click-action', event)

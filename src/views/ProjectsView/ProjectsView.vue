@@ -7,7 +7,6 @@
       action-text="Add Client"
       class="projects-view-container__tabs-actions"
       @click-action="handleOpenClientDialog()"
-      @search="handleSearch"
     />
     <AgcTabs
       :model-value="activeTab"
@@ -21,7 +20,6 @@
         :name="tab.name"
         :label="tab.title"
       >
-        <!-- TODO: Default open-->
         <AgcCollapse class="projects-view-container__collapse-clients">
           <AgcCollapseItem
             v-for="client in projectsByClient"
@@ -140,11 +138,9 @@ const projectInfoDialogRef = ref<InstanceType<typeof ProjectInfoDialog> | null>(
 const clientInfoDialogRef = ref<InstanceType<typeof ClientInfoDialog> | null>(null)
 const searchTerm = ref<string>('')
 
-const props = defineProps<IProjectsViewProps>()
+const { tab: activeTab } = defineProps<IProjectsViewProps>()
 
-const activeTab = computed(() => props.tab)
-
-const isInOpenTab = computed(() => activeTab.value === ProjectStatus.OPEN)
+const isInOpenTab = computed(() => activeTab === ProjectStatus.OPEN)
 
 const pageStore = usePageStore()
 
@@ -154,7 +150,7 @@ const {
 } = storeToRefs(pageStore)
 
 onBeforeMount(() => {
-  fetchProjects(activeTab.value, searchTerm.value)
+  fetchProjects(activeTab)
 })
 
 const {
@@ -178,21 +174,20 @@ function handleChangeTab (tab: ProjectStatus) {
     params: { tab }
   })
 
-  fetchProjects(tab, searchTerm.value)
+  fetchProjects(tab)
 }
 
-function handleSearch (value?: string) {
-  fetchProjects(activeTab.value, String(value))
+function stripProjects (client: ProjectsByClient) {
+  const { projects, ...rest } = client
+  return rest
 }
 
-// TODO: Preciso disso? Evitar Dados desnecessários
 function handleOpenClientDialog (client?: ProjectsByClient) {
-  if (client) {
-    const { projects: _projects, ...data } = client
-    clientInfoDialogRef.value?.open(data)
-  } else {
-    clientInfoDialogRef.value?.open(undefined)
-  }
+  clientInfoDialogRef.value?.open(
+    client
+      ? stripProjects(client)
+      : undefined
+  )
 }
 
 async function handleCreateClient (clientForm: ClientDoc) {
@@ -221,14 +216,14 @@ function handleClickProject (project: Project): void {
   })
 }
 
-// TODO: Preciso disso? Evitar Dados desnecessários
 function handleOpenProjectDialog (client: ProjectsByClient, project?: Project): void {
-  const { projects: _projects, ...data } = client
-  if (project) {
-    projectInfoDialogRef.value?.open({ client: data, ...project })
-  } else {
-    projectInfoDialogRef.value?.open({ client: data })
-  }
+  const data = stripProjects(client)
+
+  projectInfoDialogRef.value?.open(
+    project
+      ? { client: data, ...project }
+      : { client: data }
+  )
 }
 
 async function handleCreateProject (projectForm: ProjectDoc) {

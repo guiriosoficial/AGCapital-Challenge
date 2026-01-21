@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app'
 import { getFirestore } from 'firebase/firestore/lite'
-import { getAuth, signInAnonymously } from "firebase/auth";
+// import { getAuth, signInAnonymously } from 'firebase/auth'
 
 const firebaseConfig = {
   apiKey: "AIzaSyC88YQ5Ebqz3nB6aN22oFl2wUFHaThzBLc",

@@ -1,8 +1,8 @@
 import type { Client } from './clientModel.ts'
 
 export enum ProjectStatus {
-  OPEN = 'OPEN',
-  CLOSED = 'CLOSED',
+  OPEN = 'open',
+  CLOSED = 'closed',
 }
 
 export interface Project {

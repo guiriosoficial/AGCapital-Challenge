@@ -1,15 +1,10 @@
-import { ref } from 'vue'
-import { cloneDeep } from '@/utils/cloneDeep'
-import { projectsService } from '@/services/projectsService'
-import { clientsService } from '@/services/clientsService'
-import { useNotification } from '@/composables/useNotification'
-import type { Client, ClientDoc } from '@/models/clientModel'
-import type {
-  Project,
-  ProjectDoc,
-  ProjectsByClient,
-  ProjectStatus
-} from '@/models/projectModel'
+import {ref} from 'vue'
+import {cloneDeep} from '@/utils'
+import {projectsService} from '@/services/projectsService'
+import {clientsService} from '@/services/clientsService'
+import {useNotification} from '@/composables/useNotification'
+import type {Client, ClientDoc} from '@/models/clientModel'
+import { ProjectStatus, type Project, type ProjectDoc, type ProjectsByClient } from '@/models/projectModel'
 
 export function useProjectsController () {
   const notification = useNotification()
@@ -26,14 +21,15 @@ export function useProjectsController () {
     projectsByClient.value = snapshot
   }
 
-  async function fetchProjects (
-    projectStatus: ProjectStatus,
-    searchTerm?: string
-  ) {
+  async function fetchProjects (projectStatus: ProjectStatus) {
     isLoadingData.value = true
 
     try {
-      projectsByClient.value = await projectsService.searchProjectsByClient(projectStatus, searchTerm)
+      const response = await projectsService.searchProjectsByClient(projectStatus)
+
+      projectsByClient.value = projectStatus === ProjectStatus.CLOSED
+        ? response.filter((c) => c.projects.length)
+        : response
     } catch {
       notification.error('Error fetching projects, please try again')
     } finally {
@@ -138,8 +134,8 @@ export function useProjectsController () {
     const data = { status }
     const snapshot = backup()
 
-    const projectItem = findProject(projectId)
-    if (projectItem) Object.assign(projectItem.project, data)
+    const currentProject = findProject(projectId)
+    if (currentProject) currentProject.client.projects = currentProject.client.projects.filter(p => p.id !== projectId)
 
     try {
       await projectsService.updateProject(data, projectId)

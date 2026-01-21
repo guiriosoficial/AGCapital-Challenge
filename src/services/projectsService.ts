@@ -1,29 +1,17 @@
 import { clientsService } from '@/services/clientsService'
 import { db } from '@/plugins/firebase'
 import { collection, doc, getDocs, addDoc, updateDoc, deleteDoc, where, query, type FirestoreDataConverter } from 'firebase/firestore/lite'
-import { normalizeString } from '@/utils'
 import type { Project, ProjectDoc, ProjectsByClient, ProjectStatus } from '@/models/projectModel'
 
 const projectsPath = 'projects'
 
 export const projectsService = {
-  async searchProjectsByClient(status: ProjectStatus, searchTerm?: string): Promise<ProjectsByClient[]> {
-    const normalizedSearchTerm = normalizeString(searchTerm ?? '')
+  async searchProjectsByClient(status: ProjectStatus): Promise<ProjectsByClient[]> {
     const clientsList = await clientsService.searchClients()
 
-    const constraints = [
-      where('status', '==', status.toUpperCase())
-    ]
-
-    if (normalizedSearchTerm) {
-      constraints.push(
-        where('name_lc', '>=', normalizedSearchTerm),
-        where('name_lc', '<=', normalizedSearchTerm + '\uf8ff')
-      )
-    }
-
+    const constraints = where('status', '==', status)
     const projectsCollection = collection(db, projectsPath).withConverter(projectConverter)
-    const projectsQuery = query(projectsCollection, ...constraints)
+    const projectsQuery = query(projectsCollection, constraints)
     const projectsSnapshot = await getDocs(projectsQuery)
     const projectsList = projectsSnapshot.docs.map(d => d.data())
 

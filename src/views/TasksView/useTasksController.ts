@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { cloneDeep } from '@/utils/cloneDeep'
+import { cloneDeep } from '@/utils'
 import { tasksService } from '@/services/tasksService'
 import { useNotification } from '@/composables/useNotification'
 import { TaskStatus, type Task, type TaskDoc } from '@/models/taskModel'
@@ -61,6 +61,7 @@ export function useTasksController (projectId: string) {
     taskId: string
   ) {
     const snapshot = backup()
+    console.log('updateTask', taskId, task)
 
     const taskItem = tasks.value.find((t) => t.id === taskId)
     if (taskItem) Object.assign(taskItem, task)
