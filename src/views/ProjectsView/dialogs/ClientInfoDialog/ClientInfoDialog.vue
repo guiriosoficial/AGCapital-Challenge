@@ -63,7 +63,7 @@ const emit = defineEmits<IClientFormDialogEmits>()
 
 const clientFormRef = ref<AgcFormInstance | null>(null)
 
-const clientForm = reactive<ClientForm>(new ClientForm)
+const clientForm = reactive<ClientForm>(new ClientForm())
 
 const clientFormRules = reactive<AgcFormRules<ClientForm>>({
   name: {
@@ -98,12 +98,12 @@ function handleValidateClient () {
 function handleUpdateCreateClient () {
   if (isEditingClient.value) {
     const eventForm = {
-      id: client.value?.id ?? '',
+      id: client.value!.id,
       ...clientForm
     }
     emit('submit:update', eventForm)
   } else {
-    emit('submit:create', clientForm)
+    emit('submit:create', { ...clientForm })
   }
 }
 
@@ -113,11 +113,14 @@ function handleCloseDialog () {
   isOpen.value = false
 }
 
+
+// TODO: Evitar que ID seja setado no clientForm
 watch(isOpen, (newVal: boolean): void => {
-  if (newVal && isEditingClient) {
-    Object.assign(clientForm, client.value)
+  if (newVal && isEditingClient.value && client.value) {
+    const { id: _id, ...form } = client.value
+    Object.assign(clientForm, form)
   } else {
-    Object.assign(clientForm, new ClientForm)
+    Object.assign(clientForm, new ClientForm())
   }
 })
 

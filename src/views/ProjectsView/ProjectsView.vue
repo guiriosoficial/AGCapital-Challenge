@@ -6,7 +6,7 @@
       input-text="Search for projects os clients"
       action-text="Add Client"
       class="projects-view-container__tabs-actions"
-      @action-click="handleOpenClientDialog()"
+      @click-action="handleOpenClientDialog()"
       @search="handleSearch"
     />
     <AgcTabs
@@ -50,18 +50,15 @@
                 :key="project.id"
                 :project="project"
                 @click="handleClickProject($event)"
-                @edit="handleOpenProjectDialog(
-                  { id: client.id, name: client.name },
-                  $event
-                )"
-                @delete="handleConfirmDeleteProject(project.id, project.name)"
+                @edit="handleOpenProjectDialog(client, $event)"
+                @delete="handleConfirmDeleteProject(project)"
                 @move="moveProject($event, project.id)"
               />
               <AgcCard
                 v-if="isInOpenTab"
                 class="projects-view-container__new-project-card"
                 body-class="projects-view-container__new-project-card-body"
-                @click="handleOpenProjectDialog({ id: client.id, name: client.name })"
+                @click="handleOpenProjectDialog(client)"
               >
                 <AgcIcon
                   :icon="Plus"
@@ -118,8 +115,8 @@ import { useRouter } from 'vue-router'
 import { useMessageBox } from '@/composables/useMessageBox'
 import { useProjectsController } from '@/views/ProjectsView/useProjectsController'
 import { usePageStore } from '@/stores/pageStore'
-import {ProjectStatus, type Project, type ProjectDoc, type ProjectsByClient,} from '@/models/projectModel'
-import type { Client, ClientDoc } from '@/models/clientModel'
+import { ProjectStatus, type Project, type ProjectDoc, type ProjectsByClient } from '@/models/projectModel'
+import { type Client, type ClientDoc } from '@/models/clientModel'
 import type { IProjectsViewProps } from './types'
 
 const ClientInfoDialog = defineAsyncComponent(() => import('./dialogs/ClientInfoDialog'))
@@ -188,22 +185,23 @@ function handleSearch (value?: string) {
   fetchProjects(activeTab.value, String(value))
 }
 
+// TODO: Preciso disso? Evitar Dados desnecessários
 function handleOpenClientDialog (client?: ProjectsByClient) {
   if (client) {
     const { projects: _projects, ...data } = client
     clientInfoDialogRef.value?.open(data)
   } else {
-    clientInfoDialogRef.value?.open()
+    clientInfoDialogRef.value?.open(undefined)
   }
 }
 
-async function handleCreateClient (clientInfoForm: ClientDoc) {
-  await createClient(clientInfoForm)
+async function handleCreateClient (clientForm: ClientDoc) {
+  await createClient(clientForm)
     .then(() => clientInfoDialogRef.value?.close())
 }
 
-function handleUpdateClient (clientInfoForm: Client) {
-  updateClient(clientInfoForm)
+function handleUpdateClient (clientForm: Client) {
+  updateClient(clientForm)
   clientInfoDialogRef.value?.close()
 }
 
@@ -223,26 +221,32 @@ function handleClickProject (project: Project): void {
   })
 }
 
-function handleOpenProjectDialog (client: Client, project?: Project): void {
-  projectInfoDialogRef.value?.open({ ...project, client })
+// TODO: Preciso disso? Evitar Dados desnecessários
+function handleOpenProjectDialog (client: ProjectsByClient, project?: Project): void {
+  const { projects: _projects, ...data } = client
+  if (project) {
+    projectInfoDialogRef.value?.open({ client: data, ...project })
+  } else {
+    projectInfoDialogRef.value?.open({ client: data })
+  }
 }
 
-async function handleCreateProject (projectInfoModel: ProjectDoc) {
-  await createProject(projectInfoModel)
+async function handleCreateProject (projectForm: ProjectDoc) {
+  await createProject(projectForm)
     .then(() => projectInfoDialogRef.value?.close())
 }
 
-function handleUpdateProject (projectInfoModel: Project) {
-  updateProject(projectInfoModel)
+function handleUpdateProject (projectForm: Project) {
+  updateProject(projectForm)
   projectInfoDialogRef.value?.close()
 }
 
-function handleConfirmDeleteProject (projectId: string, projectName: string): void {
+function handleConfirmDeleteProject (project: Project): void {
   messageBox.confirm(
     'Caution!',
-    `Are you sure you want to delete this project? (${projectName})`,
+    `Are you sure you want to delete this project? (${project.name})`,
     { confirmButtonText: 'Delete' }
-  ).then(() => deleteProject(projectId))
+  ).then(() => deleteProject(project.id))
 }
 </script>
 

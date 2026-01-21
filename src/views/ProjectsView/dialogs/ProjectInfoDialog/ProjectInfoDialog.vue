@@ -76,7 +76,7 @@ const emit = defineEmits<IProjectFormDialogEmits>()
 
 const projectFormRef = ref<AgcFormInstance | null>(null)
 
-const projectForm = reactive<ProjectForm>(new ProjectForm())
+const projectForm = reactive<ProjectForm>(new ProjectForm)
 
 const projectFormRules = reactive<AgcFormRules<ProjectForm>>({
   name: {
@@ -119,14 +119,13 @@ function handleCreateEditProject () {
   if (isEditingProject.value) {
     const eventForm = {
       id: project.value?.id ?? '',
-      clientId: client.value?.id ??  '',
       ...projectForm
     }
     emit('submit:update', eventForm)
   } else {
     const eventForm = {
-      clientId: client.value?.id ??  '',
-      ...projectForm
+      ...projectForm,
+      clientId: client.value!.id,
     }
     emit('submit:create', eventForm)
   }
@@ -140,9 +139,14 @@ function handleCloseDialog () {
   projectFormRef.value?.resetValidation()
 }
 
+// TODO: Evitar que ID seja setado no projectForm
 watch(isOpen, (newVal: boolean): void => {
-  if (newVal && project.value?.id) {
-    const { client: _client, ...form } = project.value
+  if (newVal && isEditingProject.value && project.value) {
+    const {
+      client: _client,
+      id: _id,
+      ...form
+    } = project.value
     Object.assign(projectForm, form)
   } else {
     Object.assign(projectForm, new ProjectForm)

@@ -43,7 +43,7 @@ export function useProjectsController () {
 
   async function createClient (client: ClientDoc) {
     isLoadingDialog.value = true
-
+    console.log(client.name, 'client create')
     try {
       const newClient = await clientsService.createClient(client)
       projectsByClient.value.push(newClient)

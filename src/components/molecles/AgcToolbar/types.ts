@@ -8,5 +8,5 @@ export interface IAgcToolbarProps {
 
 export interface IAgcToolbarEmits {
   (e: 'search', value: string): void
-  (e: 'action-click', event: MouseEvent): void
+  (e: 'click-action', event: MouseEvent): void
 }

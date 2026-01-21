@@ -19,8 +19,9 @@ export interface ProjectsByClient extends Client {
   projects: Project[]
 }
 
-export class ProjectForm implements Omit<ProjectDoc, 'clientId'> {
+export class ProjectForm implements ProjectDoc {
   name: string = ''
   description: string = ''
+  clientId: string = ''
   status: ProjectStatus = ProjectStatus.OPEN
 }

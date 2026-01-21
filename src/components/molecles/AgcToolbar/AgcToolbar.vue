@@ -51,7 +51,7 @@ function handleInputUpdate (value: string) {
 }
 
 function handleActionClick (event: MouseEvent) {
-  emit('action-click', event)
+  emit('click-action', event)
 }
 </script>
 

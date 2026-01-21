@@ -18,8 +18,8 @@ export function useDialog<T> (): IUseDialog<T> {
   }
 
   function close (): void {
-    isOpen.value = false
     props.value = null
+    isOpen.value = false
   }
 
   function toggle (params?: T): void {
