@@ -113,8 +113,6 @@ function handleCloseDialog () {
   isOpen.value = false
 }
 
-
-// TODO: Evitar que ID seja setado no clientForm
 watch(isOpen, (newVal: boolean): void => {
   if (newVal && isEditingClient.value && client.value) {
     const { id: _id, ...form } = client.value

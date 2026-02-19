@@ -139,7 +139,6 @@ function handleCloseDialog () {
   projectFormRef.value?.resetValidation()
 }
 
-// TODO: Evitar que ID seja setado no projectForm
 watch(isOpen, (newVal: boolean): void => {
   if (newVal && isEditingProject.value && project.value) {
     const {

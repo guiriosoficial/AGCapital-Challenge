@@ -1,9 +1,9 @@
-import {ref} from 'vue'
-import {cloneDeep} from '@/utils'
-import {projectsService} from '@/services/projectsService'
-import {clientsService} from '@/services/clientsService'
-import {useNotification} from '@/composables/useNotification'
-import type {Client, ClientDoc} from '@/models/clientModel'
+import { ref } from 'vue'
+import { cloneDeep } from '@/utils'
+import { projectsService } from '@/services/projectsService'
+import { clientsService } from '@/services/clientsService'
+import { useNotification } from '@/composables/useNotification'
+import type { Client, ClientDoc } from '@/models/clientModel'
 import { ProjectStatus, type Project, type ProjectDoc, type ProjectsByClient } from '@/models/projectModel'
 
 export function useProjectsController () {
