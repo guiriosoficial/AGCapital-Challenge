@@ -178,7 +178,7 @@ function handleChangeTab (tab: ProjectStatus) {
 }
 
 function stripProjects (client: ProjectsByClient) {
-  const { projects, ...rest } = client
+  const { projects: _projects, ...rest } = client
   return rest
 }
 
