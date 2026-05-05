@@ -3,11 +3,16 @@ import { normalizeString } from '@/utils'
 export function filterByTerm<T> (
   array: T[] = [],
   term: string = '',
-  keys: (keyof T)[] | keyof T = []
+  keys: (keyof T)[] | keyof T = [],
+  ignoreCondition?: (item: T) => boolean
 ): T[] {
   const normalizedTerm: string = normalizeString(term)
 
   return array.filter((item) => {
+    if (ignoreCondition?.(item)) {
+      return true
+    }
+
     const keysList = Array.isArray(keys) ? keys : [keys]
 
     if (keysList.length > 0) {

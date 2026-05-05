@@ -22,7 +22,7 @@
       >
         <AgcCollapse class="projects-view-container__collapse-clients">
           <AgcCollapseItem
-            v-for="client in projectsByClient"
+            v-for="client in filteredProjectsByClient"
             :key="client.id"
           >
             <template #title>
@@ -112,6 +112,7 @@ import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import { useMessageBox } from '@/composables/useMessageBox'
 import { useProjectsController } from '@/views/ProjectsView/useProjectsController'
+import { filterByTerm } from "@/utils";
 import { usePageStore } from '@/stores/pageStore'
 import { ProjectStatus, type Project, type ProjectDoc, type ProjectsByClient } from '@/models/projectModel'
 import { type Client, type ClientDoc } from '@/models/clientModel'
@@ -141,6 +142,23 @@ const searchTerm = ref<string>('')
 const { tab: activeTab } = defineProps<IProjectsViewProps>()
 
 const isInOpenTab = computed(() => activeTab === ProjectStatus.OPEN)
+const filteredProjectsByClient = computed(() => {
+  const filteredByProjects = projectsByClient.value.map((client) => ({
+    ...client,
+    projects: filterByTerm<Project>(
+      client.projects,
+      searchTerm.value,
+      ['name', 'description']
+    )
+  }))
+
+  return filterByTerm<ProjectsByClient>(
+    filteredByProjects,
+    searchTerm.value,
+    'name',
+    hasProjectsInClient
+  )
+})
 
 const pageStore = usePageStore()
 
@@ -167,6 +185,15 @@ const {
   deleteClient
 } = useProjectsController()
 
+function hasProjectsInClient (client: ProjectsByClient) {
+  return Boolean(client.projects.length)
+}
+
+function stripProjects (client: ProjectsByClient) {
+  const { projects: _projects, ...rest } = client
+  return rest
+}
+
 function handleChangeTab (tab: ProjectStatus) {
   lastTab.value = tab
   router.push({
@@ -175,11 +202,6 @@ function handleChangeTab (tab: ProjectStatus) {
   })
 
   fetchProjects(tab)
-}
-
-function stripProjects (client: ProjectsByClient) {
-  const { projects: _projects, ...rest } = client
-  return rest
 }
 
 function handleOpenClientDialog (client?: ProjectsByClient) {
