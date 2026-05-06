@@ -8,7 +8,6 @@
       ref="projectFormRef"
       :model="projectForm"
       :rules="projectFormRules"
-      class="full-width"
     >
       <AgcFormItem
         label="Project name"
@@ -18,7 +17,6 @@
         <AgcInput
           v-model="projectForm.name"
           :disabled="loading"
-          class="full-width"
         />
       </AgcFormItem>
       <AgcFormItem
@@ -30,7 +28,6 @@
           v-model="projectForm.description"
           :disabled="loading"
           type="textarea"
-          class="full-width"
         />
       </AgcFormItem>
     </AgcForm>

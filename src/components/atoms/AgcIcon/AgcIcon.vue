@@ -24,4 +24,3 @@ const {
 
 const emit = defineEmits<IAgcIconEmits>()
 </script>
-

@@ -17,7 +17,6 @@
         <AgcInput
           v-model="clientForm.name"
           :disabled="loading"
-          class="full-width"
         />
       </AgcFormItem>
     </AgcForm>
