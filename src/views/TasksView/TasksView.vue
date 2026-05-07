@@ -191,13 +191,8 @@ function goToHome () {
       display: flex;
       align-items: center;
       font-size: 16px;
+      padding: 0 24px;
       .tasks-view-container__task-card-body {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        position: relative;
-        gap: 16px;
-        width: 100%;
         .tasks-view-container__task-status-tag {
           width: 120px;
           margin-right: 32px;
