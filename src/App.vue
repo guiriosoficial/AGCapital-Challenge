@@ -14,15 +14,18 @@ import { AgcHeader } from '@/components/molecles/AgcHeader'
 </script>
 
 <style scoped lang="scss">
-.main-container {
-  max-width: 1800px;
-  margin: 40px auto;
-}
+@use 'sass:map';
+@use '@/styles/breakpoints' as *;
 
-@media (max-width: 1800px) {
-  .main-container {
+.main-container {
+  max-width: map.get($breakpoints, 'xxl');
+  margin: 40px auto;
+  @include respond-below(xxl) {
     max-width: 100%;
     padding: 0 24px;
+  }
+  @include respond-below(sm) {
+    padding: 0 8px;
   }
 }
 </style>

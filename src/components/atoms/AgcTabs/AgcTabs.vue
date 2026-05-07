@@ -22,14 +22,15 @@ const modelValue = defineModel<T>({
 </script>
 
 <style lang="scss">
-.agc-tabs__header .agc-tabs__item {
-  font-size: 18px !important;
-  height: 48px !important;
-}
+@use "@/styles/breakpoints" as *;
 
-@media (max-width: 800px) {
-  .agc-tabs__header {
+.agc-tabs__header {
+  @include respond-below(md) {
     margin-bottom: 48px;
+  }
+  .agc-tabs__item {
+    font-size: 18px !important;
+    height: 48px !important;
   }
 }
 </style>

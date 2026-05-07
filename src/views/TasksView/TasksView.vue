@@ -143,6 +143,8 @@ function goToHome () {
 </script>
 
 <style scoped lang="scss">
+@use '@/styles/breakpoints' as *;
+
 .tasks-view-container {
   .tasks-view-container__header {
     border-bottom: 2px solid var(--agc-border-color);
@@ -166,6 +168,9 @@ function goToHome () {
     display: flex;
     flex-direction: column;
     gap: 16px;
+    @include respond-below(md) {
+      margin-top: 48px;
+    }
     .tasks-view-container__new-task-card {
       cursor: pointer;
       border-style: dashed !important;
@@ -199,6 +204,16 @@ function goToHome () {
           font-weight: 500;
           cursor: pointer;
         }
+        @include respond-below(sm) {
+          flex-direction: column;
+          .tasks-view-container__task-card-description {
+            width: calc(100% - 40px);
+          }
+          .tasks-view-container__task-status-tag {
+            width: 100%;
+            margin-right: 0;
+          }
+        }
       }
       .tasks-view-container__task-card-actions {
         position: absolute;
@@ -217,34 +232,11 @@ function goToHome () {
     }
   }
 }
-
-@media (max-width: 800px) {
-  .tasks-view-container {
-    .tasks-view-container__body {
-      margin-top: 48px;
-    }
-  }
-}
-
-@media (max-width: 600px) {
-  .tasks-view-container {
-    .tasks-view-container__task-card {
-      .tasks-view-container__task-card-body {
-        flex-direction: column;
-        .tasks-view-container__task-card-description {
-          width: calc(100% - 40px);
-        }
-        .tasks-view-container__task-status-tag {
-          width: 100%;
-          margin-right: 0;
-        }
-      }
-    }
-  }
-}
 </style>
 
 <style lang="scss">
+@use '@/styles/breakpoints' as *;
+
 .tasks-view-container {
   .tasks-view-container__body {
     .tasks-view-container__new-task-card {
@@ -263,16 +255,9 @@ function goToHome () {
         position: relative;
         gap: 16px;
         width: 100%;
-      }
-    }
-  }
-}
-
-@media (max-width: 600px) {
-  .tasks-view-container {
-    .tasks-view-container__task-card {
-      .tasks-view-container__task-card-body {
-        flex-direction: column;
+        @include respond-below(sm) {
+          flex-direction: column;
+        }
       }
     }
   }

@@ -94,14 +94,26 @@ function handleDeleteTask () {
 </script>
 
 <style scoped lang="scss">
+@use '@/styles/breakpoints' as *;
+
 .task-card {
   font-size: 16px;
   .task-card__body {
+    @include respond-below(sm) {
+      flex-direction: column;
+      .task-card__description {
+        width: calc(100% - 40px);
+      }
+    }
     .task-card__status-tag {
       width: 120px;
       margin-right: 32px;
       font-weight: 500;
       cursor: pointer;
+      @include respond-below(sm) {
+        width: 100%;
+        margin-right: 0;
+      }
     }
   }
   .task-card__actions {
@@ -119,38 +131,18 @@ function handleDeleteTask () {
     opacity: 1;
   }
 }
-
-@media (max-width: 600px) {
-  .task-card {
-    .task-card__body {
-      flex-direction: column;
-      .task-card__description {
-        width: calc(100% - 40px);
-      }
-      .task-card__status-tag {
-        width: 100%;
-        margin-right: 0;
-      }
-    }
-  }
-}
 </style>
 
 <style lang="scss">
+@use "@/styles/breakpoints" as *;
+
 .task-card {
   .task-card__body {
     display: flex;
-    align-items: center;
     justify-content: space-between;
     position: relative;
     gap: 16px;
-    width: 100%;
-  }
-}
-
-@media (max-width: 600px) {
-  .task-card {
-    .task-card__body {
+    @include respond-below(sm) {
       flex-direction: column;
     }
   }

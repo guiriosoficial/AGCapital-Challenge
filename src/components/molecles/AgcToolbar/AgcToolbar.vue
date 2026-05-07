@@ -44,23 +44,20 @@ function handleActionClick (event: MouseEvent) {
 </script>
 
 <style scoped lang="scss">
+@use '@/styles/breakpoints' as *;
+
 .toolbar {
   position: absolute;
   top: 8px;
   right: 0;
-  z-index: 99;
-  display: flex;
+  z-index: 90;
+  display: grid;
+  grid-template-columns: 1fr auto;
   gap: 8px;
   width: 400px;
-  .toolbar__input-search {
-    flex: 1;
-  }
-}
-
-@media (max-width: 800px) {
-  .toolbar {
+  @include respond-below(md) {
     top: 56px;
     width: 100%;
-  }
+  };
 }
 </style>

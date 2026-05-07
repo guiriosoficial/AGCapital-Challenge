@@ -27,16 +27,15 @@ function goToHome() {
 </script>
 
 <style scoped lang="scss">
+@use '@/styles/breakpoints' as *;
+
 .agc-header {
   font-size: 40px;
   text-align: center;
   padding: 24px 0;
   margin-bottom: 24px;
   cursor: default;
-}
-
-@media (max-width: 480px) {
-  .agc-header {
+  @include respond-below(sm) {
     font-size: 32px;
     margin-bottom: 8px;
     padding: 8px 0;

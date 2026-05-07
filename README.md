@@ -38,8 +38,14 @@ npm run lint:fix
 ```
 
 ## TODO
-- Create Tests
-- Abstract Element Plus Variables
-- Adjust Breakpoints
+- Create ans Update Unit and E2E Tests
+- Abstract Element Plus Variables (Design Tokens)
+- Try to Add Scope in all Styles
+- Rewrite Styles
+  - Remove Unnecessary Styles
+  - Mobile or Desktop First
+  - Adjust Breakpoints
+  - Use Design Tokens
+  - Use Display Grid
 
 > **NOTE:** I Got de Job! 💸

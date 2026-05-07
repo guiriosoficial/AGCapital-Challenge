@@ -266,7 +266,9 @@ function handleConfirmDeleteProject (project: Project): void {
 }
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
+@use "@/styles/breakpoints" as *;
+
 .projects-view-container {
   position: relative;
   .projects-view-container__collapse-clients {
@@ -292,7 +294,10 @@ function handleConfirmDeleteProject (project: Project): void {
     .projects-view-container__projects-list {
       display: grid;
       gap: 24px;
-      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      @include respond-below(md) {
+        gap: 16px;
+      }
       .projects-view-container__new-project-card {
         display: flex;
         align-items: center;
@@ -322,16 +327,6 @@ function handleConfirmDeleteProject (project: Project): void {
     margin-top: 24px;
     padding: 12px;
     color: var(--agc-text-color-secondary);
-  }
-}
-
-@media (max-width: 800px) {
-  .projects-view-container {
-    .projects-view-container__collapse-clients {
-      .projects-view-container__projects-list {
-        gap: 16px;
-      }
-    }
   }
 }
 </style>
