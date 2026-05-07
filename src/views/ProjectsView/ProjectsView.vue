@@ -270,13 +270,13 @@ function handleConfirmDeleteProject (project: Project): void {
 <style lang="scss">
 .projects-view-container {
   position: relative;
-  .el-tabs__header .el-tabs__item {
+  .agc-tabs__header .agc-tabs__item {
     font-size: 18px !important;
     height: 48px !important;
   }
   .projects-view-container__collapse-clients {
     border: none;
-    .el-collapse-item__header {
+    .agc-collapse-item__header {
       line-height: 64px;
       height: 64px;
       .projects-view-container__collapse-header {
@@ -289,7 +289,7 @@ function handleConfirmDeleteProject (project: Project): void {
           opacity: 0;
           gap: 4px;
           font-size: 16px;
-          transition: var(--el-transition-duration);
+          transition: var(--agc-transition-duration);
           margin-left: 4px;
           display: flex;
         }
@@ -298,7 +298,7 @@ function handleConfirmDeleteProject (project: Project): void {
         opacity: 1;
       }
     }
-    .el-collapse-item__wrap {
+    .agc-collapse-item__wrap {
       border: none;
     }
     .projects-view-container__projects-list {
@@ -310,11 +310,11 @@ function handleConfirmDeleteProject (project: Project): void {
         align-items: center;
         justify-content: center;
         border-style: dashed !important;
-        background-color: var(--el-color-primary);
+        background-color: var(--agc-color-primary);
         color: #FFF;
         cursor: pointer;
         &:hover {
-          background-color: var(--el-color-primary-light-3);
+          background-color: var(--agc-color-primary-light-3);
         }
       }
       .projects-view-container__new-project-card-body {
@@ -333,7 +333,7 @@ function handleConfirmDeleteProject (project: Project): void {
     flex-direction: column;
     margin-top: 24px;
     padding: 12px;
-    color: var(--el-text-color-secondary);
+    color: var(--agc-text-color-secondary);
   }
 }
 
@@ -359,7 +359,7 @@ function handleConfirmDeleteProject (project: Project): void {
 
 @media (max-width: 800px) {
   .projects-view-container {
-    .el-tabs__header {
+    .agc-tabs__header {
       margin-bottom: 48px;
     }
     .projects-view-container__collapse-clients {

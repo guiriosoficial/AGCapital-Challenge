@@ -145,7 +145,7 @@ function goToHome () {
 <style scoped lang="scss">
 .tasks-view-container {
   .tasks-view-container__header {
-    border-bottom: 2px solid var(--el-border-color);
+    border-bottom: 2px solid var(--agc-border-color);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -169,8 +169,8 @@ function goToHome () {
     .tasks-view-container__new-task-card {
       cursor: pointer;
       border-style: dashed !important;
-      background-color: var(--el-color-primary);
-      color: var(--el-color-white);
+      background-color: var(--agc-color-primary);
+      color: var(--agc-color-white);
       font-size: 16px;
       .tasks-view-container__new-task-card-body {
         gap: 12px;
@@ -179,7 +179,7 @@ function goToHome () {
         justify-content: center;
       }
       &:hover {
-        background-color: var(--el-color-primary-light-3);
+        background-color: var(--agc-color-primary-light-3);
       }
     }
     .tasks-view-container__task-card {
@@ -205,7 +205,7 @@ function goToHome () {
         top: 24px;
         right: 24px;
         opacity: 0;
-        transition: var(--el-transition-duration);
+        transition: var(--agc-transition-duration);
         display: flex;
         gap: 8px;
         width: fit-content;

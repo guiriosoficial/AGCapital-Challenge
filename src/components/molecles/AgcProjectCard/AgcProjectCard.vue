@@ -74,7 +74,7 @@ function handleMoveProject () {
 
 <style scoped lang="scss">
 .project-card {
-  background-color: var(--el-bg-color-page);
+  background-color: var(--agc-bg-color-page);
   cursor: pointer;
   .project-card__footer-action {
     float: right;
@@ -91,7 +91,7 @@ function handleMoveProject () {
       display: flex;
       gap: 4px;
       opacity: 0;
-      transition: var(--el-transition-duration);
+      transition: var(--agc-transition-duration);
       cursor: pointer;
     }
   }

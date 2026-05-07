@@ -76,10 +76,10 @@ function handleSelect (option: IAgcPopoverInlineEditorOption<T>): void {
       cursor: pointer;
       padding: 6px 24px;
       &:hover {
-        background-color:  var(--el-bg-color-page);
+        background-color: var(--agc-bg-color-page);
       }
       &--selected {
-        color: var(--el-color-primary);
+        color: var(--agc-color-primary);
         font-weight: 600;
       }
     }

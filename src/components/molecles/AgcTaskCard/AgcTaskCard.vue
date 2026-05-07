@@ -108,7 +108,7 @@ function handleDeleteTask () {
     top: 24px;
     right: 24px;
     opacity: 0;
-    transition: var(--el-transition-duration);
+    transition: var(--agc-transition-duration);
     display: flex;
     gap: 8px;
     width: fit-content;

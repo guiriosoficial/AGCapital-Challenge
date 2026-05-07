@@ -1,12 +1,15 @@
 <template>
-  <main class="main-container">
-    <AgcHeader />
-    <RouterView />
-  </main>
+  <ElConfigProvider namespace="agc">
+    <main class="main-container">
+      <AgcHeader />
+      <RouterView />
+    </main>
+  </ElConfigProvider>
 </template>
 
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
+import { ElConfigProvider } from 'element-plus'
 import { AgcHeader } from '@/components/molecles/AgcHeader'
 </script>
 
