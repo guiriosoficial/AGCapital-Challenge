@@ -39,8 +39,7 @@ npm run lint:fix
 
 ## TODO
 - Create Tests
-- Remove Element+ Variables (var(--el...))
+- Abstract Element Plus Variables
 - Adjust Breakpoints
-- Implements search by term
 
 > **NOTE:** I Got de Job! 💸

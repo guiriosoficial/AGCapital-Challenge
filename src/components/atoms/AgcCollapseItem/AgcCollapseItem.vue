@@ -18,3 +18,13 @@ defineOptions({
   inheritAttrs: false
 })
 </script>
+
+<style lang="scss">
+.agc-collapse-item__header {
+  line-height: 64px;
+  height: 64px;
+}
+.agc-collapse-item__wrap {
+  border: none;
+}
+</style>

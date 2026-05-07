@@ -26,7 +26,7 @@ function goToHome() {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 .agc-header {
   font-size: 40px;
   text-align: center;

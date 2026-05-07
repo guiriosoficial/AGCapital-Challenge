@@ -20,3 +20,16 @@ const modelValue = defineModel<T>({
   required: true
 })
 </script>
+
+<style lang="scss">
+.agc-tabs__header .agc-tabs__item {
+  font-size: 18px !important;
+  height: 48px !important;
+}
+
+@media (max-width: 800px) {
+  .agc-tabs__header {
+    margin-bottom: 48px;
+  }
+}
+</style>
