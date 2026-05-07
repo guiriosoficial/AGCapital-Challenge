@@ -24,7 +24,8 @@
     </AgcPopoverInlineEditor>
     <AgcIcon
       :icon="Delete"
-      class="task-card__actions hover-icon hover-icon--danger"
+      class="task-card__actions"
+      type="danger"
       @click.stop="handleDeleteTask"
     />
   </AgcCard>

@@ -9,12 +9,11 @@
         <span class="card-header__header-actions">
           <AgcIcon
             :icon="EditPen"
-            class="hover-icon"
             @click.stop="handleEditProject"
           />
           <AgcIcon
             :icon="Delete"
-            class="hover-icon hover-icon--danger"
+            type="danger"
             @click.stop="handleDeleteProject"
           />
         </span>

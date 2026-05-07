@@ -8,7 +8,7 @@
       <AgcIcon
         :icon="EditPen"
         role="button"
-        class="hover-icon text-inline-editor__inner-actions"
+        class="text-inline-editor__inner-actions"
         @click="startEdit"
         @keydown.enter.space.prevent="startEdit"
       />
@@ -31,14 +31,13 @@
         <AgcIcon
           :icon="Check"
           role="button"
-          class="hover-icon"
           @mousedown.prevent
           @click.stop="confirmEdit"
         />
         <AgcIcon
           :icon="Close"
           role="button"
-          class="hover-icon hover-icon--danger"
+          type="danger"
           @mousedown.prevent
           @click.stop="cancelEdit"
         />

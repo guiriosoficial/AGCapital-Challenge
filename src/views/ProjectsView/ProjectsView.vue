@@ -31,12 +31,11 @@
                 <span class="projects-view-container__collapse-header-actions">
                   <AgcIcon
                     :icon="EditPen"
-                    class="hover-icon"
                     @click.stop="handleOpenClientDialog(client)"
                   />
                   <AgcIcon
                     :icon="Delete"
-                    class="hover-icon hover-icon--danger"
+                    type="danger"
                     @click.stop="handleDeleteClient(client)"
                   />
                 </span>

@@ -12,7 +12,6 @@
       :icon="Plus"
       :disabled="disabled"
       type="primary"
-      class="hover-icon"
       @click="handleActionClick"
     >
       {{ actionText }}

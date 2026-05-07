@@ -2,28 +2,4 @@
 
 body {
   font-family: "Roboto", sans-serif;
-  color: #424242;
-
-  .agc-message-box {
-    padding: 24px;
-    width: 480px;
-    min-width: 480px;
-    .agc-message-box__headerbtn {
-      right: 12px;
-      top: 12px;
-    }
-  }
-}
-
-.hover-icon {
-  transition: var(--agc-transition-duration);
-  cursor: pointer;
-  &:hover {
-    color: var(--agc-color-primary);
-  }
-  &--danger {
-    &:hover {
-      color: var(--agc-color-danger);
-    }
-  }
 }
